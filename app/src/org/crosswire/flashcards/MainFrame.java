@@ -235,7 +235,7 @@ public class MainFrame extends JFrame {
       {
           connection = lessonsURL.openConnection();
       }
-      catch (IOException e1)
+      catch (Exception e1)
       {
           assert false;
       }
@@ -276,7 +276,10 @@ public class MainFrame extends JFrame {
   
   private void loadHomeLessons(String directoryPath)
   {
+    try {
       List files = new ArrayList();
+      File childFile = new File(directoryPath);
+      directoryPath = childFile.getParent();
       getFileListing(new File(directoryPath), files);
       Collections.sort(files);
       Iterator iter = files.iterator();
@@ -297,6 +300,10 @@ public class MainFrame extends JFrame {
           String filePath = file.getPath().replace('\\', '/');
           lessonSet.add(filePath);
       }
+    }
+    catch (Exception e) {
+	// that's fine.  We just failed to load local files.
+    }
   }
 
   private void loadWidgets()

@@ -88,8 +88,8 @@ public class EditorFrame extends JFrame {
     static class WordEntry {
         public WordEntry(String word) { this.word = word; }
         public WordEntry(String word, String answers) { this(word); this.answers = answers; }
-        public String word;
-        public String answers;
+        public String word = "";
+        public String answers = "";
         public String toString() {
             return word;
         }
