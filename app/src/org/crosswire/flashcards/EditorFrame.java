@@ -1,19 +1,36 @@
 package org.crosswire.flashcards;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
+import java.awt.AWTEvent;
+import java.awt.BorderLayout;
+import java.awt.ComponentOrientation;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.Vector;
-import java.beans.*;
-import javax.swing.event.*;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Enumeration;
-import java.io.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.filechooser.FileFilter;
+
 import org.crosswire.modedit.UniTextEdit;
 
 /**
@@ -204,13 +221,13 @@ public class EditorFrame extends JFrame {
 
     ////////////////////////////////////////////
     //
-    private void loadLesson( String fileName ) {
+    private void loadLesson( String lessonFileName ) {
 
         lesson = new Properties( );
 
         try {
 
-            lesson.load( new FileInputStream( fileName ) );
+            lesson.load( new FileInputStream( lessonFileName ) );
 
         } catch( Exception e ) {
 
@@ -313,7 +330,7 @@ public class EditorFrame extends JFrame {
                 public String getDescription() { return "Flash Card Lessons"; }
             });
         dialog.setCurrentDirectory(new File("./"));
-        if (dialog.showOpenDialog(this) == dialog.APPROVE_OPTION) {
+        if (dialog.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
                 loadLesson(dialog.getSelectedFile().getCanonicalPath());
             } catch( IOException ioe ) {
@@ -337,7 +354,7 @@ public class EditorFrame extends JFrame {
                 public String getDescription() { return "TrueType Font"; }
             });
         dialog.setCurrentDirectory(new File("./"));
-        if (dialog.showOpenDialog(this) == dialog.APPROVE_OPTION) {
+        if (dialog.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             lesson.setProperty("font", dialog.getSelectedFile().getName());
             fontPath.setText(lesson.getProperty("font"));
             try {

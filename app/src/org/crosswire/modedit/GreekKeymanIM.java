@@ -9,7 +9,7 @@ package org.crosswire.modedit;
  * @version 1.0
  */
 
-import java.util.*;
+import java.util.Hashtable;
 
 public class GreekKeymanIM
     extends SWInputMethod {

@@ -1,0 +1,127 @@
+<project name="flashcards" default="all">
+
+  <!--=======================================================================
+    == To make eclipse recognise this file as an ant file, go to preferences,
+    == ant and add core.xml to the "Names" field, and then under Workbench,
+    == "File Associations" add a type "core.xml" with ant as the editor.
+    =========================================================================-->
+
+  <!--=======================================================================
+    == These are the standard locations that this build file uses.
+    == This assumes that the build file is in the root of the project.
+    =========================================================================-->
+  <property name="source.root"    value="."/>
+  <property name="source.java"    value="${source.root}/app/src"/>
+  <property name="source.res"     value="${source.root}"/>
+  <property name="target.root"    value="${source.root}/target"/>
+  <property name="target.classes" value="${target.root}/classes"/>
+  <property name="target.install" value="${target.root}/install"/>
+  <property name="keystore.file"  value="flshcrds.keystore"/>
+  <property name="keystore.alias" value="flshcrds"/>
+  <property name="keystore.pswd"  value="p455w0rd"/>
+
+  <!--=======================================================================
+    == This is a path to all source directories and files.
+    =========================================================================-->
+  <path id="source.path">
+    <dirset dir="${source.java}" includes="*"/>
+  </path>
+
+  <!--=======================================================================
+    == Mark this build with the current timestamp
+    =========================================================================-->
+  <target name="init" description="Prepare for other tasks">
+    <echo message="Initializing ${ant.project.name}"/>
+    <tstamp/>
+  </target>
+
+  <!--=======================================================================
+    == Clean the intermediate files and build everything
+    =========================================================================-->
+  <target name="all"
+          depends="clean, build"
+          description="Run a full clean/build cycle">
+  </target>
+
+  <!--=======================================================================
+    == Clean the intermediate files.
+    == Also invoke a clean on any dependencies, if any.
+    =========================================================================-->
+  <target name="clean"
+          depends="init"
+          description="Remove the target directory">
+    <delete dir="${target.root}"/>
+  </target>
+
+  <!--=======================================================================
+    == Build all the java files into class files and
+    == create a jar file for the project with the name project.jar,
+    == where project is replaced with the name of the project.
+    == This jar is built to the target.install directory.
+    =========================================================================-->
+  <target name="build" depends="compile, jar.check, keygen" unless="jar.uptodate" description="Run a full build">
+    <mkdir dir="${target.install}"/>
+    <jar jarfile="${target.install}/${ant.project.name}.jar">
+      <fileset dir="${target.classes}"/>
+      <fileset dir="${source.root}" includes="lessons/**/*"/>
+    </jar>
+    <copy todir="${target.install}">
+      <fileset dir="${source.root}/app/webstart">
+        <include name="FlashCards.jnlp"/>
+        <include name="*.gif"/>
+      </fileset>
+    </copy>
+
+    <signjar
+          storepass="${keystore.pswd}"
+          alias="${keystore.alias}"
+          keystore="${keystore.file}"
+          keypass="${keystore.pswd}"
+          jar="${target.install}/${ant.project.name}.jar"/>
+  </target>
+  <target name="jar.check">
+    <uptodate property="jar.uptodate"
+        targetfile="${target.install}/${ant.project.name}.jar">
+      <srcfiles dir="${target.classes}"/>
+      <srcfiles dir="${source.res}"/>
+    </uptodate>
+  </target>
+
+  <!--=======================================================================
+    == Compile all the java files under source.path into class files.
+    == Make sure that all the resources in those directories make it over too.
+    =========================================================================-->
+  <target name="compile" description="Compile the source">
+    <mkdir dir="${target.classes}"/>
+    <javac debug="on"
+           includes="**/*.java"
+           destdir="${target.classes}"
+           source="1.4">
+      <src refid="source.path"/>
+    </javac>
+  </target>
+
+  <!--=======================================================================
+    == A keystore is needed to sign jars.
+    == It does not need to be build very often and can be shared.
+    =========================================================================-->
+  <target name="keygen"
+          depends="keygen.check"
+          unless="keygen.uptodate"
+          description="Generates a key for use in signing the JARs">
+    <echo message="Generating keystore for signing jars"/>
+    <genkey alias="${keystore.alias}"
+          storepass="${keystore.pswd}"
+          keystore="${keystore.file}">
+      <dname>
+        <param name="CN" value="The CrossWire Bible Society"/>
+        <param name="OU" value="FlashCards"/>
+        <param name="O" value="Crosswire.org"/>
+      </dname>
+    </genkey>
+  </target>
+  <target name="keygen.check" description="Check the keystore is there">
+    <available property="keygen.uptodate" file="${keystore.file}"/>
+  </target>
+
+</project>
