@@ -52,6 +52,21 @@ public class FlashCard implements Cloneable, Comparable
     }
 
     /**
+     * Get a particular side of this FlashCard.
+     * This is useful to flip the cards.
+     * @param front
+     * @return the requested side
+     */
+    public String getSide(boolean front)
+    {
+        if (front)
+        {
+            return getFront();
+        }
+        return getBack();
+    }
+
+    /**
      * @return Returns the back.
      */
     public String getBack()

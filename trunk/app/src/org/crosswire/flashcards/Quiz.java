@@ -49,13 +49,14 @@ public class Quiz {
 
     // ---------------
     public Quiz( ) {
+        
+        LessonManager lm = new LessonManager();
 
-        MainFrame frame = new MainFrame();
+        MainFrame frame = new MainFrame(lm);
 
         // Validate frames that have preset sizes
         // Pack frames that have useful preferred size info,
         // e.g. from their layout
-
         if( packFrame ) { frame.pack( ); }
         else { frame.validate( ); }
 

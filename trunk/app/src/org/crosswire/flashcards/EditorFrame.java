@@ -65,6 +65,7 @@ import org.crosswire.modedit.UniTextEdit;
 
 public class EditorFrame extends JFrame {
 
+    private LessonManager lessonManager;
     //
     // Attributes
     //
@@ -120,8 +121,8 @@ public class EditorFrame extends JFrame {
     //
 
     // ---------------
-    public EditorFrame( boolean standAlone ) {
-
+    public EditorFrame(LessonManager lessonManager, boolean standAlone ) {
+        this.lessonManager = lessonManager;
         this.standAlone = standAlone;
         enableEvents( AWTEvent.WINDOW_EVENT_MASK );
 

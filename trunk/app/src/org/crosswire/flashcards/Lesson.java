@@ -127,7 +127,15 @@ public class Lesson implements Comparable
     public int compareTo(Object obj)
     {
         Lesson lesson = (Lesson) obj;
-        return description.compareTo(lesson.description);
+        return filename.compareTo(lesson.filename);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
+    {
+        return description;
     }
 
     /**
