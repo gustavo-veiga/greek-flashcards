@@ -73,8 +73,15 @@ public class QuizPane
      GridBagLayout gridBagLayout1 = new GridBagLayout();
 
      static class WordEntry {
+
+          public String back;
+          private FlashCard flashCard;
+          public int attempts;
+
+
           public WordEntry(FlashCard flashCard) {
                this.flashCard = flashCard;
+               back = flashCard.getBack();
           }
 
 
@@ -89,17 +96,13 @@ public class QuizPane
 
 
           public String getSide(boolean front) {
-               return flashCard.getSide(front);
+               return (front) ? flashCard.getFront() : back;
           }
 
 
           public String toString() {
                return flashCard.getFront();
           }
-
-
-          private FlashCard flashCard;
-          private int attempts;
      }
 
 
@@ -204,9 +207,9 @@ public class QuizPane
           for (int i = 0; i < words.size() - 1; i++) {
                WordEntry w = (WordEntry) words.get(i);
                for (int j = i + 1; j < words.size(); j++) {
-                    WordEntry x = (WordEntry) words.get(j);
-                    if (w.flashCard.getFront().equals(x.flashCard.getFront())) {
-                         w.flashCard.setBack(w.flashCard.getBack() + " or " + x.flashCard.getBack());
+                    WordEntry xx = (WordEntry) words.get(j);
+                    if (w.flashCard.getFront().equals(xx.flashCard.getFront())) {
+                         w.back += " or " + xx.back;
                          words.remove(j);
                          j--;
                     }
