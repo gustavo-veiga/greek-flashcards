@@ -28,6 +28,17 @@
   </path>
 
   <!--=======================================================================
+    == These are the non-java resource files
+    == that may appear along side of java files.
+    =========================================================================-->
+  <patternset id="java.non.compile">
+    <include name="**/*"/>
+    <exclude name="**/*.html"/>
+    <exclude name="**/*.java"/>
+    <exclude name="**/*.class"/>
+  </patternset>
+
+  <!--=======================================================================
     == Mark this build with the current timestamp
     =========================================================================-->
   <target name="init" description="Prepare for other tasks">
@@ -99,6 +110,16 @@
            source="1.4">
       <src refid="source.path"/>
     </javac>
+    <!-- Copy the resources to the proper org/crosswire directory.
+      == The path separator could be either / or \
+      -->
+    <copy todir="${target.classes}" includeEmptyDirs="false" >
+<!--      <mapper type="regexp" from=".*[\\/](org[\\/].*)" to="\1"/>
+-->      <fileset dir="${source.java}">
+        <patternset refid="java.non.compile"/>
+        <exclude name="**/*Test*"/>
+      </fileset>
+    </copy>
   </target>
 
   <!--=======================================================================
