@@ -1,3 +1,13 @@
+///////////////////////////////////////////////////////////////////////////
+//
+// Quiz.java
+//
+// The start of it all
+//
+// Copyright : 2004 CrossWire Bible Society http://crosswire.org
+//
+///////////////////////////////////////////////////////////////////////////
+
 package org.crosswire.flashcards;
 
 import java.awt.Dimension;
@@ -5,49 +15,84 @@ import java.awt.Toolkit;
 
 import javax.swing.UIManager;
 
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author not attributable
- * @version 1.0
- */
-
 public class Quiz {
-  boolean packFrame = false;
 
-  //Construct the application
-  public Quiz() {
-    MainFrame frame = new MainFrame();
-    //Validate frames that have preset sizes
-    //Pack frames that have useful preferred size info, e.g. from their layout
-    if (packFrame) {
-      frame.pack();
+    //
+    // Attributes
+    //
+
+    boolean packFrame = false;
+
+    //
+    // Methods
+    //
+
+    // ---------------
+    public Quiz( ) {
+
+        MainFrame frame = new MainFrame();
+
+        // Validate frames that have preset sizes
+        // Pack frames that have useful preferred size info,
+        // e.g. from their layout
+
+        if( packFrame ) { frame.pack( ); }
+        else { frame.validate( ); }
+
+        //Center the window
+
+        Dimension screenSize = Toolkit.getDefaultToolkit( ).getScreenSize( );
+        Dimension frameSize = frame.getSize( );
+
+        if( frameSize.height > screenSize.height ) {
+
+            frameSize.height = screenSize.height;
+
+        }
+
+        if( frameSize.width > screenSize.width ) {
+
+            frameSize.width = screenSize.width;
+
+        }
+
+        frame.setLocation( ( screenSize.width - frameSize.width ) / 2,
+                           ( screenSize.height - frameSize.height ) / 2 );
+        frame.setVisible( true );
+
     }
-    else {
-      frame.validate();
+
+    // ---------------
+    public static void main( String [ ] arguments ) {
+
+        // Parse the command line arguments
+
+        for( int index = 0; arguments.length > index; ++ index ) {
+
+            if( ( arguments [ index ] ).equals( "-debug" ) ) {
+
+                Debug.setEnabled( true );
+
+            }
+
+        }
+
+        // Set the "Look And Feel"
+
+        try {
+
+            UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName( ) );
+
+        } catch(Exception e ) {
+
+            e.printStackTrace();
+
+        }
+
+        // Go...
+
+        new Quiz( );
+
     }
-    //Center the window
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    Dimension frameSize = frame.getSize();
-    if (frameSize.height > screenSize.height) {
-      frameSize.height = screenSize.height;
-    }
-    if (frameSize.width > screenSize.width) {
-      frameSize.width = screenSize.width;
-    }
-    frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-    frame.setVisible(true);
-  }
-  //Main method
-  public static void main(String[] args) {
-    try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
-    new Quiz();
-  }
+
 }

@@ -97,6 +97,7 @@ public class MainFrame extends JFrame {
   private static final String LESSON_ROOT = "lessons";
   private static final String DIR_PROJECT = ".flashcards";
   private static final String FILE_PROTOCOL = "file";
+  private MainMenu mainMenu;
 
   static class WordEntry {
     public WordEntry(String word) { this.word = word; }
@@ -121,7 +122,13 @@ public class MainFrame extends JFrame {
         }
         catch (MalformedURLException e1)
         {
-            assert false;
+            // assert false;
+            // 
+            // The above statement fails to compile in 1.4, I'm assuming the intent is
+            // to throw an AssertionError; so, 'throw new AssertionError( );'.
+            // John Jacques, john.jacques@bigfoot.com
+            //
+            throw new AssertionError( );
         }
 
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -133,6 +140,8 @@ public class MainFrame extends JFrame {
         {
             e.printStackTrace();
         }
+        mainMenu = new MainMenu( this );
+        setJMenuBar( mainMenu );
     }
   //Component initialization
   private void jbInit() throws Exception  {
@@ -224,6 +233,7 @@ public class MainFrame extends JFrame {
   
   private void loadJarLessons(String directoryPath)
   {
+
       // Dig into the jar for lessons
       URL lessonsURL = this.getClass().getResource('/' + directoryPath);
       URLConnection connection = null;
@@ -233,7 +243,14 @@ public class MainFrame extends JFrame {
       }
       catch (IOException e1)
       {
-          assert false;
+          // assert false;
+          // 
+          // The above statement fails to compile in 1.4, I'm assuming the intent is
+          // to throw an AssertionError; so, 'throw new AssertionError( );'.
+          // John Jacques, john.jacques@bigfoot.com
+          //
+          throw new AssertionError( );
+
       }
       if (connection instanceof JarURLConnection)
       {
@@ -245,7 +262,13 @@ public class MainFrame extends JFrame {
           }
           catch (IOException e2)
           {
-              assert false;
+              // assert false;
+              // 
+              // The above statement fails to compile in 1.4, I'm assuming the intent is
+              // to throw an AssertionError; so, 'throw new AssertionError( );'.
+              // John Jacques, john.jacques@bigfoot.com
+              //
+              throw new AssertionError( );
           }
           Enumeration enum = jarFile.entries();
           Set lessonSet = null;
