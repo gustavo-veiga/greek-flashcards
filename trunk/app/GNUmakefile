@@ -35,7 +35,7 @@ jar : classes
 
 classes : clean
 	@$(CHECK_CLASSES_DIRECTORY)
-	$(JAVAC) -g -source 1.4 -d $(CLASSES_DIRECTORY) `find . -type f -name '*.java'`
+	$(JAVAC) -g -source 1.4 -Xlint:all -d $(CLASSES_DIRECTORY) `find . -type f -name '*.java'`
 	cd src ; \
 	tar cf - `find . -type f | egrep -v '\.svn'` | ( cd $(CLASSES_DIRECTORY) ; tar xf - )
 	cd .. ; \
