@@ -123,6 +123,7 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
 
                 // ph => phi
                 // Ph,PH => Phi
+                // anything else => pi or Pi
 
                 if( 'H' == inputUpper ) {
 
@@ -135,7 +136,17 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
 
                     if( 'P' == getState( ) ) { returnValue.append( new char [ ] { 0x03a0 } ); }
                     else if( 'p' == getState( ) ) { returnValue.append( new char [ ] { 0x03c0 } ); }
-                    returnValue.append( new String( ) + input );
+                    String translation = ( String ) characterMap.get( new Integer( input ) );
+
+                    if( null == translation ) {
+
+                        returnValue.append( input );
+
+                    } else {
+
+                        returnValue.append( translation );
+
+                    }
 
                 }
 
@@ -157,6 +168,17 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
                 } else {
 
                     returnValue.append( new char [ ] { 0x03c2 } );
+                    String translation = ( String ) characterMap.get( new Integer( input ) );
+
+                    if( null == translation ) {
+
+                        returnValue.append( input );
+
+                    } else {
+
+                        returnValue.append( translation );
+
+                    }
 
                 }
 
@@ -164,7 +186,7 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
                 setState( 0 );
                 return returnValue.toString( );
 
-            } else if( ( 'j' == getState( ) ) || ( 'j' == getState( ) ) ) {
+            } else if( ( 'j' == getState( ) ) || ( 'J' == getState( ) ) ) {
 
                 // Smooth Breathing
 
@@ -175,6 +197,7 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
                     ( 'Q' == inputUpper ) ||
                     ( 'I' == inputUpper ) ||
                     ( 'O' == inputUpper ) ||
+                    ( 'U' == inputUpper ) ||
                     ( 'W' == inputUpper ) ) {
 
                     returnValue.append( new char [ ] { 0x0313 } );
@@ -196,6 +219,7 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
                     ( 'Q' == inputUpper ) ||
                     ( 'I' == inputUpper ) ||
                     ( 'O' == inputUpper ) ||
+                    ( 'U' == inputUpper ) ||
                     ( 'W' == inputUpper ) ) {
 
                     returnValue.append( new char [ ] { 0x0314 } );
@@ -242,7 +266,7 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
 
                 }
 
-                System.out.println( "Returning : " + returnValue.toString( ) );
+                //System.out.println( "Returning : " + returnValue.toString( ) );
                 setState( 0 );
                 return returnValue.toString( );
 
