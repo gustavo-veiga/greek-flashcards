@@ -109,6 +109,13 @@ public class LessonSet implements Comparable
         return description.compareTo(lesson.description);
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
+    {
+        return description;
+    }
     /**
      * Load this lesson set from persistent store named by the lesson set's <code>dirname</code>.
      * This is the union of lessons in the Jar and in the user's flashcard home directory.
@@ -117,13 +124,6 @@ public class LessonSet implements Comparable
     {
         loadJarLessons();
         loadHomeLessons();
-        Iterator iter = lessons.iterator();
-        while (iter.hasNext())
-        {
-            String lessonPath = (String) iter.next();
-            String lessonDescription = getLessonDescription(lessonPath);
-            add(new Lesson(lessonPath, lessonDescription));
-        }
     }
 
     /**
@@ -169,10 +169,11 @@ public class LessonSet implements Comparable
             while (entries.hasMoreElements())
             {
                 JarEntry jarEntry = (JarEntry) entries.nextElement();
-                String entryName = jarEntry.getName();
-                if (entryName.startsWith(dirname) && ! jarEntry.isDirectory())
+                String lessonPath = jarEntry.getName();
+                if (lessonPath.startsWith(dirname) && ! jarEntry.isDirectory())
                 {
-                    lessons.add(entryName);
+                    String lessonDescription = getLessonDescription(lessonPath);
+                    add(new Lesson(lessonPath, lessonDescription));
                 }
             }
         }
@@ -204,7 +205,8 @@ public class LessonSet implements Comparable
                 lessonPath = lessonPath.replace('\\', '/');
                 int offset = lessonPath.indexOf(dirname);
                 lessonPath = lessonPath.substring(offset, lessonPath.length());
-                lessons.add(lessonPath);
+                String lessonDescription = getLessonDescription(lessonPath);
+                add(new Lesson(lessonPath, lessonDescription));
             }
         }
         catch (Exception e)
@@ -269,6 +271,11 @@ public class LessonSet implements Comparable
             }
         }
         return false;
+    }
+    
+    public Iterator iterator()
+    {
+        return lessons.iterator();
     }
 
     /**

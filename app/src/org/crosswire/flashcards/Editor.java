@@ -48,9 +48,9 @@ public class Editor {
     //
 
     // ---------------
-    public Editor( boolean standAlone ) {
+    public Editor(LessonManager lessonManager, boolean standAlone ) {
 
-        EditorFrame frame = new EditorFrame( standAlone );
+        EditorFrame frame = new EditorFrame(lessonManager, standAlone );
 
         //Validate frames that have preset sizes
         //Pack frames that have useful preferred size info, e.g. from their layout
@@ -108,7 +108,7 @@ public class Editor {
 
         }
 
-        new Editor( true );
+        new Editor(new LessonManager(), true );
 
     }
 

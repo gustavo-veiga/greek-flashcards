@@ -21,25 +21,20 @@
 package org.crosswire.flashcards;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.JarURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import javax.swing.JCheckBox;
-
 import org.crosswire.common.CWClassLoader;
-import org.crosswire.common.ResourceUtil;
 
 /**
  * The <code>LessonManager</code> provides the management of <code>LessonSet</code>s.
@@ -49,10 +44,20 @@ import org.crosswire.common.ResourceUtil;
  */
 public class LessonManager implements Comparable
 {
-    public LessonManager(String dirname)
+    public LessonManager()
     {
-        this.dirname = dirname;
-        lessonSets = new ArrayList();
+        lessonSets = new TreeSet();
+        try
+        {
+            String path = System.getProperty("user.home") + File.separator + DIR_PROJECT; //$NON-NLS-1$
+            URL home = new URL(FILE_PROTOCOL, null, path);
+            CWClassLoader.setHome(home);
+        }
+        catch (MalformedURLException e1)
+        {
+            assert false;
+        }
+        load();
     }
 
     /**
@@ -63,21 +68,6 @@ public class LessonManager implements Comparable
     public void add(LessonSet aLessonSet)
     {
         lessonSets.add(aLessonSet);
-    }
-
-    /**
-     * Removes the <code>LessonSet</code> at the specified position in this list.
-     * Shifts any subsequent FlashCards to the left (subtracts one from their
-     * indices).
-     *
-     * @param index the index of the Lesson to removed.
-     * @return the Lesson that was removed from the list.
-     * @throws    IndexOutOfBoundsException if index out of range <tt>(index
-     * 		  &lt; 0 || index &gt;= size())</tt>.
-     */
-    public LessonSet remove(int index)
-    {
-        return (LessonSet) lessonSets.remove(index);
     }
 
     /**
@@ -96,22 +86,6 @@ public class LessonManager implements Comparable
         description = newDescription;
     }
 
-    /**
-     * @return Returns the dirname.
-     */
-    public String getDirname()
-    {
-        return dirname;
-    }
-
-    /**
-     * @param dirname The dirname to set.
-     */
-    public void setDirname(String newFilename)
-    {
-        dirname = newFilename;
-    }
-
     /* (non-Javadoc)
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
@@ -122,7 +96,7 @@ public class LessonManager implements Comparable
     }
 
     /**
-     * Load this lesson from persistent store named by the lesson's <code>dirname</code>.
+     * Load this lesson from persistent store named by the lesson's <code>LESSON_ROOT</code>.
      */
     public void load()
     {
@@ -137,7 +111,7 @@ public class LessonManager implements Comparable
     {
 
         // Dig into the jar for lessonSets
-        URL lessonsURL = this.getClass().getResource('/' + dirname);
+        URL lessonsURL = this.getClass().getResource('/' + LESSON_ROOT);
         if (lessonsURL == null)
         {
             return;
@@ -172,7 +146,7 @@ public class LessonManager implements Comparable
                     String entryName = jarEntry.getName();
                     // remove trailing '/'
                     entryName = entryName.substring(0, entryName.length() - 1);
-                    if (entryName.startsWith(dirname) && ! entryName.equals(dirname))
+                    if (entryName.startsWith(LESSON_ROOT) && ! entryName.equals(LESSON_ROOT))
                     {
                         // let the description be just the directory name and not the path
                         add(new LessonSet(entryName, entryName.substring(entryName.indexOf('/') + 1)));
@@ -189,7 +163,7 @@ public class LessonManager implements Comparable
     {
         try
         {
-            URL dirURL = CWClassLoader.getHomeResource(dirname);
+            URL dirURL = CWClassLoader.getHomeResource(LESSON_ROOT);
             File directory = new File(dirURL.getFile());
             File[] files = directory.listFiles();
             if (files == null)
@@ -214,7 +188,7 @@ public class LessonManager implements Comparable
     }
     
     /**
-     * Save all the modified lesson sets to persistent store named by the lesson's <code>dirname</code>.
+     * Save all the modified lesson sets to persistent store named by the lesson's <code>LESSON_ROOT</code>.
      */
     public void store()
     {
@@ -229,10 +203,14 @@ public class LessonManager implements Comparable
         }
     }
 
-    /**
-     * The <code>dirname</code> of the lesson
-     */
-    private String dirname;
+    public Iterator iterator()
+    {
+        return lessonSets.iterator();
+    }
+
+    public static final String LESSON_ROOT = "lessons";
+    private static final String DIR_PROJECT = ".flashcards";
+    private static final String FILE_PROTOCOL = "file";
 
     /**
      * A <code>description</code> of the lesson to be displayed to the user.
@@ -242,5 +220,5 @@ public class LessonManager implements Comparable
     /**
      * An ordered list of <code>lessonSets</code>
      */
-    private List lessonSets;
+    private Set lessonSets;
 }

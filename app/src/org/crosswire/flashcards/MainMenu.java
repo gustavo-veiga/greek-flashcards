@@ -43,6 +43,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 class MainMenu extends JMenuBar {
 
+    private LessonManager lessonManager;
     //
     // Attributes
     //
@@ -55,8 +56,8 @@ class MainMenu extends JMenuBar {
     //
 
     // ---------------
-    MainMenu( JFrame frame ) {
-
+    MainMenu(LessonManager lessonManager, JFrame frame ) {
+        this.lessonManager = lessonManager;
         this.frame = frame;
 
         JMenu menu1, menu2;
@@ -131,7 +132,7 @@ class MainMenu extends JMenuBar {
         public void actionPerformed( ActionEvent event ) {
 
             Debug.trace( this.toString( ), "Beginning\n" );
-            new Editor( false );
+            new Editor( lessonManager, false );
             Debug.trace( this.toString( ), "Ending\n" );
 
         }
