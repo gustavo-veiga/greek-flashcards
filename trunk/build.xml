@@ -70,15 +70,14 @@
     == where project is replaced with the name of the project.
     == This jar is built to the target.install directory.
     =========================================================================-->
-  <target name="build" depends="compile, jar.check, keygen" unless="jar.uptodate" description="Run a full build">
+  <target name="build" depends="compile, resource, jar.check, keygen" unless="jar.uptodate" description="Run a full build">
     <mkdir dir="${target.install}"/>
     <jar jarfile="${target.install}/${ant.project.name}.jar" manifest="${target.classes}/org/crosswire/flashcards/flashcards.manifest">
       <fileset dir="${target.classes}"/>
-      <fileset dir="${source.root}" includes="lessons/**/*"/>
     </jar>
     <copy todir="${target.install}">
       <fileset dir="${source.root}/app/webstart">
-        <include name="FlashCards.jnlp"/>
+        <include name="Flashcards.jnlp"/>
         <include name="*.gif"/>
       </fileset>
     </copy>
@@ -94,7 +93,25 @@
     <uptodate property="jar.uptodate"
         targetfile="${target.install}/${ant.project.name}.jar">
       <srcfiles dir="${target.classes}"/>
-      <srcfiles dir="${source.res}"/>
+    </uptodate>
+  </target>
+
+  <target name="resource" depends="resource.check, keygen" unless="resource.uptodate" description="Run a full build">
+    <mkdir dir="${target.install}"/>
+    <jar jarfile="${target.install}/lessons.jar">
+      <fileset dir="${source.root}" includes="lessons/**/*"/>
+    </jar>
+    <signjar
+          storepass="${keystore.pswd}"
+          alias="${keystore.alias}"
+          keystore="${keystore.file}"
+          keypass="${keystore.pswd}"
+          jar="${target.install}/lessons.jar"/>
+  </target>
+  <target name="resource.check">
+    <uptodate property="resource.uptodate"
+        targetfile="${target.install}/lessons.jar">
+      <srcfiles dir="${source.res}/lessons"/>
     </uptodate>
   </target>
 
@@ -105,10 +122,10 @@
   <target name="compile" description="Compile the source">
     <mkdir dir="${target.classes}"/>
     <javac debug="on"
+           srcdir="${source.java}"
            includes="**/*.java"
            destdir="${target.classes}"
            source="1.4">
-      <src refid="source.path"/>
       <exclude name="**/migrate/*"/>
     </javac>
     <!-- Copy the resources to the proper org/crosswire directory.
