@@ -399,6 +399,7 @@ public class UniTextEdit extends JPanel {
 
   public void setText(String text) {
     jTextArea1.setText(text);
+    jTextArea1.repaint();
   }
 
 }

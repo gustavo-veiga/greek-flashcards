@@ -31,12 +31,12 @@ import javax.swing.JSplitPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.crosswire.common.swing.FixedSplitPane;
+//import org.crosswire.common.swing.FixedSplitPane;
 
 
 /**
  * A panel used for setting up a quiz.
- * 
+ *
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
 public class SetupPane extends JPanel
@@ -63,7 +63,7 @@ public class SetupPane extends JPanel
     {
         return flipped.isSelected();
     }
-    
+
     public boolean isNoMultipleChoice()
     {
     	return noMultipleChoice.isSelected();
@@ -118,7 +118,7 @@ public class SetupPane extends JPanel
             }
         });
 
-        JSplitPane horizontalSplitPane = new FixedSplitPane();
+        JSplitPane horizontalSplitPane = new JSplitPane();
         horizontalSplitPane.setResizeWeight(0.3D);
         horizontalSplitPane.setDividerLocation(0.3D);
         horizontalSplitPane.setRightComponent(lessonPanel);
