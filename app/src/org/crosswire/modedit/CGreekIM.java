@@ -127,14 +127,14 @@ public class CGreekIM extends SWInputMethod {
         characterMap.put( new Integer( 't' ), new String( new char [ ] { 0x03c4 } ) );
         characterMap.put( new Integer( 'u' ), new String( new char [ ] { 0x03c5 } ) );
         characterMap.put( new Integer( 'f' ), new String( new char [ ] { 0x03c6 } ) );
-        characterMap.put( new Integer( 'c' ), new String( new char [ ] { 0x03be } ) );
+        characterMap.put( new Integer( 'c' ), new String( new char [ ] { 0x03c7 } ) );
         characterMap.put( new Integer( 'y' ), new String( new char [ ] { 0x03c8 } ) );
         characterMap.put( new Integer( 'w' ), new String( new char [ ] { 0x03c9 } ) );
 
         // Upper case alphabet
         characterMap.put( new Integer( 'A' ), new String( new char [ ] { 0x0391 } ) );
         characterMap.put( new Integer( 'B' ), new String( new char [ ] { 0x0392 } ) );
-        characterMap.put( new Integer( 'C' ), new String( new char [ ] { 0x0393 } ) );
+        characterMap.put( new Integer( 'G' ), new String( new char [ ] { 0x0393 } ) );
         characterMap.put( new Integer( 'D' ), new String( new char [ ] { 0x0394 } ) );
         characterMap.put( new Integer( 'E' ), new String( new char [ ] { 0x0395 } ) );
         characterMap.put( new Integer( 'Z' ), new String( new char [ ] { 0x0396 } ) );
@@ -153,7 +153,7 @@ public class CGreekIM extends SWInputMethod {
         characterMap.put( new Integer( 'T' ), new String( new char [ ] { 0x03a4 } ) );
         characterMap.put( new Integer( 'U' ), new String( new char [ ] { 0x03a5 } ) );
         characterMap.put( new Integer( 'F' ), new String( new char [ ] { 0x03a6 } ) );
-        characterMap.put( new Integer( 'C' ), new String( new char [ ] { 0x039e } ) );
+        characterMap.put( new Integer( 'C' ), new String( new char [ ] { 0x03a7 } ) );
         characterMap.put( new Integer( 'Y' ), new String( new char [ ] { 0x03a8 } ) );
         characterMap.put( new Integer( 'W' ), new String( new char [ ] { 0x03a9 } ) );
 
