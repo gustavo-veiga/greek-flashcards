@@ -69,6 +69,7 @@ public class EditorFrame extends JFrame {
     //
     // Attributes
     //
+    String cwdPath = "./";
 
     JPanel contentPane;
     JToolBar jToolBar = new JToolBar();
@@ -295,7 +296,7 @@ public class EditorFrame extends JFrame {
                 lesson.setProperty("word"+Integer.toString(i), we.word);
                 lesson.setProperty("answers"+Integer.toString(i), we.answers);
             }
-            lesson.store(new FileOutputStream(lesson.getProperty("fileName")),
+            lesson.store(new FileOutputStream(cwdPath + "/" + lesson.getProperty("fileName")),
                          "Flash Lesson");
         } catch (IOException ex) { ex.printStackTrace(); }
     }
@@ -379,10 +380,11 @@ public class EditorFrame extends JFrame {
                 }
                 public String getDescription() { return "Flash Card Lessons"; }
             });
-        dialog.setCurrentDirectory(new File("./"));
+        dialog.setCurrentDirectory(new File(cwdPath));
         if (dialog.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
                 loadLesson(dialog.getSelectedFile().getCanonicalPath());
+                cwdPath = dialog.getCurrentDirectory().getCanonicalPath();
             } catch( IOException ioe ) {
                 ioe.printStackTrace( );
             }
