@@ -22,6 +22,7 @@ package org.crosswire.flashcards;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -143,6 +144,7 @@ public class QuizPane extends JPanel
         choicesPanelGridLayout.setRows(0);
 
         statusPanel.setLayout(statusPanelBorderLayout);
+        statusBar.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         statusPanel.add(statusBar, BorderLayout.CENTER);
         statusPanel.add(wCount, BorderLayout.EAST);
 
@@ -171,6 +173,8 @@ public class QuizPane extends JPanel
 
         gbc.weighty = 0.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.ipadx = 10;
+        gbc.ipady = 10;
         add(statusPanel, gbc);
     }
 
@@ -329,7 +333,7 @@ public class QuizPane extends JPanel
             totalAsked++;
             if (ck.getText().compareTo(currentWord.getSide(setupPane.isFlipped())) != 0)
             {
-                statusBar.setText(ck.getText() + " is not correct.  Please try again.");
+                statusBar.setText("Please try again. " + ck.getText() + " is not correct.");
                 wrong++;
                 totalWrong++;
                 ck.setSelected(false);

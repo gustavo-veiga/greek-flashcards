@@ -151,7 +151,7 @@ public class LessonSetPane extends JPanel
      *
      * @param listener the listener
      */
-    public synchronized void addLessonChangeEvent(LessonChangeEventListener listener)
+    public synchronized void addLessonChangeEventListener(LessonChangeEventListener listener)
     {
         listenerList.add(LessonChangeEventListener.class, listener);
     }
