@@ -1,15 +1,15 @@
 #Flash Lesson
 #Mon Sep 27 16:21:36 MST 2004
-answers5=API-2P or AMI-2P
-answers4=API-3P or AMI-3P
-answers3=API-2S or AMI-2S
+answers5=API-2P
+answers4=API-3P
+answers3=API-2S
 word5=\u03B5\u0313\u03BB\u03C5\u0301\u03B8\u03B7\u03C4\u03B5
-answers2=API-1S or AMI-1S
+answers2=API-1S
 wordCount=6
 word4=\u03B5\u0313\u03BB\u03C5\u0301\u03B8\u03B7\u03C3\u03B1\u03BD
-answers1=API-1P or AMI-1P
+answers1=API-1P
 word3=\u03B5\u0313\u03BB\u03C5\u0301\u03B8\u03B7\u03C2
-answers0=API-3S or AMI-3S
+answers0=API-3S
 word2=\u03B5\u0313\u03BB\u03C5\u0301\u03B8\u03B7\u03BD
 word1=\u03B5\u0313\u03BB\u03C5\u0301\u03B8\u03B7\u03BC\u03B5\u03BD
 word0=\u03B5\u0313\u03BB\u03C5\u0301\u03B8\u03B7
