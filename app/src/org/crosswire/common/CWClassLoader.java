@@ -241,13 +241,7 @@ public class CWClassLoader extends ClassLoader
         }
         catch (MalformedURLException e)
         {
-            // assert false;
-            // 
-            // The above statement fails to compile in 1.4, I'm assuming the intent is
-            // to throw an AssertionError; so, 'throw new AssertionError( );'.
-            // John Jacques, john.jacques@bigfoot.com
-            //
-            throw new AssertionError( );
+            assert false;
         }
         return home;
     }
@@ -339,16 +333,9 @@ public class CWClassLoader extends ClassLoader
         }
         catch (MalformedURLException ex)
         {
-            // assert false : ex;
-            // 
-            // The above statement fails to compile in 1.4, I'm assuming the intent is
-            // to throw an AssertionError( ex ); so, 'throw new AssertionError( ex );'.
-            // John Jacques, john.jacques@bigfoot.com
-            //
-            throw new AssertionError( ex );
+            assert false : ex;
 
-            //return null;
-            // unreachable!
+            return null;
         }
     }
 
