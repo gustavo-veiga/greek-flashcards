@@ -28,6 +28,9 @@ import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.io.FilenameFilter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.JarURLConnection;
 
 
 /**
@@ -98,8 +101,28 @@ public class LessonManager {
       * Load this lesson from persistent store named by the lesson's <code>LESSON_ROOT</code>.
       */
      public void load() {
+          // see if there are any jars in our home directory with lesson sets
           loadLessonSetsFromJarDir("./");
+          // see if there are any lesson sets in our home project dir
           loadLessonSetsFromDir(homeLessonDir);
+          // see if there are any lessons on our path
+          // Dig into the jar for lessonSets
+          URL lessonsURL = this.getClass().getResource('/' + LESSON_ROOT);
+          if (lessonsURL == null) {
+              return;
+          }
+          URLConnection connection = null;
+          try {
+              connection = lessonsURL.openConnection();
+          }
+          catch (Exception e1) {
+              assert false;
+          }
+          if (connection instanceof JarURLConnection) {
+               JarURLConnection jarConnection = (JarURLConnection) connection;
+               loadJarLessonSets(new File(jarConnection.getJarFileURL().getFile()));
+          }
+
      }
 
 
