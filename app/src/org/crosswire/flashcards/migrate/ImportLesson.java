@@ -23,6 +23,7 @@ package org.crosswire.flashcards.migrate;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -46,6 +47,8 @@ import com.ibm.icu.text.Normalizer;
  */
 public class ImportLesson extends JWindow
 {
+    private String LESSON_TITLE_PREFIX = "Hebrew Words, part ";
+    private String LESSON_NAME_PREFIX = System.getProperty("user.home") + "/.flashcards/lessons/hebrew/lesson";
     public ImportLesson()
     {
         JFileChooser dialog = new JFileChooser();
@@ -94,6 +97,7 @@ public class ImportLesson extends JWindow
         }
         int SLICE = 100;
         int listSize = list.size();
+        MessageFormat formatter = new MessageFormat("{0}{1,number,00}.flash");
         for (int i = 0; i < listSize; i += SLICE)
         {
             Properties props = new Properties();
@@ -105,10 +109,10 @@ public class ImportLesson extends JWindow
             }
             int count = props.size() / 2;
             props.setProperty("wordCount", Integer.toString(count));
-            props.setProperty("lessonTitle", "Mounce's Most Frequent Words, part " + ((int) i/SLICE + 1));
+            props.setProperty("lessonTitle", LESSON_TITLE_PREFIX + ((int) i/SLICE + 1));
             try
             {
-                props.store(new FileOutputStream("lessons/Mounce/mounce" + ((int) i/SLICE + 1) + ".flash"), "Flash Lesson");
+                props.store(new FileOutputStream(formatter.format(new Object[] { LESSON_NAME_PREFIX, new Integer(i/SLICE + 1)})), "Flash Lesson");
             }
             catch (IOException e)
             {
