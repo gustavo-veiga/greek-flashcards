@@ -108,12 +108,34 @@ public class LessonManager {
       * Load this lesson from persistent store named by the lesson's <code>LESSON_ROOT</code>.
       */
      public void load() {
-          // see if there are any jars in our home directory with lesson sets
+          // see if there are any jars in our CWD with lesson sets
           loadLessonSetsFromJarDir("./");
+
           // see if there are any lesson sets in our home project dir
           loadLessonSetsFromDir(homeLessonDir);
+
+          // find the directory containing this
+          // search all jars in that directory for lesson sets
+          String thisName = this.getClass().getName();
+          String thisRes = "/" + thisName.replace('.', '/') + ".class";
+          URL thisURL = this.getClass().getResource(thisRes);
+          if (thisURL == null) {
+              return;
+          }
+          URLConnection thisCon = null;
+          try {
+              thisCon = thisURL.openConnection();
+          }
+          catch (Exception e1) {
+              assert false;
+          }
+          if (thisCon instanceof JarURLConnection) {
+               JarURLConnection jarConnection = (JarURLConnection) thisCon;
+               loadLessonSetsFromJarDir(new File(jarConnection.getJarFileURL().getFile()).getParent());
+          }
+
           // see if there are any lessons on our path
-          // Dig into the jar for lessonSets
+          // dig into the jar for lessonSets
           URL lessonsURL = this.getClass().getResource('/' + LESSON_ROOT);
           if (lessonsURL == null) {
               return;
@@ -141,6 +163,9 @@ public class LessonManager {
                }
                catch (Exception e) { e.printStackTrace(); }
           }
+
+
+
 
      }
 
