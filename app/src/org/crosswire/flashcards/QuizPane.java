@@ -36,6 +36,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.JOptionPane;
 import java.awt.*;
 
 
@@ -244,47 +245,56 @@ public class QuizPane extends JPanel
     {
         currentWord = w;
         wordText.setText(w.getSide(!setupPane.isFlipped()));
-        Vector choices = (Vector) words.clone();
-        choices.remove(w);
-
-        // randomly pick answers
-        boolean flipped = setupPane.isFlipped();
-        List picks = new ArrayList();
-        picks.add(createAnswerEntry(w.getSide(flipped)));
-        int size = words.size();
-        while (picks.size() < Math.min(10, size))
+        if(setupPane.isNoMultipleChoice())
         {
-            int c = (int) (Math.random() * choices.size());
-            WordEntry wc = (WordEntry) choices.get(c);
-            String answer = wc.getSide(flipped);
+            choicesPanel.invalidate();
+            choicesPanel.validate();
+            choicesPanel.repaint();
+        }
+        else
+        {
+            Vector choices = (Vector) words.clone();
+            choices.remove(w);
 
-            // some times two different word have the same answer
-            if (!picks.contains(answer))
+            // randomly pick answers
+            boolean flipped = setupPane.isFlipped();
+            List picks = new ArrayList();
+            picks.add(createAnswerEntry(w.getSide(flipped)));
+            int size = words.size();
+            while (picks.size() < Math.min(10, size))
             {
-                picks.add(createAnswerEntry(answer));
-            	choices.remove(wc);
+                int c = (int) (Math.random() * choices.size());
+                WordEntry wc = (WordEntry) choices.get(c);
+                String answer = wc.getSide(flipped);
+
+                // some times two different word have the same answer
+                if (!picks.contains(answer))
+                {
+                    picks.add(createAnswerEntry(answer));
+                    choices.remove(wc);
+                }
             }
+            // Now randomize these answers. To do this we swap the first one
+            // with another.
+            int c = (int) (Math.random() * picks.size());
+            // If we have selected something other than ourselves.
+            if (c > 0)
+            {
+                picks.add(0, picks.remove(c));
+                picks.add(c, picks.remove(1));
+            }
+            Iterator iter = picks.iterator();
+            while (iter.hasNext())
+            {
+                choicesPanel.add((Component) iter.next());
+            }
+            wrong = 0;
+            shownAnswer = false;
+            updateStats();
+            choicesPanel.invalidate();
+            choicesPanel.validate();
+            choicesPanel.repaint();
         }
-        // Now randomize these answers. To do this we swap the first one
-        // with another.
-        int c = (int) (Math.random() * picks.size());
-        // If we have selected something other than ourselves.
-        if (c > 0)
-        {
-            picks.add(0, picks.remove(c));
-            picks.add(c, picks.remove(1));
-        }
-        Iterator iter = picks.iterator();
-        while (iter.hasNext())
-        {
-            choicesPanel.add((Component) iter.next());
-        }
-        wrong = 0;
-        shownAnswer = false;
-        updateStats();
-        choicesPanel.invalidate();
-        choicesPanel.validate();
-        choicesPanel.repaint();
     }
 
 
@@ -303,8 +313,9 @@ public class QuizPane extends JPanel
         {
             percent = (int) ((((float) (totalAsked - totalWrong)) / (float) totalAsked) * (float) 100);
         }
-        wCount.setText(Integer.toString(notLearned.size()) + " | " + Integer.toString(totalAsked - totalWrong) + "/" + Integer.toString(totalAsked) + " ("
-                        + Integer.toString(percent) + "%)");
+        wCount.setText(Integer.toString(notLearned.size()) + " | " +
+                       Integer.toString(totalAsked - totalWrong) + "/" + Integer.toString(totalAsked) +
+                       " (" + Integer.toString(percent) + "%)");
     }
 
 
@@ -366,21 +377,51 @@ public class QuizPane extends JPanel
 
     void showAnswerButton_actionPerformed(ActionEvent e)
     {
-        if (!shownAnswer)
+        if (setupPane.isNoMultipleChoice())
         {
+            ++totalAsked;
+            String dialogString = new String(currentWord.getSide(!setupPane.isFlipped())+"\n"+
+                                             currentWord.getSide(setupPane.isFlipped())+"\n"+
+                                             "Did You Get It Right?\n");
+            int choice = JOptionPane.showConfirmDialog(this,dialogString,"Result",
+                                                       JOptionPane.YES_NO_OPTION);
+            if (JOptionPane.YES_OPTION == choice)
+            {
+                notLearned.remove(currentWord);
+            }
+            else
+            {
+                ++totalWrong;
+            }
+            updateStats();
+            if (notLearned.size() > 0)
+            {
+                showRandomWord(currentWord);
+            }
+            else
+            {
+                wordText.setText("-=+* Great! *+=-");
+                statusBar.setText("Nice Job!  You've mastered all " + words.size() + " words!");
+            }
+        }
+        else
+        {
+            if (!shownAnswer)
+            {
+                showAnswer();
+                return;
+            }
+            int next = notLearned.indexOf(currentWord) + 1;
+            if (next == 0)
+            {
+                return;
+            }
+            if (next >= notLearned.size())
+                next = 0;
+            deleteChildren(choicesPanel);
+            showWord((WordEntry) notLearned.get(next));
             showAnswer();
-            return;
         }
-        int next = notLearned.indexOf(currentWord) + 1;
-        if (next == 0)
-        {
-            return;
-        }
-        if (next >= notLearned.size())
-            next = 0;
-        deleteChildren(choicesPanel);
-        showWord((WordEntry) notLearned.get(next));
-        showAnswer();
     }
 
 }
