@@ -33,7 +33,7 @@ import javax.swing.JSplitPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.crosswire.common.swing.FixedSplitPane;
+//import org.crosswire.common.swing.FixedSplitPane;
 
 
 /**
@@ -166,20 +166,20 @@ public class EditPane extends JPanel
             }
         });
 
-        JSplitPane lessonSplitPane = new FixedSplitPane();
+        JSplitPane lessonSplitPane = new JSplitPane();
         lessonSplitPane.setResizeWeight(0.5D);
         lessonSplitPane.setDividerLocation(0.5D);
         lessonSplitPane.setLeftComponent(lessonSetPanel);
         lessonSplitPane.setRightComponent(lessonPanel);
 
-        JSplitPane flashCardSplitPane = new FixedSplitPane();
+        JSplitPane flashCardSplitPane = new JSplitPane();
         flashCardSplitPane.setResizeWeight(0.5D);
         flashCardSplitPane.setDividerLocation(0.5D);
         flashCardSplitPane.setLeftComponent(flashCardPanel);
         flashCardSplitPane.setRightComponent(flashCardEditor);
         flashCardSplitPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Flash Cards: "));
 
-        JSplitPane verticalSplitPane = new FixedSplitPane(JSplitPane.VERTICAL_SPLIT);
+        JSplitPane verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         verticalSplitPane.setDividerLocation(0.35D);
         verticalSplitPane.setResizeWeight(0.35D);
         verticalSplitPane.setTopComponent(lessonSplitPane);
