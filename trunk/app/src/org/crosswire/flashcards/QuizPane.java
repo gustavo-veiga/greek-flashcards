@@ -367,7 +367,6 @@ public class QuizPane extends JPanel
         }
     }
 
-
     public void showAnswer()
     {
         for (int i = 0; i < choicesPanel.getComponentCount(); i++)
