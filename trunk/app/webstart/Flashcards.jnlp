@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE jnlp PUBLIC "-//Sun Microsystems, Inc//DTD JNLP Descriptor 1.0//EN" "jnlp.dtd">
 
-<jnlp spec="1.0+" codebase="http://www.crosswire.org/flashcards/webstart" href="FlashCards.jnlp">
+<jnlp spec="1.0+" codebase="http://www.crosswire.org/flashcards/webstart" href="Flashcards.jnlp">
 
   <information>
     <title>Flashcards</title>
@@ -31,7 +31,7 @@
     <jar href="flashcards.jar"/>
     <!-- if on the Apple Mac, make it play well -->
     <property name="apple.laf.useScreenMenuBar" value="true"/>
-    <property name="com.apple.mrj.application.apple.menu.about.name" value="FlashCards"/>
+    <property name="com.apple.mrj.application.apple.menu.about.name" value="Flashcards"/>
   </resources>
 
   <application-desc main-class="org.crosswire.flashcards.Quiz"/>
