@@ -1,0 +1,5 @@
+This file attempts to convert Bible Works Hebrew font encoding to Unicode.
+The input file should be a 2 column CSV file: Column 1 being the Hebrew word,
+and column 2 being the definition.  The output file will be an almost usable
+flashcard .flash lesson.  You will need to manual edit to add the lesson name
+in the very first property in the file.
