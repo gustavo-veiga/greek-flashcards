@@ -4,12 +4,12 @@
 <jnlp spec="1.0+" codebase="http://www.crosswire.org/flashcards/webstart" href="FlashCards.jnlp">
 
   <information>
-    <title>Flash Card</title>
+    <title>Flashcards</title>
     <vendor>Crosswire Bible Society</vendor>
     <homepage href="http://www.crosswire.org/flashcards"/>
-    <description>Flash Card - A tool for memorizing vocabulary</description>
-    <description kind="short">Flash Card - A tool for learning vocabulary</description>
-    <description kind="tooltip">Flash Cards Memorization Tool</description>
+    <description>Flashcards - A tool for memorizing vocabulary</description>
+    <description kind="short">Flashcards - A tool for learning vocabulary</description>
+    <description kind="tooltip">Flashcards Memorization Tool</description>
 <!-- Put icons here
     <icon href="icon32.png"/>
     <icon kind="splash" href="icon64.png"/>
