@@ -93,9 +93,37 @@ public class Ibycus4IM extends SWInputMethod {
         char inputUpper = Character.toUpperCase( input );
         StringBuffer returnValue = new StringBuffer( );
 
-        //System.out.println( "state=" + getState( ) + " input=" + input + " inputUpper=" + inputUpper );
+        //System.out.println( "state=" + getState( ) +
+        //                    " input=" + Integer.toHexString( ( int ) input ) );
 
-        if( 0 < getState( ) ) {
+        if( 0 == getState( ) ) {
+
+            if( ( 'S' == inputUpper ) ) {
+
+                // Sigma
+                setState( input );
+
+            } else {
+
+                String translation = ( String ) characterMap.get( new Integer( input ) );
+
+                if( null == translation ) {
+
+                    returnValue.append( input );
+
+                } else {
+
+                    returnValue.append( translation );
+
+                }
+
+                //System.out.println( "Returning : " + returnValue.toString( ) );
+                setState( 0 );
+                return returnValue.toString( );
+
+            }
+
+        } else {
 
             // Second character of a multi-character sequence
 
@@ -144,36 +172,6 @@ public class Ibycus4IM extends SWInputMethod {
 
             }
 
-        } else {
-
-            // A new start
-
-            // Handle sigma
-
-            if( ( 'S' == inputUpper ) ) {
-
-                setState( input );
-
-            } else {
-
-                String translation = ( String ) characterMap.get( new Integer( input ) );
-
-                if( null == translation ) {
-
-                    returnValue.append( input );
-
-                } else {
-
-                    returnValue.append( translation );
-
-                }
-
-                //System.out.println( "Returning : " + returnValue.toString( ) );
-                setState( 0 );
-                return returnValue.toString( );
-
-            }
-
         }
 
         return null;
@@ -218,8 +216,8 @@ public class Ibycus4IM extends SWInputMethod {
         characterMap.put( new Integer( 'P' ), new String( new char [ ] { 0x03a0 } ) );
         characterMap.put( new Integer( 'r' ), new String( new char [ ] { 0x03c1 } ) );
         characterMap.put( new Integer( 'R' ), new String( new char [ ] { 0x03a1 } ) );
-        characterMap.put( new Integer( 't' ), new String( new char [ ] { 0x03c3 } ) );
-        characterMap.put( new Integer( 'T' ), new String( new char [ ] { 0x03a3 } ) );
+        characterMap.put( new Integer( 't' ), new String( new char [ ] { 0x03c4 } ) );
+        characterMap.put( new Integer( 'T' ), new String( new char [ ] { 0x03a4 } ) );
         characterMap.put( new Integer( 'u' ), new String( new char [ ] { 0x03c5 } ) );
         characterMap.put( new Integer( 'U' ), new String( new char [ ] { 0x03a5 } ) );
         characterMap.put( new Integer( 'f' ), new String( new char [ ] { 0x03c6 } ) );

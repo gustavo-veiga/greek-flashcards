@@ -111,7 +111,17 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
 
                     if( 'T' == getState( ) ) { returnValue.append( new char [ ] { 0x03a4 } ); }
                     else if( 't' == getState( ) ) { returnValue.append( new char [ ] { 0x03c4 } ); }
-                    returnValue.append( new String( ) + input );
+                    String translation = ( String ) characterMap.get( new Integer( input ) );
+
+                    if( null == translation ) {
+
+                        returnValue.append( input );
+
+                    } else {
+
+                        returnValue.append( translation );
+
+                    }
 
                 }
 
