@@ -29,7 +29,7 @@ all : flashcards
 clean :
 	rm -rf classes
 
-flashcards :
+flashcards : clean
 	@$(CHECK_CLASSES_DIRECTORY)
 	$(JAVAC) -g -d $(CLASSES_DIRECTORY) `find . -type f -name '*.java'`
 	cd src ; \
@@ -39,8 +39,5 @@ flashcards :
 	cd $(CLASSES_DIRECTORY) ; \
 	jar cvmf org/crosswire/flashcards/flashcards.manifest flashcards.jar org lessons
 
-Editor :
-	java -classpath classes org.crosswire.flashcards.Editor &
-
-Quiz :
-	java -classpath classes org.crosswire.flashcards.Quiz &
+run :
+	java -jar classes/flashcards.jar &

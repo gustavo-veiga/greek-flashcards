@@ -80,7 +80,7 @@ public class UniTextEdit extends JPanel {
   JMenu jMenu2 = new JMenu();
   JMenuItem jMenuItem4 = new JMenuItem();
   JMenuItem jMenuItem5 = new JMenuItem();
-BorderLayout borderLayout6 = new BorderLayout();
+  BorderLayout borderLayout6 = new BorderLayout();
 
   /**Construct the frame*/
   public UniTextEdit() {
@@ -352,7 +352,7 @@ BorderLayout borderLayout6 = new BorderLayout();
 
 
   public void addPropertyChangeListener(PropertyChangeListener l) {
-    jTextArea1.addPropertyChangeListener(l);
+      //jTextArea1.addPropertyChangeListener(l);
   }
 
 
