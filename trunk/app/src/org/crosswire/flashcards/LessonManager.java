@@ -67,6 +67,12 @@ public class LessonManager {
                e1.printStackTrace();
           }
           load();
+          try {
+               jbInit();
+          }
+          catch (Exception ex) {
+               ex.printStackTrace();
+          }
      }
 
 
@@ -124,6 +130,10 @@ public class LessonManager {
                try {
 
                     String uri = jarConnection.getJarFileURL().toString();
+                    //stupid bug with webstart
+                    if ((uri.startsWith("file:")) && (!uri.startsWith("file:/"))) {
+                         uri = "file:/" + uri.substring(5);
+                    }
                     int value =  JOptionPane.showConfirmDialog(null, uri,
                                      "Text Edit", JOptionPane.OK_OPTION) ;
 
@@ -244,5 +254,9 @@ public class LessonManager {
 
      public String getHomeProjectPath() {
           return homeProjectPath;
+     }
+
+
+     private void jbInit() throws Exception {
      }
 }
