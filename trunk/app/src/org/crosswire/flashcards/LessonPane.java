@@ -43,7 +43,7 @@ import javax.swing.event.ListSelectionListener;
  * 
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
-public class LessonPane extends JPanel implements ListSelectionListener
+public class LessonPane extends JPanel
 {
     private JList lessonList = new JList(new DefaultListModel());
     private LessonSet lessonSet;
@@ -148,17 +148,9 @@ public class LessonPane extends JPanel implements ListSelectionListener
         
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-     */
-    public void valueChanged(ListSelectionEvent e)
+    public void loadLessons(LessonSet aLessonSet)
     {
-        if (e.getValueIsAdjusting())
-        {
-            return;
-        }
-        JList list = (JList) e.getSource();
-        lessonSet = (LessonSet) list.getSelectedValue();
+        lessonSet = aLessonSet;
         DefaultListModel model = (DefaultListModel) lessonList.getModel();
         model.clear();
         if (lessonSet != null)
@@ -170,7 +162,7 @@ public class LessonPane extends JPanel implements ListSelectionListener
                 model.addElement(lesson);
             }
         }
-        enableControls();
+        enableControls();        
     }
 
     private void enableControls()
@@ -184,7 +176,7 @@ public class LessonPane extends JPanel implements ListSelectionListener
      *
      * @param listener the listener
      */
-    public synchronized void addLessonChangeEvent(LessonChangeEventListener listener)
+    public synchronized void addLessonChangeEventListener(LessonChangeEventListener listener)
     {
         listenerList.add(LessonChangeEventListener.class, listener);
     }

@@ -25,8 +25,11 @@ import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.crosswire.common.swing.FixedSplitPane;
 
@@ -71,10 +74,43 @@ public class SetupPane extends JPanel
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
                         "Select a Lesson Set, then one or more Lessons: "));
 
-        FlashCardPane flashCardPanel = new FlashCardPane();
+        final FlashCardPane flashCardPanel = new FlashCardPane();
 
-        lessonSetPanel.addListSelectionListener(lessonPanel);
-        lessonPanel.addListSelectionListener(flashCardPanel);
+        lessonSetPanel.addListSelectionListener(new ListSelectionListener()
+                        {
+            /* (non-Javadoc)
+             * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+             */
+            public void valueChanged(ListSelectionEvent e)
+            {
+                if (e.getValueIsAdjusting())
+                {
+                    return;
+                }
+                JList list = (JList) e.getSource();
+                lessonPanel.loadLessons((LessonSet) list.getSelectedValue());
+            }
+        });
+
+        lessonPanel.addListSelectionListener(new ListSelectionListener()
+                        {
+            /* (non-Javadoc)
+             * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+             */
+            public void valueChanged(ListSelectionEvent e)
+            {
+                if (e.getValueIsAdjusting())
+                {
+                    return;
+                }
+                JList list = (JList) e.getSource();
+                Object[] selections = list.getSelectedValues();
+                if (selections != null && selections.length == 1)
+                {
+                    flashCardPanel.loadFlashCards((Lesson) selections[0]);
+                }
+            }
+        });
 
         JSplitPane horizontalSplitPane = new FixedSplitPane();
         horizontalSplitPane.setResizeWeight(0.3D);

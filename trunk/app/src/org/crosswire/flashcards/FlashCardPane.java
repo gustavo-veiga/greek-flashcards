@@ -46,12 +46,9 @@ import org.crosswire.common.swing.RowTableModel;
  * 
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
-public class FlashCardPane extends JPanel implements ListSelectionListener
+public class FlashCardPane extends JPanel implements FlashCardEventListener
 {
     private RowTable wordList = new RowTable(new ArrayList(), new FlashCardColumns());
-    private boolean editable;
-    private JMenuItem newItem;
-    private JMenuItem deleteItem;
     private Lesson lesson;
 
     /**
@@ -70,7 +67,6 @@ public class FlashCardPane extends JPanel implements ListSelectionListener
      */
     public FlashCardPane(boolean allowsEdits)
     {
-        editable = allowsEdits;
         try
         {
             jbInit();
@@ -85,57 +81,24 @@ public class FlashCardPane extends JPanel implements ListSelectionListener
     //Component initialization
     private void jbInit() throws Exception
     {
+        wordList.setShowGrid(false);
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Flash Cards: "));
 
         wordList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         add(new JScrollPane(wordList), BorderLayout.CENTER);
-
-        JMenuBar menuBar = new JMenuBar();
-        JMenu editMenu = new JMenu("Edit");
-        newItem = new JMenuItem("New Flash Card");
-        deleteItem = new JMenuItem("Delete Flash Card");
-        menuBar.add(editMenu);
-        editMenu.add(newItem);
-        editMenu.add(deleteItem);
-        if (editable)
-        {
-            add(menuBar, BorderLayout.NORTH);
-        }
-        enableControls();
-        newItem.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                FlashCardEditor flashCardEditor = new FlashCardEditor();
-                flashCardEditor.showInDialog(FlashCardPane.this);
-            }
-        });
-        deleteItem.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                deleteSelected();
-            }
-        });
-        wordList.addListSelectionListener(new ListSelectionListener()
-       {
-
-            public void valueChanged(ListSelectionEvent e)
-            {
-                if (e.getValueIsAdjusting())
-                {
-                    return;
-                }
-                enableControls();
-            }
-
-        });
     }
 
     public boolean contains(FlashCard flashCard)
     {
         return lesson.contains(flashCard);
+    }
+
+    public FlashCard getFlashCard(int i)
+    {
+        FlashCard flashCard = null;
+        RowTableModel model = (RowTableModel) wordList.getModel();
+        flashCard = (FlashCard) model.getRow(i);
+        return flashCard;
     }
 
     public void add(FlashCard flashCard)
@@ -144,7 +107,8 @@ public class FlashCardPane extends JPanel implements ListSelectionListener
         RowTableModel model = (RowTableModel) wordList.getModel();
         model.addRow(flashCard);
         wordList.selectRow(model.getRow(flashCard));
-        
+        wordList.validate();
+        wordList.repaint();
         fireLessonChanged(new LessonChangeEvent(this));
     }
 
@@ -155,35 +119,41 @@ public class FlashCardPane extends JPanel implements ListSelectionListener
         FlashCard flashCard = (FlashCard) model.getRow(row);
         lesson.remove(flashCard);
         model.removeRow(flashCard);
+        wordList.validate();
+        wordList.repaint();
         fireLessonChanged(new LessonChangeEvent(this));
     }
 
-    protected void enableControls()
+    public void replaceSelected(FlashCard newFlashCard)
     {
-        newItem.setEnabled(lesson != null);
-        int selectedRow = wordList.getSelectedRow();
-        deleteItem.setEnabled(-1 != selectedRow);
+        int row = wordList.getSelectedRow();
+        RowTableModel model = (RowTableModel) wordList.getModel();
+        FlashCard flashCard = (FlashCard) model.getRow(row);
+        lesson.remove(flashCard);
+        model.removeRow(flashCard);
+        lesson.add(newFlashCard);
+        model.addRow(newFlashCard);
+        wordList.selectRow(model.getRow(newFlashCard));
+        wordList.validate();
+        wordList.repaint();
+        fireLessonChanged(new LessonChangeEvent(this));
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+    /**
+     * @param lessonPanel
      */
-    public void valueChanged(ListSelectionEvent e)
+    public void addListSelectionListener(ListSelectionListener listener)
     {
-        if (e.getValueIsAdjusting())
-        {
-            return;
-        }
+        wordList.addListSelectionListener(listener);
+    }
 
-        JList list = (JList) e.getSource();
+    public void loadFlashCards(Lesson aLesson)
+    {
         RowTableModel model = (RowTableModel) wordList.getModel();
         model.clear();
-        lesson = null;
-        // If only one is selected then we show its flash cards
-        Object[] lessons = list.getSelectedValues();
-        if (lessons != null && lessons.length == 1)
+        lesson = aLesson;
+        if (lesson != null)
         {
-            lesson = (Lesson) lessons[0];
             Iterator flashCardIterator = lesson.iterator();
             while (flashCardIterator.hasNext())
             {
@@ -191,7 +161,28 @@ public class FlashCardPane extends JPanel implements ListSelectionListener
                 model.addRow(flashCard);
             }
         }
-        enableControls();
+    }
+
+    /* (non-Javadoc)
+     * @see org.crosswire.flashcards.FlashCardEventListener#flashCardChanged(org.crosswire.flashcards.FlashCardEvent)
+     */
+    public void flashCardChanged(FlashCardEvent event)
+    {
+        switch (event.getAction())
+        {
+        case FlashCardEvent.ADDED:
+            add(event.getFlashCard());
+            break;
+        case FlashCardEvent.DELETED:
+            deleteSelected();
+            break;
+        case FlashCardEvent.MODIFIED:
+            replaceSelected(event.getFlashCard());
+            break;
+        default :
+            break;
+        }
+
     }
 
     /**
@@ -199,7 +190,7 @@ public class FlashCardPane extends JPanel implements ListSelectionListener
      *
      * @param listener the listener
      */
-    public synchronized void addLessonChangeEvent(LessonChangeEventListener listener)
+    public synchronized void addLessonChangeEventListener(LessonChangeEventListener listener)
     {
         listenerList.add(LessonChangeEventListener.class, listener);
     }
@@ -209,7 +200,7 @@ public class FlashCardPane extends JPanel implements ListSelectionListener
      *
      * @param listener the listener
      */
-    public synchronized void removeLessonChangeEvent(LessonChangeEventListener listener)
+    public synchronized void removeLessonChangeEventListener(LessonChangeEventListener listener)
     {
         listenerList.remove(LessonChangeEventListener.class, listener);
     }

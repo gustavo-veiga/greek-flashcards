@@ -22,18 +22,18 @@ package org.crosswire.flashcards;
 
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.WindowConstants;
+import javax.swing.event.EventListenerList;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.crosswire.modedit.UniTextEdit;
 
@@ -54,6 +54,10 @@ public class FlashCardEditor extends JPanel
     private JTextField answers = new JTextField();
     private UniTextEdit wordText = new UniTextEdit();
     protected JDialog dlgMain;
+    private FlashCard flashCard;
+    private JButton btnAdd = new JButton("Add");
+    private JButton btnModify = new JButton("Modify");
+    private JButton btnDelete = new JButton("Delete");
 
     //
     // Methods
@@ -77,108 +81,150 @@ public class FlashCardEditor extends JPanel
     private void jbInit() throws Exception
     {
         setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEtchedBorder());
 
         wordText.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Front"));
         wordText.setText("");
         wordText.showIMSelect(true);
         wordText.setComponentOrientation(ComponentOrientation.UNKNOWN);
         wordText.setFontSize(30);
-        add(wordText, BorderLayout.CENTER);
+        add(wordText, BorderLayout.NORTH);
 
         answers.setSelectionStart(0);
         answers.setText("");
         answerPanel.setLayout(new BorderLayout());
         answerPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Back"));
         answerPanel.add(answers);
-        add(answerPanel, BorderLayout.SOUTH);
-    }
-
-    protected boolean createFlashCard(FlashCardPane flashCardPane)
-    {
-        
-        String front = wordText.getText();
-        String back = answers.getText();
-        
-        if (front == null || front.length() == 0)
-        {
-            JOptionPane.showMessageDialog(null, "Front is empty", "Unable to Create Flash Card", JOptionPane.PLAIN_MESSAGE);
-            return false;
-        }
-        if (back == null || back.length() == 0)
-        {
-            JOptionPane.showMessageDialog(null, "Back is empty", "Unable to Create Flash Card", JOptionPane.PLAIN_MESSAGE);
-            return false;
-        }
-        // Create a new flash card
-        FlashCard flashCard = new FlashCard();
-        flashCard.setFront(front);
-        flashCard.setBack(back);
-        if (flashCardPane.contains(flashCard))
-        {
-            JOptionPane.showMessageDialog(null, "FlashCard already exists", "Unable to Create Flash Card", JOptionPane.PLAIN_MESSAGE);
-            return false;
-        }
-        flashCardPane.add(flashCard);
-        return true;
-    }
-
-    /**
-     * Open this Panel in it's own dialog box.
-     */
-    public void showInDialog(final FlashCardPane flashCardPane)
-    {
-        dlgMain = new JDialog(JOptionPane.getFrameForComponent(flashCardPane), "Create a Flash Card", true);
-        dlgMain.setSize(new Dimension(320, 240));
-        dlgMain.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-        JComponent contentPane = (JComponent) dlgMain.getContentPane();
-        contentPane.setLayout(new BorderLayout());
-        contentPane.add(this, BorderLayout.CENTER);
-
-        JButton btnAdd = new JButton("Create");
-        
+        add(answerPanel, BorderLayout.CENTER);
         btnAdd.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                if (createFlashCard(flashCardPane))
-                {
-                    wordText.setText("");
-                    answers.setText("");
-                }
+                createFlashCard();
             }
+            
         });
 
-        JButton btnOK = new JButton("OK");
-        btnOK.addActionListener(new ActionListener()
+        btnModify.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                if (createFlashCard(flashCardPane))
-                {
-                    dlgMain.dispose();
-                }
+                modifyFlashCard();
             }
+
         });
 
-
-        JButton btnClose = new JButton("Close");
-        
-        btnClose.addActionListener(new ActionListener()
+        btnDelete.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                dlgMain.dispose();
+                deleteFlashCard();
             }
         });
 
         JPanel pnlButtons = new JPanel();
         pnlButtons.add(btnAdd);
-        pnlButtons.add(btnOK);
-        pnlButtons.add(btnClose);
+        pnlButtons.add(btnModify);
+        pnlButtons.add(btnDelete);
+        add(pnlButtons, BorderLayout.SOUTH);
 
-        contentPane.add(pnlButtons, BorderLayout.SOUTH);
-        dlgMain.setLocationRelativeTo(flashCardPane);
-        dlgMain.show();
+        setActive(false);
+    }
+    
+    public void setFlashCard(FlashCard newFlashCard)
+    {
+        boolean selected = newFlashCard != null;
+        if (selected)
+        {
+            try
+            {
+                flashCard = (FlashCard) newFlashCard.clone();
+            }
+            catch (CloneNotSupportedException e)
+            {
+                assert false;
+            }
+            wordText.setText(flashCard.getFront());
+            answers.setText(flashCard.getBack());
+        }
+        else
+        {
+            wordText.setText("");
+            answers.setText("");
+        }
+        btnDelete.setEnabled(selected);
+        btnModify.setEnabled(selected);
+    }
+    
+    public void setActive(boolean state)
+    {
+        btnAdd.setEnabled(state);
+        btnModify.setEnabled(flashCard != null);
+        btnDelete.setEnabled(state);
+    }
+
+    protected void createFlashCard()
+    {
+        flashCard = new FlashCard();
+        flashCard.setFront(wordText.getText());
+        flashCard.setBack(answers.getText());
+
+        fireFlashCardChanged(new FlashCardEvent(this, flashCard, FlashCardEvent.ADDED));
+    }
+
+    protected void modifyFlashCard()
+    {
+        assert flashCard != null;
+
+        flashCard.setFront(wordText.getText());
+        flashCard.setBack(answers.getText());
+
+        fireFlashCardChanged(new FlashCardEvent(this, flashCard, FlashCardEvent.MODIFIED));
+    }
+
+    protected void deleteFlashCard()
+    {
+        fireFlashCardChanged(new FlashCardEvent(this, flashCard, FlashCardEvent.DELETED));
+    }
+
+    /**
+     * Adds a view event listener for notification of any changes to the view.
+     *
+     * @param listener the listener
+     */
+    public synchronized void addFlashCardEventListener(FlashCardEventListener listener)
+    {
+        listenerList.add(FlashCardEventListener.class, listener);
+    }
+
+    /**
+     * Removes a view event listener.
+     *
+     * @param listener the listener
+     */
+    public synchronized void removeFlashCardEventListener(FlashCardEventListener listener)
+    {
+        listenerList.remove(FlashCardEventListener.class, listener);
+    }
+
+    /**
+     * Notify the listeners that the view has been removed.
+     *
+     * @param e the event
+     * @see EventListenerList
+     */
+    public void fireFlashCardChanged(FlashCardEvent e)
+    {
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2)
+        {
+            if (listeners[i] == FlashCardEventListener.class)
+            {
+                ((FlashCardEventListener) listeners[i + 1]).flashCardChanged(e);
+            }
+        }
     }
 }
