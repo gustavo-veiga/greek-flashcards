@@ -22,22 +22,21 @@ fi
 ######################################################################
 # Targets
 
-.PHONY : clean flashcards Editor Quiz
+.PHONY : all clean jar classes
 
-all : flashcards
+all : clean jar
 
 clean :
 	rm -rf classes
 
-flashcards : clean
-	@$(CHECK_CLASSES_DIRECTORY)
-	$(JAVAC) -g -source 1.4 -d $(CLASSES_DIRECTORY) `find . -type f -name '*.java'`
-	cd src ; \
-	tar cf - `find . -type f | egrep -v '\.svn'` | ( cd $(CLASSES_DIRECTORY) ; tar xvf - )
-	cd .. ; \
-	tar cf - `find lessons -type f | egrep -v '\.svn'` | ( cd $(CLASSES_DIRECTORY) ; tar xvf - )
+jar : classes
 	cd $(CLASSES_DIRECTORY) ; \
 	jar cvmf org/crosswire/flashcards/flashcards.manifest flashcards.jar org lessons
 
-run :
-	java -jar classes/flashcards.jar &
+classes : clean
+	@$(CHECK_CLASSES_DIRECTORY)
+	$(JAVAC) -g -source 1.4 -d $(CLASSES_DIRECTORY) `find . -type f -name '*.java'`
+	cd src ; \
+	tar cf - `find . -type f | egrep -v '\.svn'` | ( cd $(CLASSES_DIRECTORY) ; tar xf - )
+	cd .. ; \
+	tar cf - `find lessons -type f | egrep -v '\.svn'` | ( cd $(CLASSES_DIRECTORY) ; tar xf - )
