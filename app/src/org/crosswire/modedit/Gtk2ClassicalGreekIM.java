@@ -2,7 +2,7 @@
 //
 // Gtk2ClassicalGreekIM.java
 //
-// Input Method to match the Emacs cgreek package.
+// Input Method to match GTK2's im-classasicalgreek.
 //
 // Copyright : 2004 CrossWire Bible Society http://crosswire.org
 //
@@ -166,10 +166,15 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
 
             } else if( ( 'j' == getState( ) ) || ( 'j' == getState( ) ) ) {
 
+                // Smooth Breathing
+
                 returnValue.append( characterMap.get( new Integer( input ) ) );
 
                 if( ( 'A' == inputUpper ) ||
+                    ( 'E' == inputUpper ) ||
                     ( 'Q' == inputUpper ) ||
+                    ( 'I' == inputUpper ) ||
+                    ( 'O' == inputUpper ) ||
                     ( 'W' == inputUpper ) ) {
 
                     returnValue.append( new char [ ] { 0x0313 } );
@@ -182,10 +187,15 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
 
             } else if( ( 'h' == getState( ) ) || ( 'H' == getState( ) ) ) {
 
+                // Rough Breathing
+
                 returnValue.append( characterMap.get( new Integer( input ) ) );
 
                 if( ( 'A' == inputUpper ) ||
+                    ( 'E' == inputUpper ) ||
                     ( 'Q' == inputUpper ) ||
+                    ( 'I' == inputUpper ) ||
+                    ( 'O' == inputUpper ) ||
                     ( 'W' == inputUpper ) ) {
 
                     returnValue.append( new char [ ] { 0x0314 } );
@@ -195,6 +205,12 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
                 //System.out.println( "Returning : " + returnValue.toString( ) );
                 setState( 0 );
                 return returnValue.toString( );
+
+            } else {
+
+                // Something is WRONG!  The current state is NOT valid...
+                setState( 0 );
+                return null;
 
             }
 
