@@ -94,7 +94,7 @@ public class CGreekIM extends SWInputMethod {
 
         if( returnValue == null ) {
 
-            returnValue = new String() + input;
+            returnValue = new String( ) + input;
 
         }
 
@@ -167,7 +167,7 @@ public class CGreekIM extends SWInputMethod {
         characterMap.put( new Integer( '\'' ), new String( new char [ ] { 0x0313 } ) );
         characterMap.put( new Integer( 'v' ),  new String( new char [ ] { 0x0313 } ) );
 
-        // smooth breathing
+        // rough breathing
         characterMap.put( new Integer( '`' ), new String( new char [ ] { 0x0314 } ) );
         characterMap.put( new Integer( 'V' ), new String( new char [ ] { 0x0314 } ) );
 
