@@ -1,4 +1,4 @@
-package flash;
+package org.crosswire.flashcards;
 
 import javax.swing.UIManager;
 import java.awt.*;
@@ -12,12 +12,12 @@ import java.awt.*;
  * @version 1.0
  */
 
-public class Editor {
+public class Quiz {
   boolean packFrame = false;
 
   //Construct the application
-  public Editor() {
-    EditorFrame frame = new EditorFrame();
+  public Quiz() {
+    MainFrame frame = new MainFrame();
     //Validate frames that have preset sizes
     //Pack frames that have useful preferred size info, e.g. from their layout
     if (packFrame) {
@@ -46,6 +46,6 @@ public class Editor {
     catch(Exception e) {
       e.printStackTrace();
     }
-    new Editor();
+    new Quiz();
   }
 }

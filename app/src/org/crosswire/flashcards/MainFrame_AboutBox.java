@@ -1,4 +1,4 @@
-package flash;
+package org.crosswire.flashcards;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -14,7 +14,7 @@ import javax.swing.border.*;
  * @version 1.0
  */
 
-public class EditorFrame_AboutBox extends JDialog implements ActionListener {
+public class MainFrame_AboutBox extends JDialog implements ActionListener {
 
   JPanel panel1 = new JPanel();
   JPanel panel2 = new JPanel();
@@ -36,7 +36,7 @@ public class EditorFrame_AboutBox extends JDialog implements ActionListener {
   String version = "1.0";
   String copyright = "Copyright (c) 2003";
   String comments = "";
-  public EditorFrame_AboutBox(Frame parent) {
+  public MainFrame_AboutBox(Frame parent) {
     super(parent);
     enableEvents(AWTEvent.WINDOW_EVENT_MASK);
     try {
@@ -48,7 +48,7 @@ public class EditorFrame_AboutBox extends JDialog implements ActionListener {
   }
   //Component initialization
   private void jbInit() throws Exception  {
-    image1 = new ImageIcon(flash.EditorFrame.class.getResource("about.png"));
+    image1 = new ImageIcon(MainFrame.class.getResource("about.png"));
     imageLabel.setIcon(image1);
     this.setTitle("About");
     panel1.setLayout(borderLayout1);
