@@ -1,4 +1,4 @@
-package org.crosswire.common;
+package org.crosswire.common.util;
 
 /**
  * This singleton class provides a way for a method to determine
