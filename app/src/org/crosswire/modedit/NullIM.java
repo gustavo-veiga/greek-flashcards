@@ -16,6 +16,6 @@ public class NullIM extends SWInputMethod {
     }
 
     public String translate(char ch) {
-        return new String() + ch;
+        return String.valueOf(ch);
     }
 }
