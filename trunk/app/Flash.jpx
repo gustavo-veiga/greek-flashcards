@@ -8,7 +8,7 @@
   <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
   <property category="runtime.0" name="ConfigurationName" value="Quiz"/>
   <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
-  <property category="runtime.0" name="application.class" value="flash.Quiz"/>
+  <property category="runtime.0" name="application.class" value="org.crosswire.flashcards.Quiz"/>
   <property category="serverservices" name="single.server.name" value="Tomcat 4.0"/>
   <property category="sys" name="AuthorLabel" value="@author"/>
   <property category="sys" name="BackupPath" value="bak"/>
@@ -48,20 +48,8 @@
   <node name="FlashEditor" type="Archive">
     <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ApplicationArchiver"/>
     <property category="archiving" name="contentRules.1" value="I:**/*.*"/>
-    <property category="archiving" name="manifestMainClass" value="flash.Editor"/>
+    <property category="archiving" name="manifestMainClass" value="org.crosswire.flashcards.Editor"/>
     <property category="archiving" name="targetPath" value="FlashEditor.jar"/>
     <property category="archiving" name="usingRules" value="1"/>
   </node>
-  <file path="src/flash/about.png"/>
-  <file path="src/flash/closeFile.png"/>
-  <file path="src/flash/Editor.java"/>
-  <file path="src/flash/EditorFrame.java"/>
-  <file path="src/flash/EditorFrame_AboutBox.java"/>
-  <file path="Flash.html"/>
-  <file path="src/flash/help.png"/>
-  <file path="src/flash/MainFrame.java"/>
-  <file path="src/flash/MainFrame_AboutBox.java"/>
-  <file path="src/flash/OpenFile.java"/>
-  <file path="src/flash/openFile.png"/>
-  <file path="src/flash/Quiz.java"/>
 </project>
