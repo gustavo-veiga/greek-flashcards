@@ -134,8 +134,8 @@ public class LessonManager {
                     if ((uri.startsWith("file:")) && (!uri.startsWith("file:/"))) {
                          uri = "file:/" + uri.substring(5);
                     }
-                    int value =  JOptionPane.showConfirmDialog(null, uri,
-                                     "Text Edit", JOptionPane.OK_OPTION) ;
+//                    int value =  JOptionPane.showConfirmDialog(null, uri,
+//                                     "Text Edit", JOptionPane.OK_OPTION) ;
 
                     loadJarLessonSets(new File(new java.net.URI(uri)));
                }
