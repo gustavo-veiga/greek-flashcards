@@ -20,15 +20,6 @@
  */
 package org.crosswire.flashcards;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.ComponentOrientation;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -45,11 +36,12 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import java.awt.*;
 
 
 /**
  * A panel that quizzes over a selection of lessons.
- * 
+ *
  * @author Troy A. Griffitts [scribe at crosswire dot org]
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
@@ -73,6 +65,7 @@ public class QuizPane extends JPanel
     GridLayout choicesPanelGridLayout = new GridLayout();
     JPanel statusPanel = new JPanel();
     BorderLayout statusPanelBorderLayout = new BorderLayout();
+    GridBagLayout gridBagLayout1 = new GridBagLayout();
 
     static class WordEntry
     {
@@ -134,13 +127,13 @@ public class QuizPane extends JPanel
         wordText.setFont(new Font("Dialog", 0, 30));
         wordText.setHorizontalAlignment(SwingConstants.CENTER);
         wordText.setHorizontalTextPosition(SwingConstants.CENTER);
- 
+
         statusBar.setBorder(BorderFactory.createEtchedBorder());
         statusBar.setText(" ");
         wCount.setBorder(BorderFactory.createEtchedBorder());
 
         choicesPanel.setLayout(choicesPanelGridLayout);
-        choicesPanelGridLayout.setColumns(2);
+        choicesPanelGridLayout.setColumns(1);
         choicesPanelGridLayout.setRows(0);
 
         statusPanel.setLayout(statusPanelBorderLayout);
@@ -148,34 +141,22 @@ public class QuizPane extends JPanel
         statusPanel.add(statusBar, BorderLayout.CENTER);
         statusPanel.add(wCount, BorderLayout.EAST);
 
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+        setLayout(gridBagLayout1);
 
-        gbc.gridx = 0;
-        gbc.weightx = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(startLessonButton, gbc);
-        
-        gbc.gridx = 2;
-        gbc.anchor = GridBagConstraints.EAST;
-        add(showAnswerButton, gbc);
+        add(startLessonButton,  new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
-        gbc.gridwidth = 3;
-        gbc.gridx = 0;
-        gbc.anchor = GridBagConstraints.NORTH;
-        Insets standardInsets = gbc.insets;
-        gbc.insets = new Insets(30,0,70,0);
-        add(wordText, gbc);
+        add(showAnswerButton,  new GridBagConstraints(2, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
-        gbc.weighty = 1.0;
-        gbc.insets = standardInsets;
-        add(choicesPanel, gbc);
+        add(wordText,  new GridBagConstraints(0, GridBagConstraints.RELATIVE, 3, 1, 1.0, 1.0
+            ,GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-        gbc.weighty = 0.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.ipadx = 10;
-        gbc.ipady = 10;
-        add(statusPanel, gbc);
+        add(choicesPanel,  new GridBagConstraints(0, GridBagConstraints.RELATIVE, 3, 1, 0.0, 1.0
+            ,GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+
+        add(statusPanel,  new GridBagConstraints(0, GridBagConstraints.RELATIVE, 3, 1, 1.0, 0.0
+            ,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 10, 10));
     }
 
     public void deleteChildren(JComponent c)
@@ -265,7 +246,7 @@ public class QuizPane extends JPanel
         wordText.setText(w.getSide(!setupPane.isFlipped()));
         Vector choices = (Vector) words.clone();
         choices.remove(w);
-        
+
         // randomly pick answers
         boolean flipped = setupPane.isFlipped();
         List picks = new ArrayList();
@@ -276,7 +257,7 @@ public class QuizPane extends JPanel
             int c = (int) (Math.random() * choices.size());
             WordEntry wc = (WordEntry) choices.get(c);
             String answer = wc.getSide(flipped);
-            
+
             // some times two different word have the same answer
             if (!picks.contains(answer))
             {
@@ -301,6 +282,8 @@ public class QuizPane extends JPanel
         wrong = 0;
         shownAnswer = false;
         updateStats();
+        choicesPanel.invalidate();
+        choicesPanel.validate();
         choicesPanel.repaint();
     }
 

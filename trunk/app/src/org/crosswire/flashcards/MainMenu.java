@@ -66,11 +66,7 @@ class MainMenu extends JMenuBar {
 
         // Application Menu -> Editor
 
-        item = new JMenuItem( "Edit" );
-        item.addActionListener( new EditAction( ) );
-        menu1.add( item );
-
-        // Application Menu -> Debugging
+         // Application Menu -> Debugging
 
         if( Debug.getEnabled( ) ) {
 
@@ -122,21 +118,6 @@ class MainMenu extends JMenuBar {
     //
     // Classes
     //
-
-    // ---------------
-    class EditAction extends AbstractAction {
-
-        public void actionPerformed( ActionEvent event ) {
-
-            Debug.trace( this.toString( ), "Beginning\n" );
-            JFrame lessonEditor = new EditorFrame( false );
-            lessonEditor.validate( );
-            lessonEditor.setVisible( true );
-            Debug.trace( this.toString( ), "Ending\n" );
-
-        }
-
-    }
 
     // ---------------
     class DebugAction extends AbstractAction {

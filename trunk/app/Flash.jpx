@@ -27,6 +27,8 @@
   <property category="sys" name="IncludeTestPath" value="1"/>
   <property category="sys" name="InstanceVisibility" value="2"/>
   <property category="sys" name="JDK" value="java version 1.4.2_05-b04"/>
+  <property category="sys" name="JbxEventListener0" value="org.crosswire.flashcards.FlashCardEventListener"/>
+  <property category="sys" name="JbxEventListener1" value="org.crosswire.flashcards.FlashCardEventListener"/>
   <property category="sys" name="JvmVersion" value="1.4"/>
   <property category="sys" name="LastTag" value="0"/>
   <property category="sys" name="Libraries" value=""/>
