@@ -48,6 +48,10 @@ import java.awt.*;
  */
 public class QuizPane extends JPanel
 {
+    private static final int NUM_COLUMNS = 3;
+    // NUM_ANSWERS should be a multiple of NUM_COLUMNS.
+    private static final int NUM_ANSWERS = 9;
+    
     SetupPane setupPane;
     Vector words = new Vector();
     Vector notLearned = new Vector();
@@ -134,7 +138,7 @@ public class QuizPane extends JPanel
         wCount.setBorder(BorderFactory.createEtchedBorder());
 
         choicesPanel.setLayout(choicesPanelGridLayout);
-        choicesPanelGridLayout.setColumns(1);
+        choicesPanelGridLayout.setColumns(NUM_COLUMNS);
         choicesPanelGridLayout.setRows(0);
 
         statusPanel.setLayout(statusPanelBorderLayout);
@@ -261,7 +265,7 @@ public class QuizPane extends JPanel
             List picks = new ArrayList();
             picks.add(createAnswerEntry(w.getSide(flipped)));
             int size = words.size();
-            while (picks.size() < Math.min(10, size))
+            while (picks.size() < Math.min(NUM_ANSWERS, size))
             {
                 int c = (int) (Math.random() * choices.size());
                 WordEntry wc = (WordEntry) choices.get(c);
