@@ -30,7 +30,7 @@
 
 package org.crosswire.flashcards;
 
-import java.io.*;
+import java.io.PrintStream;
 
 class Debug {
 

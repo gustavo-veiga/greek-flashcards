@@ -36,6 +36,10 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * 
+ * @author Troy A. Griffitts [scribe at crosswire dot org]
+ */
 public class EditorFrame_AboutBox extends JDialog implements ActionListener {
 
   JPanel panel1 = new JPanel();

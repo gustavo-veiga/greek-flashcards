@@ -34,7 +34,7 @@ import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.crosswire.common.CWClassLoader;
+import org.crosswire.common.util.CWClassLoader;
 
 /**
  * The <code>LessonManager</code> provides the management of <code>LessonSet</code>s.
@@ -42,9 +42,14 @@ import org.crosswire.common.CWClassLoader;
  * @author Troy A. Griffitts [scribe at crosswire dot org]
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
-public class LessonManager implements Comparable
+public class LessonManager
 {
-    public LessonManager()
+    public static LessonManager instance()
+    {
+        return INSTANCE;
+    }
+
+    private LessonManager()
     {
         lessonSets = new TreeSet();
         try
@@ -61,6 +66,14 @@ public class LessonManager implements Comparable
     }
 
     /**
+     * @return the home directory url
+     */
+    public URL getHome()
+    {
+        return CWClassLoader.getHome();
+    }
+
+    /**
      * Appends the specified <code>Lesson</code> to the end of this list.
      *
      * @param flashCard to be appended to this list.
@@ -68,31 +81,6 @@ public class LessonManager implements Comparable
     public void add(LessonSet aLessonSet)
     {
         lessonSets.add(aLessonSet);
-    }
-
-    /**
-     * @return Returns the description.
-     */
-    public String getDescription()
-    {
-        return description;
-    }
-
-    /**
-     * @param description The description to set.
-     */
-    public void setDescription(String newDescription)
-    {
-        description = newDescription;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
-    public int compareTo(Object obj)
-    {
-        LessonManager lesson = (LessonManager) obj;
-        return description.compareTo(lesson.description);
     }
 
     /**
@@ -149,7 +137,7 @@ public class LessonManager implements Comparable
                     if (entryName.startsWith(LESSON_ROOT) && ! entryName.equals(LESSON_ROOT))
                     {
                         // let the description be just the directory name and not the path
-                        add(new LessonSet(entryName, entryName.substring(entryName.indexOf('/') + 1)));
+                        add(new LessonSet(entryName));
                     }
                 }
             }
@@ -183,7 +171,7 @@ public class LessonManager implements Comparable
                     int offset = lessonPath.indexOf(LESSON_ROOT);
                     lessonPath = lessonPath.substring(offset, lessonPath.length());
                     // let the description be just the directory name and not the path
-                    add(new LessonSet(lessonPath, file.getName()));
+                    add(new LessonSet(lessonPath));
                 }
             }
         }
@@ -193,6 +181,23 @@ public class LessonManager implements Comparable
         }
     }
     
+    /**
+     * See if any LessonSet has changes that need to be saved
+     */
+    public boolean isModified()
+    {
+        Iterator iter = lessonSets.iterator();
+        while (iter.hasNext())
+        {
+            LessonSet lessonSet = (LessonSet) iter.next();
+            if (lessonSet.isModified())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Save all the modified lesson sets to persistent store named by the lesson's <code>LESSON_ROOT</code>.
      */
@@ -218,10 +223,7 @@ public class LessonManager implements Comparable
     private static final String DIR_PROJECT = ".flashcards";
     private static final String FILE_PROTOCOL = "file";
 
-    /**
-     * A <code>description</code> of the lesson to be displayed to the user.
-     */
-    private String description;
+    private static final LessonManager INSTANCE = new LessonManager();
 
     /**
      * An ordered list of <code>lessonSets</code>

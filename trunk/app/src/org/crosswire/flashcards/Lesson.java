@@ -18,6 +18,26 @@
  * The copyright to this program is held by it's authors
  * Copyright: 2004
  */
+/*
+ * Distribution Licence:
+ * FlashCard is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License,
+ * version 2 as published by the Free Software Foundation.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * See the GNU General Public License for more details.
+ * The License is available on the internet at:
+ *     http://www.gnu.org/copyleft/gpl.html,
+ * or by writing to:
+ *     Free Software Foundation, Inc.
+ *     59 Temple Place - Suite 330
+ *     Boston, MA 02111-1307, USA
+ * 
+ * The copyright to this program is held by it's authors
+ * Copyright: 2004
+ */
 package org.crosswire.flashcards;
 
 import java.io.File;
@@ -29,8 +49,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.crosswire.common.CWClassLoader;
-import org.crosswire.common.ResourceUtil;
+import org.crosswire.common.util.CWClassLoader;
+import org.crosswire.common.util.ResourceUtil;
+
 
 /**
  * A Lesson is an ordered list of FlashCards.
@@ -42,34 +63,83 @@ import org.crosswire.common.ResourceUtil;
 public class Lesson implements Comparable
 {
     /**
-     * Construct a fully described, empty lesson.
-     * @param filename
-     * @param description
+     * Construct a new, empty lesson.
+     * @param aFilename
      */
-    public Lesson(String filename, String description)
+    public Lesson()
     {
-        this.filename = filename;
-        this.description = description;
-        flashCards = new TreeSet();
-        load();
+        this("NewLesson.flash", "New Lesson");
+        loaded = true;
+        modified = true;
     }
 
     /**
-     * Appends the specified <code>FlashCard</code> to the end of this list.
+     * Construct a lesson from file.
+     * @param aFilename
+     */
+    public Lesson(String aFilename)
+    {
+        this(aFilename, null);
+    }
+
+    /**
+     * Construct a fully described, empty lesson.
+     * @param aFilename
+     * @param aDescription
+     */
+    public Lesson(String aFilename, String aDescription)
+    {
+        this.filename = aFilename;
+        this.description = aDescription;
+        flashCards = new TreeSet();
+    }
+
+    /**
+     * Adds the specified <code>FlashCard</code> to this Lesson.
      *
-     * @param flashCard to be appended to this list.
+     * @param flashCard to be added.
      */
     public void add(FlashCard flashCard)
     {
+        load();
         flashCards.add(flashCard);
     }
 
+    /**
+     * Removes the specified <code>FlashCard</code> from the lesson.
+     *
+     * @param flashCard to be removed.
+     */
+    public void remove(FlashCard flashCard)
+    {
+        load();
+        flashCards.remove(flashCard);
+    }
+
+    /**
+     * @param flashCard
+     * @return
+     */
+    public boolean contains(FlashCard flashCard)
+    {
+        load();
+        return flashCards.contains(flashCard);
+    }
+    
     /**
      * @return Returns the filename.
      */
     public String getFilename()
     {
         return filename;
+    }
+
+    /**
+     * @param filename The filename to set.
+     */
+    public void setFilename(String filename)
+    {
+        this.filename = filename;
     }
 
     /**
@@ -93,10 +163,31 @@ public class Lesson implements Comparable
     }
 
     /**
+     * @return Returns the font.
+     */
+    public String getFont()
+    {
+        return font;
+    }
+
+    /**
+     * @param font The font to set.
+     */
+    public void setFont(String newFont)
+    {
+        if (newFont != null && !newFont.equals(font))
+        {
+            modified = true;
+            font = newFont;
+        }
+    }
+
+    /**
      * @return Returns the flashCards.
      */
     public Iterator iterator()
     {
+        load();
         return flashCards.iterator();
     }
 
@@ -109,7 +200,7 @@ public class Lesson implements Comparable
         {
             return true;
         }
-        Iterator iter = flashCards.iterator();
+        Iterator iter = iterator();
         while (iter.hasNext())
         {
             FlashCard flashCard = (FlashCard) iter.next();
@@ -143,22 +234,29 @@ public class Lesson implements Comparable
      */
     public void load()
     {
-        Properties lesson = new Properties();
+        if (loaded)
+        {
+            return;
+        }
+
+        loaded = true;
+
         try
         {
             URL lessonURL = ResourceUtil.getResource(filename);
+            Properties lesson = new Properties();
             lesson.load(lessonURL.openConnection().getInputStream());
+            int wordCount = Integer.parseInt(lesson.getProperty("wordCount"));
+            for (int i = 0; i < wordCount; i++)
+            {
+                add(new FlashCard(lesson.getProperty("word" + i), lesson.getProperty("answers" + i)));
+            }
         }
         catch (Exception e1)
         {
-            e1.printStackTrace();
+            /* ignore it */;
         }
 
-        int wordCount = Integer.parseInt(lesson.getProperty("wordCount"));
-        for (int i = 0; i < wordCount; i++)
-        {
-            add(new FlashCard(lesson.getProperty("word" + i), lesson.getProperty("answers" + i)));
-        }
     }
 
     /**
@@ -166,6 +264,7 @@ public class Lesson implements Comparable
      */
     public void store()
     {
+        load();
         Properties lesson = new Properties();
         try
         {
@@ -210,6 +309,11 @@ public class Lesson implements Comparable
     private String description;
 
     /**
+     * A path to the <code>font</code> to be used by the lesson.
+     */
+    private String font;
+
+    /**
      * An ordered list of <code>flashCards</code>
      */
     private Set flashCards;
@@ -218,4 +322,10 @@ public class Lesson implements Comparable
      * Flag indicating whether this lesson has been <code>modified</code>
      */
     private boolean modified;
+    
+    /**
+     * Flag indicating whether this lesson has been <code>loaded</code>
+     */
+    private boolean loaded;
+
 }

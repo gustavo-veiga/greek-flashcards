@@ -25,21 +25,18 @@ import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
+import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.crosswire.common.CWClassLoader;
-import org.crosswire.common.ResourceUtil;
+import org.crosswire.common.util.CWClassLoader;
+import org.crosswire.common.util.ResourceUtil;
 
 /**
  * A <code>LessonSet</code> is an ordered list of <code>Lesson</code>s.
@@ -53,10 +50,10 @@ import org.crosswire.common.ResourceUtil;
  */
 public class LessonSet implements Comparable
 {
-    public LessonSet(String dirname, String description)
+    public LessonSet(String aDirname)
     {
-        this.dirname = dirname;
-        this.description = description;
+        dirname = aDirname.toLowerCase();
+        description = dirname.substring(dirname.indexOf('/') + 1);
         lessons = new TreeSet();
         load();
     }
@@ -100,6 +97,17 @@ public class LessonSet implements Comparable
         return dirname;
     }
 
+    public String getNextLessonFilename()
+    {
+        // This needs work: It should check for collisions
+        String result = null;
+        int next = lessons.size();
+        Object [] params = { dirname, new Integer(next) };
+        MessageFormat format = new MessageFormat("{0}/lesson{1,number,00}.flash");
+        result = format.format(params);
+        return result;
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
@@ -116,6 +124,7 @@ public class LessonSet implements Comparable
     {
         return description;
     }
+
     /**
      * Load this lesson set from persistent store named by the lesson set's <code>dirname</code>.
      * This is the union of lessons in the Jar and in the user's flashcard home directory.
@@ -170,10 +179,10 @@ public class LessonSet implements Comparable
             {
                 JarEntry jarEntry = (JarEntry) entries.nextElement();
                 String lessonPath = jarEntry.getName();
-                if (lessonPath.startsWith(dirname) && ! jarEntry.isDirectory())
+                if (lessonPath.startsWith(dirname) && !jarEntry.isDirectory())
                 {
                     String lessonDescription = getLessonDescription(lessonPath);
-                    add(new Lesson(lessonPath, lessonDescription));
+                    lessons.add(new Lesson(lessonPath, lessonDescription));
                 }
             }
         }
@@ -206,7 +215,7 @@ public class LessonSet implements Comparable
                 int offset = lessonPath.indexOf(dirname);
                 lessonPath = lessonPath.substring(offset, lessonPath.length());
                 String lessonDescription = getLessonDescription(lessonPath);
-                add(new Lesson(lessonPath, lessonDescription));
+                lessons.add(new Lesson(lessonPath, lessonDescription));
             }
         }
         catch (Exception e)
@@ -214,7 +223,7 @@ public class LessonSet implements Comparable
             // that's fine.  We just failed to load local files.
         }
     }
-    
+
     /**
      * Get the description of the lesson
      * @param lessonpath the relative path to the lesson
@@ -272,7 +281,7 @@ public class LessonSet implements Comparable
         }
         return false;
     }
-    
+
     public Iterator iterator()
     {
         return lessons.iterator();

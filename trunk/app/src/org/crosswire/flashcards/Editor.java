@@ -30,9 +30,6 @@
 
 package org.crosswire.flashcards;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
 import javax.swing.UIManager;
 
 public class Editor {
@@ -50,7 +47,7 @@ public class Editor {
     // ---------------
     public Editor(LessonManager lessonManager, boolean standAlone ) {
 
-        EditorFrame frame = new EditorFrame(lessonManager, standAlone );
+        EditorFrame frame = new EditorFrame( standAlone );
 
         //Validate frames that have preset sizes
         //Pack frames that have useful preferred size info, e.g. from their layout
@@ -108,7 +105,7 @@ public class Editor {
 
         }
 
-        new Editor(new LessonManager(), true );
+        new Editor(LessonManager.instance(), true );
 
     }
 

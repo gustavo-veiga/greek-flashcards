@@ -33,7 +33,6 @@ package org.crosswire.flashcards;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
-import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -43,7 +42,6 @@ import javax.swing.JRadioButtonMenuItem;
 
 class MainMenu extends JMenuBar {
 
-    private LessonManager lessonManager;
     //
     // Attributes
     //
@@ -56,8 +54,7 @@ class MainMenu extends JMenuBar {
     //
 
     // ---------------
-    MainMenu(LessonManager lessonManager, JFrame frame ) {
-        this.lessonManager = lessonManager;
+    MainMenu( JFrame frame ) {
         this.frame = frame;
 
         JMenu menu1, menu2;
@@ -132,7 +129,9 @@ class MainMenu extends JMenuBar {
         public void actionPerformed( ActionEvent event ) {
 
             Debug.trace( this.toString( ), "Beginning\n" );
-            new Editor( lessonManager, false );
+            JFrame lessonEditor = new EditorFrame( false );
+            lessonEditor.validate( );
+            lessonEditor.setVisible( true );
             Debug.trace( this.toString( ), "Ending\n" );
 
         }
