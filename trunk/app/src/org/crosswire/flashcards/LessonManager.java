@@ -31,6 +31,7 @@ import java.io.FilenameFilter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.JarURLConnection;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -121,7 +122,12 @@ public class LessonManager {
           if (connection instanceof JarURLConnection) {
                JarURLConnection jarConnection = (JarURLConnection) connection;
                try {
-                    loadJarLessonSets(new File(new java.net.URI(jarConnection.getJarFileURL().toString())));
+
+                    String uri = jarConnection.getJarFileURL().toString();
+                    int value =  JOptionPane.showConfirmDialog(null, uri,
+                                     "Text Edit", JOptionPane.OK_OPTION) ;
+
+                    loadJarLessonSets(new File(new java.net.URI(uri)));
                }
                catch (Exception e) { e.printStackTrace(); }
           }
