@@ -1,4 +1,4 @@
-package flash;
+package org.crosswire.flashcards;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -83,9 +83,9 @@ public class EditorFrame extends JFrame {
   }
   //Component initialization
   private void jbInit() throws Exception  {
-    image1 = new ImageIcon(flash.EditorFrame.class.getResource("openFile.png"));
-    image2 = new ImageIcon(flash.EditorFrame.class.getResource("closeFile.png"));
-    image3 = new ImageIcon(flash.EditorFrame.class.getResource("saveDoc.png"));
+    image1 = new ImageIcon(EditorFrame.class.getResource("openFile.png"));
+    image2 = new ImageIcon(EditorFrame.class.getResource("closeFile.png"));
+    image3 = new ImageIcon(EditorFrame.class.getResource("saveDoc.png"));
     contentPane = (JPanel) this.getContentPane();
     contentPane.setLayout(borderLayout1);
     this.setSize(new Dimension(512, 300));

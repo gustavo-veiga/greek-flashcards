@@ -1,4 +1,4 @@
-package flash;
+package org.crosswire.flashcards;
 
 import java.awt.*;
 import java.awt.event.*;
