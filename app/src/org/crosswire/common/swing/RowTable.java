@@ -65,10 +65,8 @@ public class RowTable extends JTable
         super(new RowTableModel(aList, columns));
         setSortRenderer();
 
-        // Don't display vertical lines in table
-        //		getColumnModel().setColumnMargin(0);
-
         setColumnWidths(columns.getCharacterWidths(), columns.getFixedWidths());
+        setRowHeight(getStandardCharacterHeight() + (getRowMargin() << 1) + PADDING);
 
         getTableHeader().addMouseListener(new MouseAdapter()
         {
@@ -261,6 +259,24 @@ public class RowTable extends JTable
     }
 
     /**
+     * Size each column to something reasonable
+     * We do this by getting the height of the letter 'M'
+     * from the default Table Header Renderer and adding the margin size to it.
+     * and set the preferred width of the column
+     * as the width of some number of 'M's.
+     * @return int
+     */
+    private int getStandardCharacterHeight()
+    {
+        // The preferredSize of the component is more than just the character
+        final JTableHeader th = getTableHeader();
+        final TableCellRenderer renderer = th.getDefaultRenderer();
+        Component comp = renderer.getTableCellRendererComponent(this, ONE_STANDARD_CHARACTER, false, false, 0, 0);
+        final int height = comp.getPreferredSize().height;
+        return height;
+    }
+
+    /**
      * Method addListSelectionListener
      * @param listener ListSelectionListener
      */
@@ -278,7 +294,7 @@ public class RowTable extends JTable
     {
         int newHeight = getRowHeight() * numRows;
         // The following may be needed for Java 1.4
-        // newHeight += table.getIntercellSpacing().height * (numRows + 1);
+        newHeight += getIntercellSpacing().height * (numRows + 1);
         newHeight += getTableHeader().getPreferredSize().height;
         final Insets insets = getInsets();
         newHeight += insets.top + insets.bottom;
