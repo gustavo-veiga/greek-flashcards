@@ -17,8 +17,7 @@ import java.util.*;
 // Mimics 'im-classicalgreek - A GTK2 Input Method for Classicla Greek'.
 // See http://im-classgreek.sourceforge.net
 //
-// N.B. Due to the way 'UniTextEdit' works, the breathing must be
-//      entered AFTER the vowel!
+// N.B. This input method doesn't implement all of im-classicalgreek!
 //
 //          alpha - lower: a    upper: A
 //           beta - lower: b    upper: B
@@ -46,7 +45,7 @@ import java.util.*;
 //            psi - lower: ps   upper: PS,Ps
 //          omega - lower: w    upper: W
 //
-// The breathing is entered after the vowel.
+// The breathing is entered before the vowel.
 //
 //     j - smooth
 //     h - rough
@@ -61,7 +60,6 @@ import java.util.*;
 //     ' - acute
 //     ` - grave
 //     ~ - circumflex
-//     _ - macron
 //
 ///////////////////////////////////////////////////////////////////////////
 
@@ -88,15 +86,155 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
     // ---------------
     public String translate( char input ) {
 
-        String returnValue = ( String ) characterMap.get( new Integer( input ) );
+        char inputUpper = Character.toUpperCase( input );
+        StringBuffer returnValue = new StringBuffer( );
 
-        if( returnValue == null ) {
+        //System.out.println( "state=" + getState( ) + " input=" + input + " inputUpper=" + inputUpper );
 
-            returnValue = new String() + input;
+        if( 0 < getState( ) ) {
+
+            // Second character of a multi-character sequence
+
+            if( ( 't' == getState( ) ) || ( 'T' == getState( ) ) ) {
+
+                // th => theta
+                // Th,TH => Theta
+
+                if( 'H' == inputUpper ) {
+
+                    if( 'T' == getState( ) ) { returnValue.append( new char [ ] { 0x0398 } ); }
+                    else if( 't' == getState( ) ) { returnValue.append( new char [ ] { 0x03b8 } ); }
+
+                } else {
+
+                    // the first 'T'/'t' was tau, not the beginning of a multi-character sequence.
+
+                    if( 'T' == getState( ) ) { returnValue.append( new char [ ] { 0x03a4 } ); }
+                    else if( 't' == getState( ) ) { returnValue.append( new char [ ] { 0x03c4 } ); }
+                    returnValue.append( new String( ) + input );
+
+                }
+
+                //System.out.println( "Returning : " + returnValue.toString( ) );
+                setState( 0 );
+                return returnValue.toString( );
+
+            } else if( ( 'p' == getState( ) ) || ( 'P' == getState( ) ) ) {
+
+                // ph => phi
+                // Ph,PH => Phi
+
+                if( 'H' == inputUpper ) {
+
+                    if( 'P' == getState( ) ) { returnValue.append( new char [ ] { 0x03a6 } ); }
+                    else if( 'p' == getState( ) ) { returnValue.append( new char [ ] { 0x03c6 } ); }
+
+                } else {
+
+                    // the first 'P'/'p' was pi, not the beginning of a multi-character sequence.
+
+                    if( 'P' == getState( ) ) { returnValue.append( new char [ ] { 0x03a0 } ); }
+                    else if( 'p' == getState( ) ) { returnValue.append( new char [ ] { 0x03c0 } ); }
+                    returnValue.append( new String( ) + input );
+
+                }
+
+                //System.out.println( "Returning : " + returnValue.toString( ) );
+                setState( 0 );
+                return returnValue.toString( );
+
+            } else if( ( 'c' == getState( ) ) || ( 'C' == getState( ) ) ) {
+
+                // ch => chi
+                // Ch,CH => Chi
+                // otherwise, terminal sigma
+
+                if( 'H' == inputUpper ) {
+
+                    if( 'C' == getState( ) ) { returnValue.append( new char [ ] { 0x03a7 } ); }
+                    else if( 'c' == getState( ) ) { returnValue.append( new char [ ] { 0x03c7 } ); }
+
+                } else {
+
+                    returnValue.append( new char [ ] { 0x03c2 } );
+
+                }
+
+                //System.out.println( "Returning : " + returnValue.toString( ) );
+                setState( 0 );
+                return returnValue.toString( );
+
+            } else if( ( 'j' == getState( ) ) || ( 'j' == getState( ) ) ) {
+
+                returnValue.append( characterMap.get( new Integer( input ) ) );
+
+                if( ( 'A' == inputUpper ) ||
+                    ( 'Q' == inputUpper ) ||
+                    ( 'W' == inputUpper ) ) {
+
+                    returnValue.append( new char [ ] { 0x0313 } );
+
+                }
+
+                //System.out.println( "Returning : " + returnValue.toString( ) );
+                setState( 0 );
+                return returnValue.toString( );
+
+            } else if( ( 'h' == getState( ) ) || ( 'H' == getState( ) ) ) {
+
+                returnValue.append( characterMap.get( new Integer( input ) ) );
+
+                if( ( 'A' == inputUpper ) ||
+                    ( 'Q' == inputUpper ) ||
+                    ( 'W' == inputUpper ) ) {
+
+                    returnValue.append( new char [ ] { 0x0314 } );
+
+                }
+
+                //System.out.println( "Returning : " + returnValue.toString( ) );
+                setState( 0 );
+                return returnValue.toString( );
+
+            }
+
+        } else {
+
+            // A new start
+
+            // Handle breathings ('j' or 'h' before a vowel)
+
+            if( ( 'T' == inputUpper ) ||
+                ( 'P' == inputUpper ) ||
+                ( 'C' == inputUpper ) ||
+                ( 'J' == inputUpper ) ||
+                ( 'H' == inputUpper ) ) {
+
+                setState( input );
+
+            } else {
+
+                String translation = ( String ) characterMap.get( new Integer( input ) );
+
+                if( null == translation ) {
+
+                    returnValue.append( input );
+
+                } else {
+
+                    returnValue.append( translation );
+
+                }
+
+                System.out.println( "Returning : " + returnValue.toString( ) );
+                setState( 0 );
+                return returnValue.toString( );
+
+            }
 
         }
 
-        return returnValue;
+        return null;
 
     }
 
@@ -134,14 +272,10 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
         characterMap.put( new Integer( 'X' ), new String( new char [ ] { 0x039e } ) );
         characterMap.put( new Integer( 'o' ), new String( new char [ ] { 0x03bf } ) );
         characterMap.put( new Integer( 'O' ), new String( new char [ ] { 0x039f } ) );
-        characterMap.put( new Integer( 'p' ), new String( new char [ ] { 0x03c0 } ) );
-        characterMap.put( new Integer( 'P' ), new String( new char [ ] { 0x03a0 } ) );
         characterMap.put( new Integer( 'r' ), new String( new char [ ] { 0x03c1 } ) );
         characterMap.put( new Integer( 'R' ), new String( new char [ ] { 0x03a1 } ) );
         characterMap.put( new Integer( 's' ), new String( new char [ ] { 0x03c3 } ) );
         characterMap.put( new Integer( 'S' ), new String( new char [ ] { 0x03a3 } ) );
-        characterMap.put( new Integer( 't' ), new String( new char [ ] { 0x03c4 } ) );
-        characterMap.put( new Integer( 'T' ), new String( new char [ ] { 0x03a4 } ) );
         characterMap.put( new Integer( 'u' ), new String( new char [ ] { 0x03c5 } ) );
         characterMap.put( new Integer( 'U' ), new String( new char [ ] { 0x03a5 } ) );
         characterMap.put( new Integer( 'f' ), new String( new char [ ] { 0x03c6 } ) );
@@ -152,22 +286,8 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
         // Terminal sigma
         characterMap.put( new Integer( 'c' ), new String( new char [ ] { 0x03c2 } ) );
 
-        // theta
-        // phi
-        // chi
-        // psi
-        characterMap.put( new Integer( 't' ), new String( new char [ ] { 0xffff } ) );
-        characterMap.put( new Integer( 'p' ), new String( new char [ ] { 0xffff } ) );
-        characterMap.put( new Integer( 'c' ), new String( new char [ ] { 0xffff } ) );
-
         // iota subscript
         characterMap.put( new Integer( 'y' ), new String( new char [ ] { 0x0345 } ) );
-
-        // smooth breathing
-        characterMap.put( new Integer( 'j' ), new String( new char [ ] { 0x0313 } ) );
-
-        // rough breathing
-        characterMap.put( new Integer( 'h' ), new String( new char [ ] { 0x0314 } ) );
 
         // acute
         characterMap.put( new Integer( '\'' ), new String( new char [ ] { 0x0301 } ) );
