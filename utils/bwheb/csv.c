@@ -517,6 +517,20 @@ int ConvertBwHebb1(unsigned char ch, unsigned int *puiChar, unsigned int *puiAcc
 		nChars = 2;
 		break;
 		
+		// HEBREW LETTER QOF WITH DAGESH
+	case 81 :
+		*puiChar   = 0X05E7;
+		*puiAccent = 0X05BC;
+		nChars = 2;
+		break;
+
+		// HEBREW LETTER SAMEKH WITH DAGESH
+	case 83 :
+		*puiChar   = 0X05E1;
+		*puiAccent = 0X05BC;
+		nChars = 2;
+		break;
+
 		// HEBREW LETTER TAV WITH DAGESH
 	case 84 :
 		*puiChar   = 0X05EA;
