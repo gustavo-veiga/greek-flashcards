@@ -27,9 +27,12 @@ clean :
 flashcards :
 	@$(CHECK_CLASSES_DIRECTORY)
 	javac -g -d $(CLASSES_DIRECTORY) `find . -type f -name '*.java'`
-	cp src/org/crosswire/flashcards/*png classes/org/crosswire/flashcards
+	cd src ; \
+	tar cf - `find . -type f | egrep -v '\.svn'` | ( cd $(CLASSES_DIRECTORY) ; tar xvf - )
+	cd .. ; \
+	tar cf - `find lessons -type f | egrep -v '\.svn'` | ( cd $(CLASSES_DIRECTORY) ; tar xvf - )
 	cd $(CLASSES_DIRECTORY) ; \
-	jar cvf $(CLASSES_DIRECTORY)/flashcards.jar org
+	jar cvmf org/crosswire/flashcards/flashcards.manifest flashcards.jar org lessons
 
 Editor :
 	java -classpath classes org.crosswire.flashcards.Editor &
