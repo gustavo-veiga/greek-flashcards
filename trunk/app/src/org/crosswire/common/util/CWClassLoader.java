@@ -1,4 +1,4 @@
-package org.crosswire.common;
+package org.crosswire.common.util;
 
 import java.io.File;
 import java.net.MalformedURLException;
