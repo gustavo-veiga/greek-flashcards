@@ -118,7 +118,6 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
         characterMap.put( new Integer( 'Z' ), new String( new char [ ] { 0x0396 } ) );
         characterMap.put( new Integer( 'q' ), new String( new char [ ] { 0x03b7 } ) );
         characterMap.put( new Integer( 'Q' ), new String( new char [ ] { 0x0397 } ) );
-
         characterMap.put( new Integer( 'i' ), new String( new char [ ] { 0x03b9 } ) );
         characterMap.put( new Integer( 'I' ), new String( new char [ ] { 0x0399 } ) );
         characterMap.put( new Integer( 'k' ), new String( new char [ ] { 0x03ba } ) );
@@ -182,17 +181,11 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
         // trema (diaeresis)
         characterMap.put( new Integer( '"' ), new String( new char [ ] { 0x0308 } ) );
 
-        // comma
-        characterMap.put( new Integer( ',' ), new String( new char [ ] { 0x002c } ) );
-
         // full stop
         characterMap.put( new Integer( '.' ), new String( new char [ ] { 0x0387 } ) );
 
         // question mark
         characterMap.put( new Integer( ';' ), new String( new char [ ] { 0x037e } ) );
-
-        // colon
-        characterMap.put( new Integer( ':' ), new String( new char [ ] { 0x003a } ) );
 
     }
 

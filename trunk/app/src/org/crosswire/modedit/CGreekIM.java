@@ -12,6 +12,61 @@ package org.crosswire.modedit;
 
 import java.util.*;
 
+///////////////////////////////////////////////////////////////////////////
+//
+// Mimics 'cgreek - Classical Greek with Emacs'
+// See http://m17n.org/cgreek/index.en.html
+//
+// This is the default mode, see Ibycus4IM.java for the
+// alternative greek-ibycus4 mode.
+//
+// N.B. Does not include sampi, diagamma, stigma or qoppa.
+//
+//          alpha - lower: a    upper: A
+//           beta - lower: b    upper: B
+//          gamma - lower: g    upper: G
+//          delta - lower: d    upper: D
+//        epsilon - lower: e    upper: E
+//           zeta - lower: z    upper: Z
+//            eta - lower: h    upper: h
+//          theta - lower: q    upper: Q
+//           iota - lower: i    upper: I
+//          kappa - lower: k    upper: K
+//         lambda - lower: l    upper: L
+//             mu - lower: m    upper: M
+//             nu - lower: n    upper: N
+//             xi - lower: x    upper: X
+//        omicron - lower: o    upper: O
+//             pi - lower: p    upper: P
+//            rho - lower: r    upper: R
+//          sigma - lower: s    upper: S
+// terminal sigma - lower: j
+//            tau - lower: t    upper: T
+//        upsilon - lower: u    upper: U
+//            phi - lower: f    upper: F
+//            chi - lower: c    upper: C
+//            psi - lower: y    upper: Y
+//          omega - lower: w    upper: W
+//
+// The breathing is entered after the vowel.
+//
+//     ',v - smooth
+//     `,V - rough
+//
+// Iota subscript is entered by typing 'J' after
+// the vowel.
+//
+// After entering the breathing (if any),
+// the letter and the iota subscript (if present),
+// accents may be added as follows.
+//
+//     / - acute
+//     ? - grave
+//     ^ - circumflex
+//     " - trema (diaeresis)
+//
+///////////////////////////////////////////////////////////////////////////
+
 public class CGreekIM extends SWInputMethod {
 
     //
@@ -129,32 +184,11 @@ public class CGreekIM extends SWInputMethod {
         // trema (diaeresis)
         characterMap.put( new Integer( '"' ), new String( new char [ ] { 0x0308 } ) );
 
-        // comma
-        characterMap.put( new Integer( ',' ), new String( new char [ ] { 0x002c } ) );
-
         // full stop
         characterMap.put( new Integer( '.' ), new String( new char [ ] { 0x0387 } ) );
 
         // question mark
         characterMap.put( new Integer( ';' ), new String( new char [ ] { 0x037e } ) );
-
-        // colon
-        characterMap.put( new Integer( ':' ), new String( new char [ ] { 0x003a } ) );
-
-        // sampi (upper case 0x3e0, lower case 0x3e1)
-        characterMap.put( new Integer( '!' ), new String( new char [ ] { 0x03e0 } ) );
-
-        // diagamma (upper case 0x3dc, lower case 0x3dd)
-        characterMap.put( new Integer( '#' ), new String( new char [ ] { 0x03dc } ) );
-
-        // stigma (upper case 0x3da, lower case 0x3db)
-        characterMap.put( new Integer( '$' ), new String( new char [ ] { 0x03da } ) );
-
-        // qoppa (lower case)
-        characterMap.put( new Integer( '%' ), new String( new char [ ] { 0x03df } ) );
-
-        // qoppa (upper case)
-        characterMap.put( new Integer( '&' ), new String( new char [ ] { 0x03de } ) );
 
     }
 
