@@ -348,10 +348,10 @@ int ConvertBwHebb1(unsigned char ch, unsigned int *puiChar, unsigned int *puiAcc
 		nChars = 1;
 		break;
 		
-		// HEBREW POINT SHEVA
+		// HEBREW POINT SHEVA '-'
 	case 45 :
-		*puiChar   = 0X0000;
-		*puiAccent = 0X05BE;
+		*puiChar   = 0X05BE;
+		*puiAccent = 0X0000;
 		nChars = 1;
 		break;
 		
