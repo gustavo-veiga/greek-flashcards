@@ -299,6 +299,13 @@ int ConvertBwHebb1(unsigned char ch, unsigned int *puiChar, unsigned int *puiAcc
 	*puiAccent2 = 0;
 	switch (ch)
 	{
+		// SPACE?
+	case 32 :
+		*puiChar   = 0X0020;
+		*puiAccent = 0X0000;
+		nChars = 1;
+		break;
+
 		// HEBREW LETTER FINAL NUN
 	case 33 :
 		*puiChar   = 0X05DF;
@@ -316,6 +323,13 @@ int ConvertBwHebb1(unsigned char ch, unsigned int *puiChar, unsigned int *puiAcc
 		// HEBREW LETTER FINAL TSADI
 	case 35 :
 		*puiChar   = 0X05E5;
+		*puiAccent = 0X0000;
+		nChars = 1;
+		break;
+		
+		// HEBREW LETTER FINAL KAF WITH HEBREW POINT SHEVA
+	case 36 :
+		*puiChar   = 0X05DA;
 		*puiAccent = 0X0000;
 		nChars = 1;
 		break;
@@ -396,6 +410,14 @@ int ConvertBwHebb1(unsigned char ch, unsigned int *puiChar, unsigned int *puiAcc
 		*puiAccent = 0X05B0;
 		nChars = 1;
 		break;
+
+		// HEBREW LETTER PE
+	case 64 :
+		*puiChar   = 0X05E3;
+		*puiAccent = 0X0000;
+		nChars = 1;
+		break;
+		
 		
 		// HEBREW LETTER VAV WITH HOLAM
 	case 65 :
@@ -513,6 +535,13 @@ int ConvertBwHebb1(unsigned char ch, unsigned int *puiChar, unsigned int *puiAcc
 		// HEBREW LETTER VAV WITH DAGESH
 	case 87 :
 		*puiChar   = 0X05D5;
+		*puiAccent = 0X05BC;
+		nChars = 2;
+		break;
+		
+		// HEBREW LETTER YOD WITH DAGESH
+	case 89 :
+		*puiChar   = 0X05D9;
 		*puiAccent = 0X05BC;
 		nChars = 2;
 		break;
@@ -742,7 +771,7 @@ int ConvertBwHebb1(unsigned char ch, unsigned int *puiChar, unsigned int *puiAcc
 	}
 	
 	if (nChars < 1)
-		fprintf(stderr, "Unhandled character - %u\n", ch);
+		fprintf(stderr, "Unhandled character - %u (0x%x)\n", ch, ch);
 	
 	return nChars;
 }
