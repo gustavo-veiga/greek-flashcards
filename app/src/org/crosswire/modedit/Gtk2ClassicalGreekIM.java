@@ -140,6 +140,11 @@ public class Gtk2ClassicalGreekIM extends SWInputMethod {
                     if( 'P' == getState( ) ) { returnValue.append( new char [ ] { 0x03a6 } ); }
                     else if( 'p' == getState( ) ) { returnValue.append( new char [ ] { 0x03c6 } ); }
 
+                } else if( 'S' == inputUpper ) {
+
+                    if( 'P' == getState( ) ) { returnValue.append( new char [ ] { 0x03a8 } ); }
+                    else if( 'p' == getState( ) ) { returnValue.append( new char [ ] { 0x03c8 } ); }
+
                 } else {
 
                     // the first 'P'/'p' was pi, not the beginning of a multi-character sequence.
