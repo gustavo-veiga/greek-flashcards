@@ -1,5 +1,5 @@
 #Flash Lesson
-#Thu Sep 16 12:48:38 CDT 2004
+#Thu Sep 16 14:20:45 CDT 2004
 fileName=Chapter07.flash
 lessonTitle=Chapter 7
 word9=\u0399\u0313\u03B7\u03C3\u03BF\u03C5\u0311\u03C2,\u03BF\u03C5\u0311,\u03BF\u0314
@@ -12,10 +12,11 @@ word3=\u03B5\u03B9\u0313\u0311
 word2=\u03B3\u03B1\u0301\u03C1
 word1=\u03B1\u0313\u03C1\u03C7\u03B7\u0301,\u03B7\u0311\u03C2,\u03B7\u0314
 word0=\u03B1\u0313\u03BC\u03B1\u03C1\u03C4\u03B9\u0301\u03B1,\u03B1\u03C2,\u03B7\u0314
+word17=\u03BF\u03C5\u0314\u0311\u03C4o\u03C2,\u03B1\u03C5\u0314\u0301\u03C4\u03B7,\u03C4\u03BF\u03C5\u0311\u03C4\u03BF pl.
 word16=\u03C9\u0313\u0301\u03C3\u03C4e
 word15=\u03C5\u03B9\u0314\u03BF\u03C2,\u03BF\u03C5\u0311,\u03BF\u0314
 word14=\u03C3\u03C5\u0301
-word13=\u03BF\u03C5\u0314\u0311\u03C4o\u03C2,\u03B1\u03C5\u0314\u0301\u03C4\u03B7,\u03C4\u03BF\u03C5\u0311\u03C4\u03BF
+word13=\u03BF\u03C5\u0314\u0311\u03C4o\u03C2,\u03B1\u03C5\u0314\u0301\u03C4\u03B7,\u03C4\u03BF\u03C5\u0311\u03C4\u03BF sg.
 word12=\u03BF\u03C5\u0313\u03C1\u03B1\u03BD\u03BF\u0301\u03C2,\u03BF\u03C5\u0311,\u03BF\u0314
 word11=\u03BC\u03B7\u0301
 word10=\u03BA\u03C5\u0301\u03C1\u03B9\u03BF\u03C2,\u03BF\u03C5,\u03BF\u0314
@@ -27,13 +28,14 @@ answers5=into,in,among
 answers4=he/she/it said
 answers3=you are
 answers2=for,then
-wordCount=17
+wordCount=18
 answers1=beginning,ruler
 answers0=sin
+answers17=these
 answers16=therefore,so that
 answers15=son,descendant
 answers14=you sg.
-answers13=this,these
+answers13=this,he/she/it
 answers12=heaven,sky
 answers11=not,lest
 answers10=Lord,lord,master,sir
