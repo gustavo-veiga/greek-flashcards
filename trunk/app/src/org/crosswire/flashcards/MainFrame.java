@@ -270,11 +270,11 @@ public class MainFrame extends JFrame {
               //
               throw new AssertionError( );
           }
-          Enumeration enum = jarFile.entries();
+          Enumeration entries = jarFile.entries();
           Set lessonSet = null;
-          while (enum.hasMoreElements())
+          while (entries.hasMoreElements())
           {
-              JarEntry jarEntry = (JarEntry) enum.nextElement();
+              JarEntry jarEntry = (JarEntry) entries.nextElement();
               String entryName = jarEntry.getName();
               if (entryName.startsWith(directoryPath))
               {
