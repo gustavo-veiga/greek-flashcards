@@ -72,7 +72,7 @@
     =========================================================================-->
   <target name="build" depends="compile, jar.check, keygen" unless="jar.uptodate" description="Run a full build">
     <mkdir dir="${target.install}"/>
-    <jar jarfile="${target.install}/${ant.project.name}.jar">
+    <jar jarfile="${target.install}/${ant.project.name}.jar" manifest="${target.classes}/org/crosswire/flashcards/flashcards.manifest">
       <fileset dir="${target.classes}"/>
       <fileset dir="${source.root}" includes="lessons/**/*"/>
     </jar>
