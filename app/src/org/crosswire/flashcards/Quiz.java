@@ -18,16 +18,6 @@
  * The copyright to this program is held by it's authors.
  * Copyright: 2004
  */
-///////////////////////////////////////////////////////////////////////////
-//
-// Quiz.java
-//
-// The start of it all
-//
-// Copyright : 2004 CrossWire Bible Society http://crosswire.org
-//
-///////////////////////////////////////////////////////////////////////////
-
 package org.crosswire.flashcards;
 
 import java.awt.Dimension;
@@ -35,6 +25,11 @@ import java.awt.Toolkit;
 
 import javax.swing.UIManager;
 
+/**
+ * The start of it all.
+ * 
+ * @author Troy A. Griffitts [scribe at crosswire dot org]
+ */
 public class Quiz {
 
     //
@@ -50,9 +45,7 @@ public class Quiz {
     // ---------------
     public Quiz( ) {
         
-        LessonManager lm = new LessonManager();
-
-        MainFrame frame = new MainFrame(lm);
+        MainFrame frame = new MainFrame();
 
         // Validate frames that have preset sizes
         // Pack frames that have useful preferred size info,

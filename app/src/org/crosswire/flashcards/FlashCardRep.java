@@ -20,7 +20,6 @@
  */
 package org.crosswire.flashcards;
 
-
 /**
  * A FlashCard has a front and a back. The front has the test
  * and the back has the answer.
@@ -28,15 +27,15 @@ package org.crosswire.flashcards;
  * @author Troy A. Griffitts [scribe at crosswire dot org]
  * @author DM Smith [ dmsmith555 at yahoo dot com]
  */
-public class FlashCard implements Cloneable, Comparable
+public class FlashCardRep implements Cloneable, Comparable
 {
     /**
      * Create a partial FlashCard.
      * @param front
      */
-    public FlashCard()
+    public FlashCardRep(String front)
     {
-        this("", "");
+        this(front, "");
     }
 
     /**
@@ -44,18 +43,10 @@ public class FlashCard implements Cloneable, Comparable
      * @param front
      * @param back
      */
-    public FlashCard(String front, String back)
+    public FlashCardRep(String front, String back)
     {
-        original = new FlashCardRep(front, back);
-
-        try
-        {
-            copy = (FlashCardRep) original.clone();
-        }
-        catch (CloneNotSupportedException e)
-        {
-            assert false;
-        }
+        this.front = front;
+        this.back = back;
     }
 
     /**
@@ -78,7 +69,7 @@ public class FlashCard implements Cloneable, Comparable
      */
     public String getBack()
     {
-        return copy.getBack();
+        return back;
     }
 
     /**
@@ -86,7 +77,7 @@ public class FlashCard implements Cloneable, Comparable
      */
     public void setBack(String newBack)
     {
-        copy.setBack(newBack);
+        back = newBack;
     }
 
     /**
@@ -94,7 +85,7 @@ public class FlashCard implements Cloneable, Comparable
      */
     public String getFront()
     {
-        return copy.getFront();
+        return front;
     }
 
     /**
@@ -102,40 +93,18 @@ public class FlashCard implements Cloneable, Comparable
      */
     public void setFront(String newFront)
     {
-        copy.setFront(newFront);
+        front = newFront;
     }
 
-    /**
-     * Method reset
-     */
-    public void reset()
+    public void assign(FlashCardRep rep)
     {
-        copy.assign(original);
+        front = rep.front;
+        back = rep.back;
     }
 
-    /**
-     * Method isIncomplete
-     * @return boolean
-     */
     public boolean isIncomplete()
     {
-        return copy.isIncomplete();
-    }
-
-    /**
-     * Method setOriginal
-     */
-    public void setOriginal()
-    {
-        original.assign(copy);
-    }
-
-    /**
-     * @return Returns whether this FlashCard has been modified.
-     */
-    protected boolean isModified()
-    {
-        return !original.equals(copy);
+        return (back.length() == 0 || front.length() == 0);
     }
 
     /* (non-Javadoc)
@@ -153,10 +122,11 @@ public class FlashCard implements Cloneable, Comparable
     {
         if (obj == this)
             return true;
-        if (!(obj instanceof FlashCard))
+        if (!(obj instanceof FlashCardRep))
             return false;
-        FlashCard otherCard = (FlashCard) obj;
-        return copy.equals(otherCard.copy);
+        FlashCardRep otherCard = (FlashCardRep) obj;
+        return front.equals(otherCard.front)
+        	&& back.equals(otherCard.back);
     }
 
     /* (non-Javadoc)
@@ -164,7 +134,9 @@ public class FlashCard implements Cloneable, Comparable
      */
     public int hashCode()
     {
-        return copy.hashCode();
+        int hashCode = 31 + front.hashCode();
+        hashCode = 31 * hashCode + back.hashCode();
+        return hashCode;
     }
 
     /* (non-Javadoc)
@@ -172,7 +144,7 @@ public class FlashCard implements Cloneable, Comparable
      */
     public String toString()
     {
-        return copy.toString();
+        return front + " " + back;
     }
 
     /* (non-Javadoc)
@@ -180,10 +152,15 @@ public class FlashCard implements Cloneable, Comparable
      */
     public int compareTo(Object obj)
     {
-        FlashCard otherCard = (FlashCard) obj;
-        return copy.compareTo(otherCard.copy);
+        FlashCardRep otherCard = (FlashCardRep) obj;
+        int result = front.compareTo(otherCard.front);
+        if (result == 0)
+        {
+            result = back.compareTo(otherCard.back);
+        }
+        return result;
     }
 
-    private FlashCardRep original;
-    private FlashCardRep copy;
+    private String front;
+    private String back;
 }

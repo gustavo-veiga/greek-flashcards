@@ -20,37 +20,31 @@
  */
 package org.crosswire.flashcards;
 
-import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.util.Iterator;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import org.crosswire.common.swing.FixedSplitPane;
 
 
+/**
+ * A panel used for setting up a quiz.
+ * 
+ * @author DM Smith [dmsmith555 at yahoo dot com]
+ */
 public class SetupPane extends JPanel
 {
-    private LessonManager lessonManager;
-    private JList lessonSetList = new JList(new DefaultListModel());
-    private JList lessonList = new JList(new DefaultListModel());
+    private LessonPane lessonPanel = new LessonPane();
+    private LessonSetPane lessonSetPanel = new LessonSetPane();
+    private JCheckBox flipped = new JCheckBox("Flip the Flash Cards");
 
     //Construct the frame
-    public SetupPane(LessonManager lessonManager)
+    public SetupPane()
     {
-        this.lessonManager = lessonManager;
-        enableEvents(AWTEvent.WINDOW_EVENT_MASK);
         try
         {
             jbInit();
@@ -61,151 +55,47 @@ public class SetupPane extends JPanel
         }
     }
 
+    public boolean isFlipped()
+    {
+        return flipped.isSelected();
+    }
+
     public Iterator iterator()
     {
-        return new SelectedLessonIterator(lessonList);
+        return lessonPanel.iterator();
     }
 
     private void jbInit() throws Exception
     {
         setLayout(new BorderLayout());
-        JPanel lessonPanel = new JPanel(new BorderLayout());
-        lessonPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Lessons: "));
-        lessonPanel.add(new JScrollPane(lessonList));
-//        lessonList.setCellRenderer(new CheckBoxListCellRenderer());
-        lessonSetList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        lessonSetList.addListSelectionListener(new LessonSetSelectionListener(lessonList));
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+                        "Select a Lesson Set, then one or more Lessons: "));
 
-        JPanel lessonSetPanel = new JPanel(new BorderLayout());
-        lessonSetPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Lesson Sets: "));
-        lessonSetPanel.add(new JScrollPane(lessonSetList), BorderLayout.CENTER);
+        FlashCardPane flashCardPanel = new FlashCardPane();
 
-        JSplitPane splitPane = new FixedSplitPane();
-        splitPane.setResizeWeight(0.3D);
-        splitPane.setDividerLocation(0.3D);
-        splitPane.setRightComponent(lessonPanel);
-        splitPane.setLeftComponent(lessonSetPanel);
+        lessonSetPanel.addListSelectionListener(lessonPanel);
+        lessonPanel.addListSelectionListener(flashCardPanel);
 
-        add(splitPane);
+        JSplitPane horizontalSplitPane = new FixedSplitPane();
+        horizontalSplitPane.setResizeWeight(0.3D);
+        horizontalSplitPane.setDividerLocation(0.3D);
+        horizontalSplitPane.setRightComponent(lessonPanel);
+        horizontalSplitPane.setLeftComponent(lessonSetPanel);
 
-        loadLessonSets();
+//        JSplitPane verticalSplitPane = new FixedSplitPane(JSplitPane.VERTICAL_SPLIT);
+//        verticalSplitPane.setOneTouchExpandable(true);
+//        verticalSplitPane.setDividerSize(6);
+//        verticalSplitPane.setDividerLocation(0.5D);
+//        verticalSplitPane.setResizeWeight(0.5D);
+//        verticalSplitPane.setTopComponent(horizontalSplitPane);
+//        verticalSplitPane.setBottomComponent(flashCardPanel);
+        add(horizontalSplitPane, BorderLayout.CENTER);
+
+        JPanel panel = new JPanel();
+        panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+        "Show the backs of the Flash Cards for the test: "));
+        panel.add(flipped);
+        add(panel, BorderLayout.SOUTH);
     }
 
-    private void loadLessonSets()
-    {
-        Iterator lessonSetIterator = lessonManager.iterator();
-        while (lessonSetIterator.hasNext())
-        {
-            LessonSet lessonSet = (LessonSet) lessonSetIterator.next();
-            DefaultListModel model = (DefaultListModel) lessonSetList.getModel();
-            model.addElement(lessonSet);
-        }
-    }
-
-    /**
-     * Iterator over the selections in a JList
-     */
-    private static class SelectedLessonIterator implements Iterator
-    {
-
-        public SelectedLessonIterator(JList list)
-        {
-            model = (DefaultListModel) list.getModel();
-            selectedIndexes = list.getSelectedIndices();
-        }
-
-        /* (non-Javadoc)
-         * @see java.util.Iterator#remove()
-         */
-        public void remove()
-        {
-            throw new UnsupportedOperationException();
-        }
-
-        /* (non-Javadoc)
-         * @see java.util.Iterator#hasNext()
-         */
-        public boolean hasNext()
-        {
-            return currentIndex < selectedIndexes.length;
-        }
-
-        /* (non-Javadoc)
-         * @see java.util.Iterator#next()
-         */
-        public Object next()
-        {
-            return model.get(selectedIndexes[currentIndex++]);
-        }
-
-        private int[] selectedIndexes;
-        private DefaultListModel model;
-        private int currentIndex;
-    }
-    /**
-     * When a <code>LessonSet</code> is loaded this listener will populate the lessonList
-     * with the <code>Lesson</code>s.
-     */
-    private static class LessonSetSelectionListener implements ListSelectionListener
-    {
-
-        /**
-         * Create a listener that populates the lessonList with lessons.
-         * @param lessonList the list to populate
-         */
-        public LessonSetSelectionListener(JList lessonList)
-        {
-            this.lessonList = lessonList;
-        }
-
-        /* (non-Javadoc)
-         * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-         */
-        public void valueChanged(ListSelectionEvent e)
-        {
-            if (e.getValueIsAdjusting())
-            {
-                return;
-            }
-            JList list = (JList) e.getSource();
-            LessonSet lessonSet = (LessonSet) list.getSelectedValue();
-            DefaultListModel model = (DefaultListModel) lessonList.getModel();
-            model.clear();
-            if (lessonSet != null)
-            {
-                Iterator lessonIterator = lessonSet.iterator();
-                while (lessonIterator.hasNext())
-                {
-                    Lesson lesson = (Lesson) lessonIterator.next();
-                    model.addElement(lesson);
-                }
-            }
-        }
-        private JList lessonList;
-    }
-
-    /**
-     * This renderer shows selection with a check box instead of shading the row.
-     */
-    private static class CheckBoxListCellRenderer extends JCheckBox implements ListCellRenderer
-    {
-        public CheckBoxListCellRenderer()
-        {
-            // So it looks like it is a row in a list, we need to show the background of the list
-            // and not the checkbox.
-            setOpaque(false);
-        }
-
-        /* (non-Javadoc)
-         * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
-         */
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
-        {
-            setSelected(isSelected);
-            setText(value.toString());
-            setFocusPainted(cellHasFocus);
-            return this;
-        }
-
-    }
 }
