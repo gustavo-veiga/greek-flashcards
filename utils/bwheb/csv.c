@@ -538,10 +538,10 @@ int ConvertBwHebb1(unsigned char ch, unsigned int *puiChar, unsigned int *puiAcc
 		nChars = 1;
 		break;
 		
-		// HEBREW ACCENT ETNAHTA
+		// HEBREW ACCENT MUNAH
 	case 95 :
 		*puiChar   = 0X0000;
-		*puiAccent = 0X0591;
+		*puiAccent = 0X05A3;
 		nChars = 1;
 		break;
 		
