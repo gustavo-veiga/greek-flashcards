@@ -1,3 +1,13 @@
+///////////////////////////////////////////////////////////////////////////
+//
+// EditorFrame.java
+//
+// Editor for lessons used by Quiz (part of FlashCards).
+//
+// Copyright : (c) 2004 CrossWire Bible Society http://crosswire.org
+//
+///////////////////////////////////////////////////////////////////////////
+
 package org.crosswire.flashcards;
 
 import java.awt.AWTEvent;
@@ -33,16 +43,12 @@ import javax.swing.filechooser.FileFilter;
 
 import org.crosswire.modedit.UniTextEdit;
 
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author not attributable
- * @version 1.0
- */
-
 public class EditorFrame extends JFrame {
+
+    //
+    // Attributes
+    //
+
     JPanel contentPane;
     JToolBar jToolBar = new JToolBar();
     JButton jButton1 = new JButton();
@@ -77,6 +83,7 @@ public class EditorFrame extends JFrame {
     BorderLayout borderLayout6 = new BorderLayout();
     Vector words = new Vector();
     UniTextEdit wordText = new UniTextEdit();
+    private boolean standAlone;
 
     static class WordEntry {
         public WordEntry(String word) { this.word = word; }
@@ -88,16 +95,25 @@ public class EditorFrame extends JFrame {
         }
     }
 
-    //Construct the frame
-    public EditorFrame() {
-        enableEvents(AWTEvent.WINDOW_EVENT_MASK);
-        try {
-            jbInit();
+    //
+    // Methods
+    //
+
+    // ---------------
+    public EditorFrame( boolean standAlone ) {
+
+        this.standAlone = standAlone;
+        enableEvents( AWTEvent.WINDOW_EVENT_MASK );
+
+        try { jbInit( ); }
+        catch( Exception exception ) {
+
+            Debug.error( this.toString( ), exception.getMessage( ) );
+
         }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
+
     }
+
     //Component initialization
     private void jbInit() throws Exception  {
         image1 = new ImageIcon(EditorFrame.class.getResource("openFile.png"));
@@ -296,8 +312,12 @@ public class EditorFrame extends JFrame {
     }
 
     //File | Exit action performed
-    public void jMenuFileExit_actionPerformed(ActionEvent e) {
-        System.exit(0);
+
+    public void jMenuFileExit_actionPerformed( ActionEvent event ) {
+
+        if( standAlone ) { System.exit( 0 ); }
+        else { dispose( ); }
+
     }
 
     //Help | About action performed
@@ -306,17 +326,26 @@ public class EditorFrame extends JFrame {
         Dimension dlgSize = dlg.getPreferredSize();
         Dimension frmSize = getSize();
         Point loc = getLocation();
-        dlg.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
+        dlg.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x,
+                        (frmSize.height - dlgSize.height) / 2 + loc.y);
         dlg.setModal(true);
         dlg.pack();
         dlg.show();
     }
-    //Overridden so we can exit when window is closed
-    protected void processWindowEvent(WindowEvent e) {
-        super.processWindowEvent(e);
-        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-            System.exit(0);
+
+    // Overridden so we can exit when window is closed
+
+    protected void processWindowEvent( WindowEvent event ) {
+
+        super.processWindowEvent( event );
+
+        if( event.getID( ) == WindowEvent.WINDOW_CLOSING ) {
+
+            if( standAlone ) { System.exit( 0 ); }
+            else { dispose( ); }
+
         }
+
     }
 
     void jButton1_actionPerformed(ActionEvent e) {
@@ -424,7 +453,8 @@ public class EditorFrame extends JFrame {
 
     void fileName_caretUpdate(CaretEvent e) {
         lesson.setProperty("fileName", fileName.getText()+".flash");
-        setTitle("FlashCard Editor (c) CrossWire Bible Society http://crosswire.org - " + lesson.getProperty("fileName"));
+        setTitle("FlashCard Editor (c) CrossWire Bible Society http://crosswire.org - " +
+                 lesson.getProperty("fileName"));
     }
 
     void lessonTitle_caretUpdate(CaretEvent e) {

@@ -28,6 +28,8 @@ flashcards :
 	@$(CHECK_CLASSES_DIRECTORY)
 	javac -g -d $(CLASSES_DIRECTORY) `find . -type f -name '*.java'`
 	cp src/org/crosswire/flashcards/*png classes/org/crosswire/flashcards
+	cd $(CLASSES_DIRECTORY) ; \
+	jar cvf $(CLASSES_DIRECTORY)/flashcards.jar org
 
 Editor :
 	java -classpath classes org.crosswire.flashcards.Editor &
