@@ -349,6 +349,13 @@ int ConvertBwHebb1(unsigned char ch, unsigned int *puiChar, unsigned int *puiAcc
 		break;
 		
 		// HEBREW POINT SHEVA
+	case 45 :
+		*puiChar   = 0X0000;
+		*puiAccent = 0X05BE;
+		nChars = 1;
+		break;
+		
+		// HEBREW POINT SHEVA
 	case 46 :
 		*puiChar   = 0X0000;
 		*puiAccent = 0X05B0;
@@ -380,6 +387,13 @@ int ConvertBwHebb1(unsigned char ch, unsigned int *puiChar, unsigned int *puiAcc
 	case 60 :
 		*puiChar   = 0X0000;
 		*puiAccent = 0X05B6;
+		nChars = 1;
+		break;
+		
+		// HEBREW POINT SHEVA
+	case 62 :
+		*puiChar   = 0X0000;
+		*puiAccent = 0X05B0;
 		nChars = 1;
 		break;
 		
@@ -449,6 +463,13 @@ int ConvertBwHebb1(unsigned char ch, unsigned int *puiChar, unsigned int *puiAcc
 		// HEBREW LETTER LAMED WITH DAGESH
 	case 76 :
 		*puiChar   = 0X05DC;
+		*puiAccent = 0X05BC;
+		nChars = 2;
+		break;
+		
+		// HEBREW LETTER MEM WITH DAGESH
+	case 77 :
+		*puiChar   = 0X05DE;
 		*puiAccent = 0X05BC;
 		nChars = 2;
 		break;
@@ -660,6 +681,13 @@ int ConvertBwHebb1(unsigned char ch, unsigned int *puiChar, unsigned int *puiAcc
 	case 116 :
 		*puiChar   = 0X05EA;
 		*puiAccent = 0X0000;
+		nChars = 1;
+		break;
+		
+		// HEBREW POINT QIBBUS
+	case 117 :
+		*puiChar   = 0X0000;
+		*puiAccent = 0X05BB;
 		nChars = 1;
 		break;
 		
