@@ -44,6 +44,7 @@ public class SetupPane extends JPanel
     private LessonPane lessonPanel = new LessonPane();
     private LessonSetPane lessonSetPanel = new LessonSetPane();
     private JCheckBox flipped = new JCheckBox("Flip the Flash Cards");
+    private JCheckBox noMultipleChoice = new JCheckBox("No Multiple Choice");
 
     //Construct the frame
     public SetupPane()
@@ -61,6 +62,11 @@ public class SetupPane extends JPanel
     public boolean isFlipped()
     {
         return flipped.isSelected();
+    }
+    
+    public boolean isNoMultipleChoice()
+    {
+    	return noMultipleChoice.isSelected();
     }
 
     public Iterator iterator()
@@ -129,8 +135,9 @@ public class SetupPane extends JPanel
 
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-        "Show the backs of the Flash Cards for the test: "));
+        "Quiz Options: "));
         panel.add(flipped);
+        panel.add(noMultipleChoice);
         add(panel, BorderLayout.SOUTH);
     }
 
