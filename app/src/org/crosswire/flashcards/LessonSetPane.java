@@ -41,7 +41,7 @@ import javax.swing.event.ListSelectionListener;
 
 /**
  * A panel consisting of all the lesson sets known to FlashCards.
- * 
+ *
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
 public class LessonSetPane extends JPanel
@@ -124,7 +124,7 @@ public class LessonSetPane extends JPanel
 
     public void createLessonSet(String name)
     {
-        LessonSet lessonSet = new LessonSet(LessonManager.LESSON_ROOT + '/' + name);
+        LessonSet lessonSet = new LessonSet("file:"+LessonManager.instance().getHomeProjectPath() + "/" + LessonManager.LESSON_ROOT + '/' + name);
         DefaultListModel model = (DefaultListModel) lessonSetList.getModel();
         if (!model.contains(lessonSet))
         {

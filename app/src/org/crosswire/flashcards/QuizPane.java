@@ -46,143 +46,144 @@ import java.awt.*;
  * @author Troy A. Griffitts [scribe at crosswire dot org]
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
-public class QuizPane extends JPanel
-{
-    private static final int NUM_COLUMNS = 2;
-    // NUM_ANSWERS should be a multiple of NUM_COLUMNS.
-    private static final int NUM_ANSWERS = 10;
-    
-    SetupPane setupPane;
-    Vector words = new Vector();
-    Vector notLearned = new Vector();
-    WordEntry currentWord = null;
-    int wrong = 0;
-    int totalAsked = 0;
-    int totalWrong = 0;
-    boolean shownAnswer = false;
-    JButton startLessonButton = new JButton();
-    JButton showAnswerButton = new JButton();
-    JLabel wordText = new JLabel();
-    JLabel statusBar = new JLabel();
-    JLabel wCount = new JLabel();
+public class QuizPane
+          extends JPanel {
+     private static final int NUM_COLUMNS = 2;
+     // NUM_ANSWERS should be a multiple of NUM_COLUMNS.
+     private static final int NUM_ANSWERS = 10;
 
-    JPanel choicesPanel = new JPanel();
-    GridLayout choicesPanelGridLayout = new GridLayout();
-    JPanel statusPanel = new JPanel();
-    BorderLayout statusPanelBorderLayout = new BorderLayout();
-    GridBagLayout gridBagLayout1 = new GridBagLayout();
+     SetupPane setupPane;
+     Vector words = new Vector();
+     Vector notLearned = new Vector();
+     WordEntry currentWord = null;
+     int wrong = 0;
+     int totalAsked = 0;
+     int totalWrong = 0;
+     boolean shownAnswer = false;
+     JButton startLessonButton = new JButton();
+     JButton showAnswerButton = new JButton();
+     JLabel wordText = new JLabel();
+     JLabel statusBar = new JLabel();
+     JLabel wCount = new JLabel();
 
-    static class WordEntry
-    {
-        public WordEntry(FlashCard flashCard)
-        {
-            this.flashCard = flashCard;
-        }
+     JPanel choicesPanel = new JPanel();
+     GridLayout choicesPanelGridLayout = new GridLayout();
+     JPanel statusPanel = new JPanel();
+     BorderLayout statusPanelBorderLayout = new BorderLayout();
+     GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-        public void incrementFailures(int failures)
-        {
-            attempts += failures;
-        }
-
-        public int getFailures()
-        {
-            return attempts;
-        }
-
-        public String getSide(boolean front)
-        {
-            return flashCard.getSide(front);
-        }
-
-        public String toString()
-        {
-            return flashCard.getFront();
-        }
-        private FlashCard flashCard;
-        private int attempts;
-    }
+     static class WordEntry {
+          public WordEntry(FlashCard flashCard) {
+               this.flashCard = flashCard;
+          }
 
 
-    //Construct the frame
-    public QuizPane(SetupPane setupPane)
-    {
-        this.setupPane = setupPane;
-        try
-        {
-            jbInit();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
+          public void incrementFailures(int failures) {
+               attempts += failures;
+          }
 
-    //Component initialization
-    private void jbInit() throws Exception
-    {
-        startLessonButton.setText("Start");
-        startLessonButton.addActionListener(new QuizPane_startLessonButton_actionAdapter(this));
 
-        showAnswerButton.setFocusPainted(true);
-        showAnswerButton.setMnemonic('A');
-        showAnswerButton.setText("Show Answer");
-        showAnswerButton.addActionListener(new QuizPane_showAnswerButton_actionAdapter(this));
+          public int getFailures() {
+               return attempts;
+          }
 
-        wordText.setBackground(SystemColor.text);
-        wordText.setFont(new Font("Dialog", 0, 30));
-        wordText.setHorizontalAlignment(SwingConstants.CENTER);
-        wordText.setHorizontalTextPosition(SwingConstants.CENTER);
 
-        statusBar.setBorder(BorderFactory.createEtchedBorder());
-        statusBar.setText(" ");
-        wCount.setBorder(BorderFactory.createEtchedBorder());
+          public String getSide(boolean front) {
+               return flashCard.getSide(front);
+          }
 
-        choicesPanel.setLayout(choicesPanelGridLayout);
-        choicesPanelGridLayout.setColumns(NUM_COLUMNS);
-        choicesPanelGridLayout.setRows(0);
 
-        statusPanel.setLayout(statusPanelBorderLayout);
-        statusBar.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-        statusPanel.add(statusBar, BorderLayout.CENTER);
-        statusPanel.add(wCount, BorderLayout.EAST);
+          public String toString() {
+               return flashCard.getFront();
+          }
 
-        setLayout(gridBagLayout1);
 
-        add(startLessonButton,  new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+          private FlashCard flashCard;
+          private int attempts;
+     }
 
-        add(showAnswerButton,  new GridBagConstraints(2, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
-        add(wordText,  new GridBagConstraints(0, GridBagConstraints.RELATIVE, 3, 1, 1.0, 1.0
-            ,GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+     //Construct the frame
+     public QuizPane(SetupPane setupPane) {
+          this.setupPane = setupPane;
+          try {
+               jbInit();
+          }
+          catch (Exception e) {
+               e.printStackTrace();
+          }
+     }
 
-        add(choicesPanel,  new GridBagConstraints(0, GridBagConstraints.RELATIVE, 3, 1, 0.0, 1.0
-            ,GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
-        add(statusPanel,  new GridBagConstraints(0, GridBagConstraints.RELATIVE, 3, 1, 1.0, 0.0
-            ,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 10, 10));
-    }
+     //Component initialization
+     private void jbInit() throws Exception {
+          startLessonButton.setText("Start");
+          startLessonButton.addActionListener(new QuizPane_startLessonButton_actionAdapter(this));
 
-    public void deleteChildren(JComponent c)
-    {
-        while (c.getComponentCount() > 0)
-            c.remove(c.getComponent(0));
-    }
+          showAnswerButton.setFocusPainted(true);
+          showAnswerButton.setMnemonic('A');
+          showAnswerButton.setText("Show Answer");
+          showAnswerButton.addActionListener(new QuizPane_showAnswerButton_actionAdapter(this));
 
-    public void loadTest()
-    {
+          wordText.setBackground(SystemColor.text);
+          wordText.setFont(new Font("Dialog", 0, 30));
+          wordText.setHorizontalAlignment(SwingConstants.CENTER);
+          wordText.setHorizontalTextPosition(SwingConstants.CENTER);
+
+          statusBar.setBorder(BorderFactory.createEtchedBorder());
+          statusBar.setText(" ");
+          wCount.setBorder(BorderFactory.createEtchedBorder());
+
+          choicesPanel.setLayout(choicesPanelGridLayout);
+          choicesPanelGridLayout.setColumns(NUM_COLUMNS);
+          choicesPanelGridLayout.setRows(0);
+
+          statusPanel.setLayout(statusPanelBorderLayout);
+          statusBar.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+          statusPanel.add(statusBar, BorderLayout.CENTER);
+          statusPanel.add(wCount, BorderLayout.EAST);
+
+          setLayout(gridBagLayout1);
+
+          add(startLessonButton,
+              new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.WEST,
+                                     GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+
+          add(showAnswerButton,
+              new GridBagConstraints(2, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.EAST,
+                                     GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+
+          add(wordText,
+              new GridBagConstraints(0, GridBagConstraints.RELATIVE, 3, 1, 1.0, 1.0, GridBagConstraints.NORTH,
+                                     GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+
+          add(choicesPanel,
+              new GridBagConstraints(0, GridBagConstraints.RELATIVE, 3, 1, 0.0, 1.0, GridBagConstraints.NORTH,
+                                     GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+
+          add(statusPanel,
+              new GridBagConstraints(0, GridBagConstraints.RELATIVE, 3, 1, 1.0, 0.0, GridBagConstraints.NORTH,
+                                     GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 10, 10));
+     }
+
+
+     public void deleteChildren(JComponent c) {
+          while (c.getComponentCount() > 0) {
+               c.remove(c.getComponent(0));
+          }
+     }
+
+
+     public void loadTest() {
 //        boolean loadedFont = false;
-        words = new Vector();
-        Iterator lessonIter = setupPane.iterator();
-        while (lessonIter.hasNext())
-        {
-            Lesson lesson = (Lesson) lessonIter.next();
-            Iterator cardIter = lesson.iterator();
-            while (cardIter.hasNext())
-            {
-                words.add(new WordEntry((FlashCard) cardIter.next()));
-            }
+          words = new Vector();
+          Iterator lessonIter = setupPane.iterator();
+          while (lessonIter.hasNext()) {
+               Lesson lesson = (Lesson) lessonIter.next();
+               Iterator cardIter = lesson.iterator();
+               while (cardIter.hasNext()) {
+                    words.add(new WordEntry( (FlashCard) cardIter.next()));
+               }
 //            if (!loadedFont)
 //            {
 //                String font = lesson.getFont();
@@ -198,8 +199,21 @@ public class QuizPane extends JPanel
 //                    }
 //                }
 //            }
-        }
-    }
+          }
+          // let's combine duplicate words
+          for (int i = 0; i < words.size() - 1; i++) {
+               WordEntry w = (WordEntry) words.get(i);
+               for (int j = i + 1; j < words.size(); j++) {
+                    WordEntry x = (WordEntry) words.get(j);
+                    if (w.flashCard.getFront().equals(x.flashCard.getFront())) {
+                         w.flashCard.setBack(w.flashCard.getBack() + " or " + x.flashCard.getBack());
+                         words.remove(j);
+                         j--;
+                    }
+               }
+          }
+     }
+
 
 //    public void loadFont(InputStream is)
 //    {
@@ -219,258 +233,226 @@ public class QuizPane extends JPanel
 //        }
 //    }
 
-    void startLessonButton_actionPerformed(ActionEvent e)
-    {
-        loadTest();
-        notLearned = (Vector) words.clone();
-        totalAsked = 0;
-        totalWrong = 0;
-        showRandomWord(currentWord);
-    }
-
-    public void showRandomWord(WordEntry last)
-    {
-        deleteChildren(choicesPanel);
-        int numToLearn = notLearned.size();
-        if (numToLearn == 0)
-        {
-            return;
-        }
-        while (currentWord == last)
-        {
-            int wordNum = (int) (Math.random() * notLearned.size());
-            currentWord = (WordEntry) notLearned.get(wordNum);
-        }
-        showWord(currentWord);
-    }
+     void startLessonButton_actionPerformed(ActionEvent e) {
+          loadTest();
+          notLearned = (Vector) words.clone();
+          totalAsked = 0;
+          totalWrong = 0;
+          showRandomWord(currentWord);
+     }
 
 
-    public void showWord(WordEntry w)
-    {
-        currentWord = w;
-        wordText.setText(w.getSide(!setupPane.isFlipped()));
-        if(setupPane.isNoMultipleChoice())
-        {
-            choicesPanel.invalidate();
-            choicesPanel.validate();
-            choicesPanel.repaint();
-        }
-        else
-        {
-            Vector choices = (Vector) words.clone();
-            choices.remove(w);
-
-            // randomly pick answers
-            boolean flipped = setupPane.isFlipped();
-            List picks = new ArrayList();
-            picks.add(createAnswerEntry(w.getSide(flipped)));
-            int size = words.size();
-            while (picks.size() < Math.min(NUM_ANSWERS, size))
-            {
-                int c = (int) (Math.random() * choices.size());
-                WordEntry wc = (WordEntry) choices.get(c);
-                String answer = wc.getSide(flipped);
-
-                // some times two different word have the same answer
-                if (!picks.contains(answer))
-                {
-                    picks.add(createAnswerEntry(answer));
-                    choices.remove(wc);
-                }
-            }
-            // Now randomize these answers. To do this we swap the first one
-            // with another.
-            int c = (int) (Math.random() * picks.size());
-            // If we have selected something other than ourselves.
-            if (c > 0)
-            {
-                picks.add(0, picks.remove(c));
-                picks.add(c, picks.remove(1));
-            }
-            Iterator iter = picks.iterator();
-            while (iter.hasNext())
-            {
-                choicesPanel.add((Component) iter.next());
-            }
-            wrong = 0;
-            shownAnswer = false;
-            updateStats();
-            choicesPanel.invalidate();
-            choicesPanel.validate();
-            choicesPanel.repaint();
-        }
-    }
+     public void showRandomWord(WordEntry last) {
+          deleteChildren(choicesPanel);
+          int numToLearn = notLearned.size();
+          if (numToLearn == 0) {
+               return;
+          }
+          while (currentWord == last) {
+               int wordNum = (int) (Math.random() * notLearned.size());
+               currentWord = (WordEntry) notLearned.get(wordNum);
+          }
+          showWord(currentWord);
+     }
 
 
-    Component createAnswerEntry(String answer)
-    {
-        JCheckBox ck = new JCheckBox(answer, false);
-        ck.setFont(new Font("Dialog", 0, 16));
-        ck.addItemListener(new QuizPane_answer_itemAdapter(this));
-        return ck;
-    }
+     public void showWord(WordEntry w) {
+          currentWord = w;
+          wordText.setText(w.getSide(!setupPane.isFlipped()));
+          if (setupPane.isNoMultipleChoice()) {
+               choicesPanel.invalidate();
+               choicesPanel.validate();
+               choicesPanel.repaint();
+          }
+          else {
+               Vector choices = (Vector) words.clone();
+               choices.remove(w);
 
-    void updateStats()
-    {
-        int percent = 100;
-        if (totalAsked > 0)
-        {
-            percent = (int) ((((float) (totalAsked - totalWrong)) / (float) totalAsked) * (float) 100);
-        }
-        wCount.setText(Integer.toString(notLearned.size()) + " | " +
-                       Integer.toString(totalAsked - totalWrong) + "/" + Integer.toString(totalAsked) +
-                       " (" + Integer.toString(percent) + "%)");
-    }
+               // randomly pick answers
+               boolean flipped = setupPane.isFlipped();
+               List picks = new ArrayList();
+               picks.add(createAnswerEntry(w.getSide(flipped)));
+               int size = words.size();
+               while (picks.size() < Math.min(NUM_ANSWERS, size)) {
+                    int c = (int) (Math.random() * choices.size());
+                    WordEntry wc = (WordEntry) choices.get(c);
+                    String answer = wc.getSide(flipped);
 
-
-    void answer_itemStateChanged(ItemEvent e)
-    {
-        JCheckBox ck = (JCheckBox) e.getItem();
-        if (ck.isSelected())
-        {
-            totalAsked++;
-            if (ck.getText().compareTo(currentWord.getSide(setupPane.isFlipped())) != 0)
-            {
-                statusBar.setText("Please try again. " + ck.getText() + " is not correct.");
-                wrong++;
-                totalWrong++;
-                ck.setSelected(false);
-            }
-            else
-            {
-                if (notLearned.size() > 1)
-                {
-                    statusBar.setText("Correct.  Try this next word");
-                    if (wrong > 0)
-                    {
-                        currentWord.incrementFailures(wrong);
+                    // some times two different word have the same answer
+                    if (!picks.contains(answer)) {
+                         picks.add(createAnswerEntry(answer));
+                         choices.remove(wc);
                     }
-                    else
-                        currentWord.incrementFailures(-1);
-                    if (currentWord.getFailures() < 0)
-                    {
-                        notLearned.remove(currentWord);
+               }
+               // Now randomize these answers. To do this we swap the first one
+               // with another.
+               int c = (int) (Math.random() * picks.size());
+               // If we have selected something other than ourselves.
+               if (c > 0) {
+                    picks.add(0, picks.remove(c));
+                    picks.add(c, picks.remove(1));
+               }
+               Iterator iter = picks.iterator();
+               while (iter.hasNext()) {
+                    choicesPanel.add( (Component) iter.next());
+               }
+               wrong = 0;
+               shownAnswer = false;
+               updateStats();
+               choicesPanel.invalidate();
+               choicesPanel.validate();
+               choicesPanel.repaint();
+          }
+     }
+
+
+     Component createAnswerEntry(String answer) {
+          JCheckBox ck = new JCheckBox(answer, false);
+          ck.setFont(new Font("Dialog", 0, 16));
+          ck.addItemListener(new QuizPane_answer_itemAdapter(this));
+          return ck;
+     }
+
+
+     void updateStats() {
+          int percent = 100;
+          if (totalAsked > 0) {
+               percent = (int) ( ( ( (float) (totalAsked - totalWrong)) / (float) totalAsked) * (float) 100);
+          }
+          wCount.setText(Integer.toString(notLearned.size()) + " | " + Integer.toString(totalAsked - totalWrong) + "/" +
+                         Integer.toString(totalAsked) + " (" + Integer.toString(percent) + "%)");
+     }
+
+
+     void answer_itemStateChanged(ItemEvent e) {
+          JCheckBox ck = (JCheckBox) e.getItem();
+          if (ck.isSelected()) {
+               totalAsked++;
+               if (ck.getText().compareTo(currentWord.getSide(setupPane.isFlipped())) != 0) {
+                    statusBar.setText("Please try again. " + ck.getText() + " is not correct.");
+                    wrong++;
+                    totalWrong++;
+                    ck.setSelected(false);
+               }
+               else {
+                    if (notLearned.size() > 1) {
+                         statusBar.setText("Correct.  Try this next word");
+                         if (wrong > 0) {
+                              currentWord.incrementFailures(wrong);
+                         }
+                         else {
+                              currentWord.incrementFailures( -1);
+                         }
+                         if (currentWord.getFailures() < 0) {
+                              notLearned.remove(currentWord);
+                         }
+                         showRandomWord(currentWord);
                     }
-                    showRandomWord(currentWord);
-                }
-                else
-                {
+                    else {
+                         notLearned.remove(currentWord);
+                         deleteChildren(choicesPanel);
+                         wordText.setText("-=+* Great! *+=-");
+                         statusBar.setText("Nice Job!  You've mastered all " + words.size() + " words!");
+                    }
+               }
+               updateStats();
+          }
+     }
+
+
+     public void showAnswer() {
+          for (int i = 0; i < choicesPanel.getComponentCount(); i++) {
+               JCheckBox ck = (JCheckBox) choicesPanel.getComponent(i);
+               if (ck.getText() == currentWord.getSide(setupPane.isFlipped())) {
+                    ck.setFont(new Font(ck.getFont().getName(), Font.BOLD | Font.ITALIC, ck.getFont().getSize()));
+                    break;
+               }
+          }
+          shownAnswer = true;
+     }
+
+
+     void showAnswerButton_actionPerformed(ActionEvent e) {
+          if (setupPane.isNoMultipleChoice()) {
+               ++totalAsked; String dialogString = new String(currentWord.getSide(!setupPane.isFlipped()) + "\n" +
+                         currentWord.getSide(setupPane.isFlipped()) + "\n" + "Did You Get It Right?\n");
+               int choice = JOptionPane.showConfirmDialog(this, dialogString, "Result", JOptionPane.YES_NO_OPTION);
+               if (JOptionPane.YES_OPTION == choice) {
                     notLearned.remove(currentWord);
-                    deleteChildren(choicesPanel);
+               }
+               else {
+                    ++totalWrong;
+               }
+               updateStats();
+               if (notLearned.size() > 0) {
+                    showRandomWord(currentWord);
+               }
+               else {
                     wordText.setText("-=+* Great! *+=-");
                     statusBar.setText("Nice Job!  You've mastered all " + words.size() + " words!");
-                }
-            }
-            updateStats();
-        }
-    }
-
-    public void showAnswer()
-    {
-        for (int i = 0; i < choicesPanel.getComponentCount(); i++)
-        {
-            JCheckBox ck = (JCheckBox) choicesPanel.getComponent(i);
-            if (ck.getText() == currentWord.getSide(setupPane.isFlipped()))
-            {
-                ck.setFont(new Font(ck.getFont().getName(), Font.BOLD | Font.ITALIC, ck.getFont().getSize()));
-                break;
-            }
-        }
-        shownAnswer = true;
-    }
-
-    void showAnswerButton_actionPerformed(ActionEvent e)
-    {
-        if (setupPane.isNoMultipleChoice())
-        {
-            ++totalAsked;
-            String dialogString = new String(currentWord.getSide(!setupPane.isFlipped())+"\n"+
-                                             currentWord.getSide(setupPane.isFlipped())+"\n"+
-                                             "Did You Get It Right?\n");
-            int choice = JOptionPane.showConfirmDialog(this,dialogString,"Result",
-                                                       JOptionPane.YES_NO_OPTION);
-            if (JOptionPane.YES_OPTION == choice)
-            {
-                notLearned.remove(currentWord);
-            }
-            else
-            {
-                ++totalWrong;
-            }
-            updateStats();
-            if (notLearned.size() > 0)
-            {
-                showRandomWord(currentWord);
-            }
-            else
-            {
-                wordText.setText("-=+* Great! *+=-");
-                statusBar.setText("Nice Job!  You've mastered all " + words.size() + " words!");
-            }
-        }
-        else
-        {
-            if (!shownAnswer)
-            {
-                showAnswer();
-                return;
-            }
-            int next = notLearned.indexOf(currentWord) + 1;
-            if (next == 0)
-            {
-                return;
-            }
-            if (next >= notLearned.size())
-                next = 0;
-            deleteChildren(choicesPanel);
-            showWord((WordEntry) notLearned.get(next));
-            showAnswer();
-        }
-    }
+               }
+          }
+          else {
+               if (!shownAnswer) {
+                    showAnswer();
+                    return;
+               }
+               int next = notLearned.indexOf(currentWord) + 1;
+               if (next == 0) {
+                    return;
+               }
+               if (next >= notLearned.size()) {
+                    next = 0;
+               }
+               deleteChildren(choicesPanel);
+               showWord( (WordEntry) notLearned.get(next));
+               showAnswer();
+          }
+     }
 
 }
 
-class QuizPane_startLessonButton_actionAdapter implements ActionListener
-{
-    QuizPane adaptee;
 
-    QuizPane_startLessonButton_actionAdapter(QuizPane adaptee)
-    {
-        this.adaptee = adaptee;
-    }
+class QuizPane_startLessonButton_actionAdapter
+          implements ActionListener {
+     QuizPane adaptee;
 
-    public void actionPerformed(ActionEvent e)
-    {
-        adaptee.startLessonButton_actionPerformed(e);
-    }
+     QuizPane_startLessonButton_actionAdapter(QuizPane adaptee) {
+          this.adaptee = adaptee;
+     }
+
+
+     public void actionPerformed(ActionEvent e) {
+          adaptee.startLessonButton_actionPerformed(e);
+     }
 }
 
-class QuizPane_answer_itemAdapter implements ItemListener
-{
-    QuizPane adaptee;
 
-    QuizPane_answer_itemAdapter(QuizPane adaptee)
-    {
-        this.adaptee = adaptee;
-    }
+class QuizPane_answer_itemAdapter
+          implements ItemListener {
+     QuizPane adaptee;
 
-    public void itemStateChanged(ItemEvent e)
-    {
-        adaptee.answer_itemStateChanged(e);
-    }
+     QuizPane_answer_itemAdapter(QuizPane adaptee) {
+          this.adaptee = adaptee;
+     }
+
+
+     public void itemStateChanged(ItemEvent e) {
+          adaptee.answer_itemStateChanged(e);
+     }
 }
 
-class QuizPane_showAnswerButton_actionAdapter implements ActionListener
-{
-    QuizPane adaptee;
 
-    QuizPane_showAnswerButton_actionAdapter(QuizPane adaptee)
-    {
-        this.adaptee = adaptee;
-    }
+class QuizPane_showAnswerButton_actionAdapter
+          implements ActionListener {
+     QuizPane adaptee;
 
-    public void actionPerformed(ActionEvent e)
-    {
-        adaptee.showAnswerButton_actionPerformed(e);
-    }
+     QuizPane_showAnswerButton_actionAdapter(QuizPane adaptee) {
+          this.adaptee = adaptee;
+     }
+
+
+     public void actionPerformed(ActionEvent e) {
+          adaptee.showAnswerButton_actionPerformed(e);
+     }
 }
