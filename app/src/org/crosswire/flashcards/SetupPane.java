@@ -135,7 +135,7 @@ public class SetupPane extends JPanel
          */
         public Object next()
         {
-            return model.get(currentIndex++);
+            return model.get(selectedIndexes[currentIndex++]);
         }
 
         private int[] selectedIndexes;

@@ -176,8 +176,14 @@ public class LessonManager implements Comparable
                 File file = files[i];
                 if (file.isDirectory())
                 {
+                    // convert the path to one that is relative to the home and has forward slashes
+                    String lessonPath = file.getPath();
+                    // If it uses \ as a path separator then replace it w/ /
+                    lessonPath = lessonPath.replace('\\', '/');
+                    int offset = lessonPath.indexOf(LESSON_ROOT);
+                    lessonPath = lessonPath.substring(offset, lessonPath.length());
                     // let the description be just the directory name and not the path
-                    add(new LessonSet(file.getPath(), file.getName()));
+                    add(new LessonSet(lessonPath, file.getName()));
                 }
             }
         }
