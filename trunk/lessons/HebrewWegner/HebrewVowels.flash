@@ -1,5 +1,4 @@
-#Flash Lesson
-#Thu Sep 16 17:31:42 MST 2004
+lessonTitle=Hebrew Vowels
 word13=\u05D4\u05B2
 word1=\u05DB\u05B6
 word12=\u05DB\u05B0
@@ -24,12 +23,10 @@ wordCount=16
 answers1=Segol (pen)
 answers0=Patah (cat)
 word9=\u05DB\u05D5\u05C2
-lessonTitle=Hebrew Vowels
 word8=\u05DB\u05B4\u05D9
 word7=\u05DB\u05B5\u05D9
 word6=\u05DB\u05B5
 word5=\u05DB\u05B8
-fileName=HebrewVowels.flash
 word4=\u05DB\u05BB
 word3=(stop) \u05DB\u05B8
 word15=\u05D4\u05B3
