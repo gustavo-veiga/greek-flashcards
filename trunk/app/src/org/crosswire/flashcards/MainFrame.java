@@ -122,13 +122,7 @@ public class MainFrame extends JFrame {
         }
         catch (MalformedURLException e1)
         {
-            // assert false;
-            // 
-            // The above statement fails to compile in 1.4, I'm assuming the intent is
-            // to throw an AssertionError; so, 'throw new AssertionError( );'.
-            // John Jacques, john.jacques@bigfoot.com
-            //
-            throw new AssertionError( );
+            assert false;
         }
 
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -243,14 +237,7 @@ public class MainFrame extends JFrame {
       }
       catch (IOException e1)
       {
-          // assert false;
-          // 
-          // The above statement fails to compile in 1.4, I'm assuming the intent is
-          // to throw an AssertionError; so, 'throw new AssertionError( );'.
-          // John Jacques, john.jacques@bigfoot.com
-          //
-          throw new AssertionError( );
-
+          assert false;
       }
       if (connection instanceof JarURLConnection)
       {
@@ -262,13 +249,7 @@ public class MainFrame extends JFrame {
           }
           catch (IOException e2)
           {
-              // assert false;
-              // 
-              // The above statement fails to compile in 1.4, I'm assuming the intent is
-              // to throw an AssertionError; so, 'throw new AssertionError( );'.
-              // John Jacques, john.jacques@bigfoot.com
-              //
-              throw new AssertionError( );
+              assert false;
           }
           Enumeration entries = jarFile.entries();
           Set lessonSet = null;
