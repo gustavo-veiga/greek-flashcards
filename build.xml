@@ -109,6 +109,7 @@
            destdir="${target.classes}"
            source="1.4">
       <src refid="source.path"/>
+      <exclude name="**/migrate/*"/>
     </javac>
     <!-- Copy the resources to the proper org/crosswire directory.
       == The path separator could be either / or \
