@@ -10,11 +10,16 @@
 
 package org.crosswire.flashcards;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
 
 class MainMenu extends JMenuBar {
 
@@ -36,7 +41,6 @@ class MainMenu extends JMenuBar {
 
         JMenu menu1, menu2;
         JMenuItem item;
-        ButtonGroup buttonGroup;
 
         // Application Menu
 
