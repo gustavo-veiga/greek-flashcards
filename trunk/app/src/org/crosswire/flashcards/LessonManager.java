@@ -6,7 +6,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * 
+ *
  * See the GNU General Public License for more details.
  * The License is available on the internet at:
  *     http://www.gnu.org/copyleft/gpl.html,
@@ -14,7 +14,7 @@
  *     Free Software Foundation, Inc.
  *     59 Temple Place - Suite 330
  *     Boston, MA 02111-1307, USA
- * 
+ *
  * The copyright to this program is held by it's authors
  * Copyright: 2004
  */
@@ -38,7 +38,7 @@ import org.crosswire.common.util.CWClassLoader;
 
 /**
  * The <code>LessonManager</code> provides the management of <code>LessonSet</code>s.
- * 
+ *
  * @author Troy A. Griffitts [scribe at crosswire dot org]
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
@@ -92,6 +92,51 @@ public class LessonManager
         loadHomeLessonSets();
     }
 
+    /**
+     * Load lesson sets from the jar file
+     */
+    private void loadPathLessonSets()
+    {
+
+        // Dig into the jar for lessonSets
+        URL lessonsURL = this.getClass().getResource('/' + LESSON_ROOT);
+        if (lessonsURL == null) {
+            return;
+        }
+        URLConnection connection = null;
+        try {
+            connection = lessonsURL.openConnection();
+        }
+        catch (Exception e1) {
+            assert false;
+        }
+        if (connection instanceof JarURLConnection) {
+            JarURLConnection jarConnection = (JarURLConnection) connection;
+            JarFile jarFile = null;
+            try {
+                jarFile = jarConnection.getJarFile();
+            }
+            catch (IOException e2) {
+                assert false;
+            }
+            Enumeration entries = jarFile.entries();
+            while (entries.hasMoreElements())
+            {
+                JarEntry jarEntry = (JarEntry) entries.nextElement();
+                if (jarEntry.isDirectory())
+                {
+                    String entryName = jarEntry.getName();
+                    // remove trailing '/'
+                    entryName = entryName.substring(0, entryName.length() - 1);
+                    if (entryName.startsWith(LESSON_ROOT) && ! entryName.equals(LESSON_ROOT))
+                    {
+                        // let the description be just the directory name and not the path
+                        add(new LessonSet(entryName));
+                    }
+                }
+            }
+        }
+    }
     /**
      * Load lesson sets from the jar file
      */
@@ -180,7 +225,7 @@ public class LessonManager
             // that's fine.  We just failed to load local files.
         }
     }
-    
+
     /**
      * See if any LessonSet has changes that need to be saved
      */
