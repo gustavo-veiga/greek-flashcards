@@ -1,7 +1,9 @@
 package org.crosswire.flashcards;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import javax.swing.UIManager;
-import java.awt.*;
 
 /**
  * <p>Title: </p>

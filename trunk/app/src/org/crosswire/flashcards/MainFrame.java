@@ -1,16 +1,52 @@
 package org.crosswire.flashcards;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
+import java.awt.AWTEvent;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Vector;
-import java.util.Properties;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.JarURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Hashtable;
-import java.io.*;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+
+import org.crosswire.common.CWClassLoader;
+import org.crosswire.common.ResourceUtil;
 
 /**
  * <p>Title: </p>
@@ -57,6 +93,10 @@ public class MainFrame extends JFrame {
   JPanel jPanel3 = new JPanel();
   BorderLayout borderLayout7 = new BorderLayout();
   JLabel wCount = new JLabel();
+  Map lessonSets = new LinkedHashMap();
+  private static final String LESSON_ROOT = "lessons";
+  private static final String DIR_PROJECT = ".flashcards";
+  private static final String FILE_PROTOCOL = "file";
 
   static class WordEntry {
     public WordEntry(String word) { this.word = word; }
@@ -70,16 +110,30 @@ public class MainFrame extends JFrame {
   }
 
 
-  //Construct the frame
-  public MainFrame() {
-    enableEvents(AWTEvent.WINDOW_EVENT_MASK);
-    try {
-      jbInit();
+    //Construct the frame
+    public MainFrame()
+    {
+        try
+        {
+            String path = System.getProperty("user.home") + File.separator + DIR_PROJECT; //$NON-NLS-1$
+            URL home = new URL(FILE_PROTOCOL, null, path);
+            CWClassLoader.setHome(home);
+        }
+        catch (MalformedURLException e1)
+        {
+            assert false;
+        }
+
+        enableEvents(AWTEvent.WINDOW_EVENT_MASK);
+        try
+        {
+            jbInit();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
-  }
   //Component initialization
   private void jbInit() throws Exception  {
     contentPane = (JPanel) this.getContentPane();
@@ -140,7 +194,7 @@ public class MainFrame extends JFrame {
     jPanel1.add(jButton3,  BorderLayout.EAST);
 
 
-    loadLessonDirectory("./");
+    loadLessons(LESSON_ROOT);
     jTabbedPane1.setSelectedComponent(setupPanel);
   }
 
@@ -159,37 +213,180 @@ public class MainFrame extends JFrame {
     while (c.getComponentCount() > 0)
       c.remove(c.getComponent(0));
   }
-  public void loadLessonDirectory(String directoryPath) {
-    deleteChildren(lessonPanel);
-    File d = new File(directoryPath);
-    File[] children = d.listFiles(new FilenameFilter() {
-      public boolean accept(File dir, String name) {
-        return (name.endsWith(".flash"));
+
+  public void loadLessons(String directoryPath) {
+      deleteChildren(lessonPanel);
+      lessonSets.clear();
+      loadJarLessons(directoryPath);
+      loadHomeLessons(directoryPath);
+      loadWidgets();
+  }
+  
+  private void loadJarLessons(String directoryPath)
+  {
+      // Dig into the jar for lessons
+      URL lessonsURL = this.getClass().getResource('/' + directoryPath);
+      URLConnection connection = null;
+      try
+      {
+          connection = lessonsURL.openConnection();
       }
-    });
-    java.util.Arrays.sort(children);
-    lessons = new Hashtable();
-    for (int i = 0; i < children.length; i++) {
-      Properties p = new Properties();
-      try {
-        p.load(new FileInputStream(children[i].getAbsolutePath()));
+      catch (IOException e1)
+      {
+          assert false;
       }
-      catch (IOException ex) {
+      if (connection instanceof JarURLConnection)
+      {
+          JarURLConnection jarConnection = (JarURLConnection) connection;
+          JarFile jarFile = null;
+          try
+          {
+              jarFile = jarConnection.getJarFile();
+          }
+          catch (IOException e2)
+          {
+              assert false;
+          }
+          Enumeration enum = jarFile.entries();
+          Set lessonSet = null;
+          while (enum.hasMoreElements())
+          {
+              JarEntry jarEntry = (JarEntry) enum.nextElement();
+              String entryName = jarEntry.getName();
+              if (entryName.startsWith(directoryPath))
+              {
+                  if (jarEntry.isDirectory())
+                  {
+                      lessonSet = new TreeSet();
+                      // remove trailing '/'
+                      lessonSets.put(entryName.substring(0, entryName.length() - 1), lessonSet);
+                  }
+                  else
+                  {
+                      lessonSet.add(entryName);
+                  }
+              }
+          }
       }
-      JCheckBox ck = new JCheckBox(p.getProperty("lessonTitle"), false);
-      lessonPanel.add(ck, null);
-      lessons.put(ck, children[i].getAbsolutePath());
-    }
-    lessonDirectory.setText(directoryPath);
-    this.pack();
+  }
+  
+  private void loadHomeLessons(String directoryPath)
+  {
+      List files = new ArrayList();
+      getFileListing(new File(directoryPath), files);
+      Collections.sort(files);
+      Iterator iter = files.iterator();
+      Set lessonSet = null;
+      while (iter.hasNext())
+      {
+          File file = (File) iter.next();
+          File parent = file.getParentFile();
+          String parentPath = parent.getPath().replace('\\', '/');
+          if (lessonSets.containsKey(parentPath))
+          {
+              lessonSet = (Set) lessonSets.get(parentPath);
+          }
+          else
+          {
+              lessonSet = new TreeSet();
+          }
+          String filePath = file.getPath().replace('\\', '/');
+          lessonSet.add(filePath);
+      }
+  }
+
+  private void loadWidgets()
+  {
+      lessons = new Hashtable();
+      Iterator iter = lessonSets.values().iterator();
+      while (iter.hasNext())
+      {
+          Set lessonSet = (Set) iter.next();
+          Iterator lessonIterator = lessonSet.iterator();
+          while (lessonIterator.hasNext())
+          {
+            String lessonName = (String) lessonIterator.next();
+            URL lessonURL = ResourceUtil.getResource(lessonName);
+            Properties p = new Properties();
+            try {
+                p.load(lessonURL.openConnection().getInputStream());
+            }
+            catch (IOException ex) {
+            }
+          JCheckBox ck = new JCheckBox(p.getProperty("lessonTitle"), false);
+          lessonPanel.add(ck, null);
+          lessons.put(ck, lessonURL);
+          }
+      }
+/*
+ * This code (or something like it) is for the future and shows how to use ResourceBundles.
+ * The extension on the files needs to be changed from .flash to .properties
+ * and the name given to getBundle is not to contain .properties.
+ */
+//      Locale defaultLocale = Locale.getDefault();
+//      while (iter.hasNext())
+//      {
+//          lessonSet = (Set) iter.next();
+//          Iterator lessonIterator = lessonSet.iterator();
+//          while (lessonIterator.hasNext())
+//          {
+//              String lessonName = (String) lessonIterator.next();
+//              try
+//              {
+//                  ResourceBundle resources = ResourceBundle.getBundle(lessonName, defaultLocale, new CWClassLoader());
+//                  JCheckBox ck = new JCheckBox(resources.getString("lessonTitle"), false);
+//                  lessonPanel.add(ck, null);
+//                  lessons.put(ck, resources);
+//              }
+//              catch (MissingResourceException ex)
+//              {
+//                  System.err.println("Cannot get resource " + lessonName + ":lessonTitle"); //$NON-NLS-1$ //$NON-NLS-2$
+//              }
+//          }
+//      }
+      this.pack();
+  }
+  /**
+   * Recursively walk a directory tree and return a List of all
+   * Files found; the List is sorted using File.compareTo.
+   *
+   * @param aStartingDir is a valid directory, which can be read.
+   */
+  public void getFileListing(File aStartingDir, List result) {
+       // look for files that are either directories or end with .flash
+      File[] filesAndDirs = aStartingDir.listFiles(new FilenameFilter() {
+          public boolean accept(File dir, String name) {
+              if (name.endsWith(".flash"))
+              {
+                  return true;
+              }
+              File testFile = new File(dir.getName() + File.separator + name);
+              return testFile.isDirectory();
+          }
+      });
+      if (filesAndDirs == null)
+      {
+          return;
+      }
+      for (int i = 0; i < filesAndDirs.length; i++)
+      {
+          File file = filesAndDirs[i];
+          if (file.isDirectory()) {
+              // dig deeper
+              getFileListing(file, result);
+          } else {
+              // Add only files
+              result.add(file);
+          }
+      }
   }
 
   void jButton2_actionPerformed(ActionEvent e) {
     JFileChooser dialog = new JFileChooser();
     dialog.setCurrentDirectory(new File("./"));
-    if (dialog.showOpenDialog(this) == dialog.APPROVE_OPTION) {
+    if (dialog.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
       lessonDirectory.setText(dialog.getSelectedFile().getParentFile().getAbsolutePath());
-      loadLessonDirectory(lessonDirectory.getText());
+      loadLessons(lessonDirectory.getText());
     }
   }
 
@@ -202,8 +399,8 @@ public class MainFrame extends JFrame {
       if (!ck.isSelected())
         continue;
       try {
-        String fullPath = (String)lessons.get(ck);
-        lesson.load(new FileInputStream(fullPath));
+        URL lessonURL = (URL)lessons.get(ck);
+        lesson.load(lessonURL.openConnection().getInputStream());
       }
       catch (Exception e1) {
         e1.printStackTrace();

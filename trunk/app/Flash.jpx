@@ -4,6 +4,7 @@
   <property category="debug.0" name="SmartStepRedefineClasses" value="0"/>
   <property category="debug.0" name="SmartStepSkipStaticInitializers" value="0"/>
   <property category="debug.0" name="SmartStepSkipSynthetics" value="0"/>
+  <property category="personality" name="personality" value=""/>
   <property category="runtime" name="DefaultConfiguration" value="-1"/>
   <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
   <property category="runtime.0" name="ConfigurationName" value="Quiz"/>
@@ -11,6 +12,7 @@
   <property category="runtime.0" name="application.class" value="org.crosswire.flashcards.Quiz"/>
   <property category="serverservices" name="single.server.name" value="Tomcat 4.0"/>
   <property category="sys" name="AuthorLabel" value="@author"/>
+  <property category="sys" name="Autorefresh" value="1"/>
   <property category="sys" name="BackupPath" value="bak"/>
   <property category="sys" name="CheckStable" value="1"/>
   <property category="sys" name="Company" value=""/>
@@ -24,13 +26,14 @@
   <property category="sys" name="ExcludeClassEnabled" value="0"/>
   <property category="sys" name="IncludeTestPath" value="1"/>
   <property category="sys" name="InstanceVisibility" value="2"/>
-  <property category="sys" name="JDK" value="java version 1.4.2_01-b06"/>
-  <property category="sys" name="JvmVersion" value="1.2"/>
+  <property category="sys" name="JDK" value="java version 1.4.2_05-b04"/>
+  <property category="sys" name="JvmVersion" value="1.4"/>
   <property category="sys" name="LastTag" value="0"/>
   <property category="sys" name="Libraries" value=""/>
   <property category="sys" name="MakeStable" value="0"/>
   <property category="sys" name="OutPath" value="classes"/>
   <property category="sys" name="SourcePath" value="src;test;../jsword-old/apps/ModEdit/src"/>
+  <property category="sys" name="SourceVersion" value="1.4"/>
   <property category="sys" name="TestPath" value="test"/>
   <property category="sys" name="Title" value=""/>
   <property category="sys" name="TitleLabel" value="Title:"/>
@@ -52,4 +55,9 @@
     <property category="archiving" name="targetPath" value="FlashEditor.jar"/>
     <property category="archiving" name="usingRules" value="1"/>
   </node>
+  <file path="../build.xml">
+    <property category="ant" name="displayrelativepath" value="0"/>
+    <property category="ant" name="loglevel" value="-debug"/>
+    <property category="ant" name="usebmj" value="0"/>
+  </file>
 </project>
