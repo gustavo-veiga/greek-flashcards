@@ -29,6 +29,7 @@
   <resources>
     <j2se version="1.4+"/>
     <jar href="flashcards.jar"/>
+    <jar href="lessons.jar"/>
     <!-- if on the Apple Mac, make it play well -->
     <property name="apple.laf.useScreenMenuBar" value="true"/>
     <property name="com.apple.mrj.application.apple.menu.about.name" value="Flashcards"/>
