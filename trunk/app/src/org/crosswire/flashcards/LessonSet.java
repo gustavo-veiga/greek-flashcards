@@ -52,7 +52,7 @@ public class LessonSet implements Comparable
 {
     public LessonSet(String aDirname)
     {
-        dirname = aDirname.toLowerCase();
+        dirname = aDirname; // .toLowerCase();
         description = dirname.substring(dirname.indexOf('/') + 1);
         lessons = new TreeSet();
         load();

@@ -162,7 +162,7 @@ public class QuizPane extends JPanel
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.NORTH;
         Insets standardInsets = gbc.insets;
-        gbc.insets = new Insets(10,0,20,0);
+        gbc.insets = new Insets(30,0,70,0);
         add(wordText, gbc);
 
         gbc.weighty = 1.0;

@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import org.crosswire.common.ResourceUtil;
+import org.crosswire.common.util.ResourceUtil;
 
 /**
  * A TabbedFileReader reads a file consisting of lines with
