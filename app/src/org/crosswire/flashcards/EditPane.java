@@ -38,7 +38,7 @@ import org.crosswire.common.swing.FixedSplitPane;
 
 /**
  * An EditPane consists of Lesson Sets, Lessons, Flash Cards and a Flash Card editor.
- * 
+ *
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
 public class EditPane extends JPanel
@@ -67,7 +67,7 @@ public class EditPane extends JPanel
         final FlashCardPane flashCardPanel = new FlashCardPane(true);
         final FlashCardEditor flashCardEditor = new FlashCardEditor();
         final JButton saveButton = new JButton("Save");
-        
+
         saveButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
@@ -75,7 +75,7 @@ public class EditPane extends JPanel
                 LessonManager.instance().store();
             }
         });
-        
+
         LessonChangeEventListener changeListener = new LessonChangeEventListener()
         {
             public void lessonChanged(LessonChangeEvent event)
@@ -83,7 +83,7 @@ public class EditPane extends JPanel
                 boolean modified = LessonManager.instance().isModified();
                 saveButton.setEnabled(modified);
             }
-            
+
         };
 
         boolean modified = LessonManager.instance().isModified();
@@ -94,7 +94,7 @@ public class EditPane extends JPanel
         lessonSetPanel.addLessonChangeEventListener(changeListener);
         lessonPanel.addLessonChangeEventListener(changeListener);
         flashCardPanel.addLessonChangeEventListener(changeListener);
-        
+
         // When flash cards are edited the FlashCard panel is updated
         flashCardEditor.addFlashCardEventListener(flashCardPanel);
 
@@ -131,7 +131,7 @@ public class EditPane extends JPanel
                 flashCardPanel.loadFlashCards((Lesson) list.getSelectedValue());
             }
         });
-        
+
         // When a lesson is selected then FlashCards can be edited
         lessonPanel.addListSelectionListener(new ListSelectionListener()
         {
@@ -180,12 +180,12 @@ public class EditPane extends JPanel
         flashCardSplitPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Flash Cards: "));
 
         JSplitPane verticalSplitPane = new FixedSplitPane(JSplitPane.VERTICAL_SPLIT);
-        verticalSplitPane.setDividerLocation(0.4D);
-        verticalSplitPane.setResizeWeight(0.4D);
+        verticalSplitPane.setDividerLocation(0.35D);
+        verticalSplitPane.setResizeWeight(0.35D);
         verticalSplitPane.setTopComponent(lessonSplitPane);
         verticalSplitPane.setBottomComponent(flashCardSplitPane);
         add(verticalSplitPane, BorderLayout.CENTER);
-        
+
         JPanel buttonPane = new JPanel();
         buttonPane.add(saveButton);
         add(buttonPane, BorderLayout.SOUTH);

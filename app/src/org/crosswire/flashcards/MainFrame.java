@@ -68,7 +68,7 @@ public class MainFrame extends JFrame
     {
         JPanel contentPane = (JPanel) this.getContentPane();
         contentPane.setLayout(new BorderLayout());
-        this.setSize(new Dimension(640, 480));
+        this.setSize(new Dimension(600, 480));
         this.setTitle("FlashCards  - (c) 2004 CrossWire Bible Society http://crosswire.org");
 
         JTabbedPane tabs = new JTabbedPane();
