@@ -120,7 +120,10 @@ public class LessonManager {
           }
           if (connection instanceof JarURLConnection) {
                JarURLConnection jarConnection = (JarURLConnection) connection;
-               loadJarLessonSets(new File(jarConnection.getJarFileURL().getFile()));
+               try {
+                    loadJarLessonSets(new File(new java.net.URI(jarConnection.getJarFileURL().toString())));
+               }
+               catch (Exception e) { e.printStackTrace(); }
           }
 
      }
