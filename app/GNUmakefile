@@ -7,6 +7,11 @@
 ######################################################################
 # Macros
 
+JAVAC=$(JAVA_HOME)/bin/javac
+if [ ! -f $(JAVAC) ] ; then \
+	JAVAC=javac ; \
+fi
+
 CLASSES_DIRECTORY = $(shell pwd)/classes
 
 CHECK_CLASSES_DIRECTORY = \
@@ -26,7 +31,7 @@ clean :
 
 flashcards :
 	@$(CHECK_CLASSES_DIRECTORY)
-	javac -g -d $(CLASSES_DIRECTORY) `find . -type f -name '*.java'`
+	$(JAVAC) -g -d $(CLASSES_DIRECTORY) `find . -type f -name '*.java'`
 	cd src ; \
 	tar cf - `find . -type f | egrep -v '\.svn'` | ( cd $(CLASSES_DIRECTORY) ; tar xvf - )
 	cd .. ; \
