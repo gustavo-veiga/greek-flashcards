@@ -48,9 +48,9 @@ import java.awt.*;
  */
 public class QuizPane extends JPanel
 {
-    private static final int NUM_COLUMNS = 3;
+    private static final int NUM_COLUMNS = 2;
     // NUM_ANSWERS should be a multiple of NUM_COLUMNS.
-    private static final int NUM_ANSWERS = 9;
+    private static final int NUM_ANSWERS = 10;
     
     SetupPane setupPane;
     Vector words = new Vector();
