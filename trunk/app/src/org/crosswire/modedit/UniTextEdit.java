@@ -125,6 +125,7 @@ public class UniTextEdit extends JPanel {
     });
     jTextArea1.setText("");
     jTextArea1.setLineWrap(true);
+    jTextArea1.setFont(new Font("Dialog", 0, 30));
     jTextArea1.addKeyListener(new java.awt.event.KeyAdapter() {
       public void keyTyped(KeyEvent e) {
         jTextArea1_keyTyped(e);
