@@ -1,3 +1,23 @@
+/*
+ * Distribution Licence:
+ * FlashCard is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License,
+ * version 2 as published by the Free Software Foundation.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * 
+ * See the GNU General Public License for more details.
+ * The License is available on the internet at:
+ *     http://www.gnu.org/copyleft/gpl.html,
+ * or by writing to:
+ *     Free Software Foundation, Inc.
+ *     59 Temple Place - Suite 330
+ *     Boston, MA 02111-1307, USA
+ * 
+ * The copyright to this program is held by it's authors
+ * Copyright: 2004
+ */
 package org.crosswire.flashcards;
 
 import java.awt.BorderLayout;
@@ -6,15 +26,6 @@ import java.awt.Frame;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
-
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author not attributable
- * @version 1.0
- */
 
 public class OpenFile extends JDialog {
   JPanel panel1 = new JPanel();

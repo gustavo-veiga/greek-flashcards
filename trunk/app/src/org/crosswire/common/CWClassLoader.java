@@ -265,32 +265,36 @@ public class CWClassLoader extends ClassLoader
     {
         URL reply = null;
         
-        URL homeURL = getHome();;
+        URL override = getHomeResource(search);
 
         // Look at the application's home first to allow overrides
-        if (homeURL != null)
+        if (override != null)
         {
-            // Since home does not end in a '/'
-            // we need to add one to the front of search
-            // if it does not have it.
-            String ssearch = null;
-            if (search.charAt(0) == '/')
-            {
-                ssearch = search;
-            }
-            else
-            {
-                ssearch = '/' + search;
-            }
-
-            URL override = lengthenURL(homeURL, ssearch);
-
             // Make sure the file exists and can be read
             File f = new File(override.getFile());
             if (f.canRead())
             {
                 reply = override;
             }
+        }
+
+        return reply;
+    }
+
+    /**
+     * Compute an URL for the resource in the home directory
+     * @param search must be non-null, non-empty
+     */
+    public static URL getHomeResource(String search)
+    {
+        URL reply = null;
+        
+        URL homeURL = getHome();
+
+        // Look at the application's home first to allow overrides
+        if (homeURL != null)
+        {
+            reply = lengthenURL(homeURL, search);
         }
 
         return reply;
@@ -306,9 +310,17 @@ public class CWClassLoader extends ClassLoader
     {
         try
         {
+            char firstChar = extra.charAt(extra.length() - 1);
+            if (isSeparator(firstChar))
+            {
+                extra = extra.substring(1);
+            }
+
             if (orig.getProtocol().equals(PROTOCOL_FILE))
             {
-                if (orig.toExternalForm().endsWith(File.separator))
+                String file = orig.toExternalForm();
+                char lastChar = file.charAt(file.length() - 1);
+                if (isSeparator(lastChar))
                 {
                     return new URL(orig.getProtocol(),
                                    orig.getHost(),
@@ -334,11 +346,14 @@ public class CWClassLoader extends ClassLoader
         catch (MalformedURLException ex)
         {
             assert false : ex;
-
             return null;
         }
     }
 
+    private static boolean isSeparator(char c)
+    {
+        return c == '/' || c == '\\';
+    }
 
     /**
      * Constant for the file: protocol
