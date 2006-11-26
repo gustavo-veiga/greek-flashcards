@@ -46,6 +46,10 @@ import javax.swing.event.ListSelectionListener;
  */
 public class LessonSetPane extends JPanel
 {
+    /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = -5348157756345036495L;
     private JList lessonSetList = new JList(new DefaultListModel());
     private boolean editable;
 

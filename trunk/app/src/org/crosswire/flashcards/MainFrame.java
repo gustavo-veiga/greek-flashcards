@@ -39,6 +39,11 @@ import javax.swing.JTabbedPane;
  */
 public class MainFrame extends JFrame
 {
+    /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = 8755537121252831657L;
+
     private SetupPane setupPane;
     private QuizPane testPane;
     private EditPane editPane;

@@ -20,7 +20,7 @@
 package org.crosswire.flashcards;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FilenameFilter;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -28,12 +28,10 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.io.FilenameFilter;
 
 
 /**
@@ -99,9 +97,6 @@ public class LessonSet
           URLConnection connection = null;
           try {
                lessonsURL = new URL(url);
-               if (lessonsURL == null) {
-                    return;
-               }
                connection = lessonsURL.openConnection();
           }
           catch (Exception e1) {
@@ -112,7 +107,9 @@ public class LessonSet
                loadJarLessonSet(jarConnection);
           }
           else {
-               loadDirectoryLessonSet(new File(lessonsURL.getFile()));
+              if (lessonsURL != null) {
+                  loadDirectoryLessonSet(new File(lessonsURL.getFile()));
+              }
           }
      }
 
@@ -285,11 +282,11 @@ public class LessonSet
      }
 
 
-     public Lesson getLesson(String description) {
+     public Lesson getLesson(String desc) {
           Iterator i = iterator();
           while (i.hasNext()) {
                Lesson ls = (Lesson) i.next();
-               if (description.equals(ls.getDescription())) {
+               if (desc.equals(ls.getDescription())) {
                     return ls;
                }
           }

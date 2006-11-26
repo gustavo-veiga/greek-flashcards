@@ -41,7 +41,11 @@ import javax.swing.event.ListSelectionListener;
  */
 public class SetupPane extends JPanel
 {
-    private LessonPane lessonPanel = new LessonPane();
+    /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = 1L;
+    protected LessonPane lessonPanel = new LessonPane();
     private LessonSetPane lessonSetPanel = new LessonSetPane();
     private JCheckBox flipped = new JCheckBox("Flip the Flash Cards");
     private JCheckBox noMultipleChoice = new JCheckBox("No Multiple Choice");

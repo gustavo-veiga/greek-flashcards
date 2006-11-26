@@ -20,6 +20,10 @@
 package org.crosswire.flashcards;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -27,11 +31,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.io.FilenameFilter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.JarURLConnection;
-import javax.swing.JOptionPane;
 
 
 /**
@@ -174,9 +173,9 @@ public class LessonManager {
       * Load lesson sets from the jar file
       */
      private void loadLessonSetsFromJarDir(String path) {
-          File dir = new File(path);
-          if (dir.isDirectory()) {
-               File[] files = dir.listFiles(new FilenameFilter() {
+          File lessonDir = new File(path);
+          if (lessonDir.isDirectory()) {
+               File[] files = lessonDir.listFiles(new FilenameFilter() {
                     public boolean accept(File dir, String name) {
                          return name.toUpperCase().endsWith(".JAR");
                     }

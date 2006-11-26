@@ -46,8 +46,12 @@ class MainMenu extends JMenuBar {
     // Attributes
     //
 
-    private JFrame frame;
-    private JRadioButtonMenuItem trace, inform, warn, error;
+    /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = 8985550639988241474L;
+    protected JFrame frame;
+    protected JRadioButtonMenuItem trace, inform, warn, error;
 
     //
     // Methods
@@ -122,6 +126,11 @@ class MainMenu extends JMenuBar {
     // ---------------
     class DebugAction extends AbstractAction {
 
+        /**
+         * Serialization ID
+         */
+        private static final long serialVersionUID = 3017480579590120226L;
+
         public void actionPerformed( ActionEvent event ) {
 
             Debug.trace( this.toString( ), "Beginning\n" );
@@ -159,6 +168,11 @@ class MainMenu extends JMenuBar {
     // ---------------
     class ExitAction extends AbstractAction {
 
+        /**
+         * Serialization ID
+         */
+        private static final long serialVersionUID = -4617551302933053860L;
+
         public ExitAction( ) { super( ); }
 
         public void actionPerformed( ActionEvent event ) {
@@ -173,6 +187,11 @@ class MainMenu extends JMenuBar {
 
     // ---------------
     class AboutAction extends AbstractAction {
+
+        /**
+         * Serialization ID
+         */
+        private static final long serialVersionUID = 2317132982826962267L;
 
         public void actionPerformed( ActionEvent event ) {
 

@@ -62,6 +62,12 @@ public class EditorFrame_AboutBox extends JDialog implements ActionListener {
   String version = "1.0";
   String copyright = "Copyright (c) 2003";
   String comments = "";
+
+  /**
+   * Serialization ID
+   */
+  private static final long serialVersionUID = -374098587942625556L;
+
   public EditorFrame_AboutBox(Frame parent) {
     super(parent);
     enableEvents(AWTEvent.WINDOW_EVENT_MASK);

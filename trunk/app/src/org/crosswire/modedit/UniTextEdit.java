@@ -81,6 +81,10 @@ public class UniTextEdit extends JPanel {
   JMenuItem jMenuItem4 = new JMenuItem();
   JMenuItem jMenuItem5 = new JMenuItem();
   BorderLayout borderLayout6 = new BorderLayout();
+  /**
+   * Serialization ID
+   */
+  private static final long serialVersionUID = 8632340739785278662L;
 
   /**Construct the frame*/
   public UniTextEdit() {
@@ -255,7 +259,7 @@ public class UniTextEdit extends JPanel {
   }
 
   void fontSizer_stateChanged(ChangeEvent e) {
-          setFontSize((float)fontSizer.getValue());
+          setFontSize(fontSizer.getValue());
   }
 
   void imComboBox_itemStateChanged(ItemEvent e) {

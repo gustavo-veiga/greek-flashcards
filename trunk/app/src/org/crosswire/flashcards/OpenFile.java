@@ -28,9 +28,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
 public class OpenFile extends JDialog {
+
   JPanel panel1 = new JPanel();
   BorderLayout borderLayout1 = new BorderLayout();
   JFileChooser jFileChooser1 = new JFileChooser();
+  /**
+   * Serialization ID
+   */
+  private static final long serialVersionUID = 8979475366924598387L;
 
   public OpenFile(Frame frame, String title, boolean modal) {
     super(frame, title, modal);

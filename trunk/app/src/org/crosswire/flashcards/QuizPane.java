@@ -51,6 +51,10 @@ public class QuizPane
      private static final int NUM_COLUMNS = 2;
      // NUM_ANSWERS should be a multiple of NUM_COLUMNS.
      private static final int NUM_ANSWERS = 10;
+     /**
+      * Serialization ID
+      */
+     private static final long serialVersionUID = 8613458092624929167L;
 
      SetupPane setupPane;
      Vector words = new Vector();
@@ -75,7 +79,7 @@ public class QuizPane
      static class WordEntry {
 
           public String back;
-          private FlashCard flashCard;
+          protected FlashCard flashCard;
           public int attempts;
 
 
@@ -320,7 +324,7 @@ public class QuizPane
      void updateStats() {
           int percent = 100;
           if (totalAsked > 0) {
-               percent = (int) ( ( ( (float) (totalAsked - totalWrong)) / (float) totalAsked) * (float) 100);
+               percent = (int) ( ( ( (float) (totalAsked - totalWrong)) / (float) totalAsked) * 100);
           }
           wCount.setText(Integer.toString(notLearned.size()) + " | " + Integer.toString(totalAsked - totalWrong) + "/" +
                          Integer.toString(totalAsked) + " (" + Integer.toString(percent) + "%)");
