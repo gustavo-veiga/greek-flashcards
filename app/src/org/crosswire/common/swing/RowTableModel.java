@@ -33,6 +33,11 @@ import javax.swing.table.AbstractTableModel;
 public class RowTableModel extends AbstractTableModel
 {
     /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = 4243175203443082117L;
+
+    /**
      * Field list contains the objects that can be worked upon
      */
     private List list;

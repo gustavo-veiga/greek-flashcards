@@ -38,6 +38,10 @@ import javax.swing.table.TableColumn;
 public class SortRenderer extends DefaultTableCellRenderer {
 
 	/**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = 7280299308536170406L;
+    /**
 	 * Field pressedColumn
 	 */
 	private TableColumn pressedColumn;

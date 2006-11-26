@@ -29,6 +29,11 @@ import org.crosswire.common.swing.RowColumns;
 public class FlashCardColumns extends RowColumns
 {
     /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = -6175919819882232731L;
+
+    /**
      * Field HEADERS
      * The names of the table column headers.
      */

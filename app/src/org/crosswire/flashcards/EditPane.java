@@ -43,6 +43,11 @@ import javax.swing.event.ListSelectionListener;
  */
 public class EditPane extends JPanel
 {
+    /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = 8637424690635575114L;
+
     //Construct the frame
     public EditPane()
     {

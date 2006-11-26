@@ -32,6 +32,11 @@ public class LessonChangeEvent extends EventObject
 {
 
     /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = 6186012752083856266L;
+
+    /**
      * @param source
      */
     public LessonChangeEvent(Object source)

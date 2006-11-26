@@ -43,6 +43,10 @@ import javax.swing.table.TableColumnModel;
 public class RowTable extends JTable
 {
     /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = 4343292788655616441L;
+    /**
      * Field ONE_STANDARD_CHARACTER
      */
     private static final String ONE_STANDARD_CHARACTER = "M"; //$NON-NLS-1$

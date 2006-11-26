@@ -46,6 +46,11 @@ public class FlashCardEditor extends JPanel
     // Attributes
     //
 
+    /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = -4278635534357530483L;
+
     private JPanel answerPanel = new JPanel();
     private JTextField answers = new JTextField();
     private UniTextEdit wordText = new UniTextEdit();
@@ -133,9 +138,10 @@ public class FlashCardEditor extends JPanel
 
     public void setFlashCard(FlashCard newFlashCard)
     {
-        boolean selected = newFlashCard != null;
-        if (selected)
+        boolean selected = false;
+        if (newFlashCard != null)
         {
+            selected = true;
             try
             {
                 flashCard = (FlashCard) newFlashCard.clone();

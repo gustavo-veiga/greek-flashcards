@@ -106,6 +106,11 @@ public class EditorFrame extends JFrame {
     UniTextEdit wordText = new UniTextEdit();
     private boolean standAlone;
 
+    /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = -1544644199693526132L;
+
     static class WordEntry {
         public WordEntry(String word) { this.word = word; }
         public WordEntry(String word, String answers) { this(word); this.answers = answers; }

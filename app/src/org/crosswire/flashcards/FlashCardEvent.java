@@ -34,6 +34,11 @@ public class FlashCardEvent extends EventObject
     public static final int MODIFIED = 1;
     public static final int DELETED = 2;
     /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = -5013093593239579380L;
+
+    /**
      * @param source
      */
     public FlashCardEvent(Object source, FlashCard aFlashCard, int anAction)

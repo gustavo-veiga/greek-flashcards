@@ -21,21 +21,13 @@
 package org.crosswire.flashcards;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.swing.BorderFactory;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.EventListenerList;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.crosswire.common.swing.RowTable;
@@ -48,6 +40,10 @@ import org.crosswire.common.swing.RowTableModel;
  */
 public class FlashCardPane extends JPanel implements FlashCardEventListener
 {
+    /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = 5685660811196521485L;
     private RowTable wordList = new RowTable(new ArrayList(), new FlashCardColumns());
     private Lesson lesson;
 
