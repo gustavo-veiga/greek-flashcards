@@ -39,19 +39,14 @@ public class OpenFile extends JDialog {
 
   public OpenFile(Frame frame, String title, boolean modal) {
     super(frame, title, modal);
-    try {
-      jbInit();
-      pack();
-    }
-    catch(Exception ex) {
-      ex.printStackTrace();
-    }
+    jbInit();
+    pack();
   }
 
   public OpenFile() {
     this(null, "", false);
   }
-  private void jbInit() throws Exception {
+  private void jbInit() {
     panel1.setLayout(borderLayout1);
     getContentPane().add(panel1);
     panel1.add(jFileChooser1, BorderLayout.CENTER);

@@ -24,7 +24,7 @@ public class GreekKeymanIM
   public String translate(char in) {
     String retVal = (String) charMap.get(new Integer(in));
     if (retVal == null) {
-      retVal = new String() + in;
+      retVal = "" + in;
 
     }
     return retVal;

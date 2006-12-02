@@ -35,7 +35,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionListener;
 
 
@@ -53,11 +52,6 @@ public class LessonSetPane extends JPanel
     private JList lessonSetList = new JList(new DefaultListModel());
     private boolean editable;
 
-    /**
-     * The listeners for handling ViewEvent Listeners
-     */
-    private EventListenerList listenerList = new EventListenerList();
-
     //Construct the frame
     public LessonSetPane()
     {
@@ -70,14 +64,7 @@ public class LessonSetPane extends JPanel
     public LessonSetPane(boolean allowEdits)
     {
         editable = allowEdits;
-        try
-        {
-            jbInit();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        jbInit();
     }
 
     /**
@@ -88,7 +75,7 @@ public class LessonSetPane extends JPanel
         lessonSetList.addListSelectionListener(listener);
     }
 
-    private void jbInit() throws Exception
+    private void jbInit()
     {
         lessonSetList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 

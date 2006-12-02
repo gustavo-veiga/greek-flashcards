@@ -21,12 +21,14 @@ package org.crosswire.flashcards;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.jar.JarEntry;
@@ -58,20 +60,10 @@ public class LessonManager {
 
 
      private LessonManager() {
-          try {
-               homeProjectPath = System.getProperty("user.home") + File.separator + DIR_PROJECT;
-               homeLessonDir = new File(homeProjectPath + File.separator + LESSON_ROOT);
-          }
-          catch (Exception e1) {
-               e1.printStackTrace();
-          }
-          load();
-          try {
-               jbInit();
-          }
-          catch (Exception ex) {
-               ex.printStackTrace();
-          }
+         homeProjectPath = System.getProperty("user.home") + File.separator + DIR_PROJECT;
+         homeLessonDir = new File(homeProjectPath + File.separator + LESSON_ROOT);
+         load();
+         jbInit();
      }
 
 
@@ -115,9 +107,9 @@ public class LessonManager {
 
           // find the directory containing this
           // search all jars in that directory for lesson sets
-          String thisName = this.getClass().getName();
+          String thisName = LessonManager.class.getName();
           String thisRes = "/" + thisName.replace('.', '/') + ".class";
-          URL thisURL = this.getClass().getResource(thisRes);
+          URL thisURL = LessonManager.class.getResource(thisRes);
           if (thisURL == null) {
               return;
           }
@@ -135,7 +127,7 @@ public class LessonManager {
 
           // see if there are any lessons on our path
           // dig into the jar for lessonSets
-          URL lessonsURL = this.getClass().getResource('/' + LESSON_ROOT);
+          URL lessonsURL = LessonManager.class.getResource('/' + LESSON_ROOT);
           if (lessonsURL == null) {
               return;
           }
@@ -160,14 +152,11 @@ public class LessonManager {
 
                     loadJarLessonSets(new File(new java.net.URI(uri)));
                }
-               catch (Exception e) { e.printStackTrace(); }
+               catch (Exception e) { 
+                   Debug.error(this.getClass().getName(), e.getMessage());
+               }
           }
-
-
-
-
      }
-
 
      /**
       * Load lesson sets from the jar file
@@ -175,11 +164,7 @@ public class LessonManager {
      private void loadLessonSetsFromJarDir(String path) {
           File lessonDir = new File(path);
           if (lessonDir.isDirectory()) {
-               File[] files = lessonDir.listFiles(new FilenameFilter() {
-                    public boolean accept(File dir, String name) {
-                         return name.toUpperCase().endsWith(".JAR");
-                    }
-               });
+               File[] files = lessonDir.listFiles(new JarFileFilter());
                if (files != null) {
                     for (int i = 0; i < files.length; i++) {
                          loadJarLessonSets(files[i]);
@@ -213,8 +198,8 @@ public class LessonManager {
                     }
                }
           }
-          catch (Exception e2) {
-               e2.printStackTrace();
+          catch (IOException e2) {
+              Debug.error(this.getClass().getName(), e2.getMessage());
           }
      }
 
@@ -236,7 +221,7 @@ public class LessonManager {
                     }
                }
           }
-          catch (Exception e) {
+          catch (IOException e) {
                // that's fine.  We just failed to load local files.
           }
      }
@@ -281,6 +266,12 @@ public class LessonManager {
      }
 
 
-     private void jbInit() throws Exception {
+     private void jbInit() {
      }
+
+     static class JarFileFilter implements FilenameFilter {
+         public boolean accept(File dir, String name) {
+              return name.toUpperCase(Locale.ENGLISH).endsWith(".JAR");
+         }
+    }
 }

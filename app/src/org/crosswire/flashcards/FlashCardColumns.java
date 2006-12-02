@@ -101,7 +101,7 @@ public class FlashCardColumns extends RowColumns
      */
     public String[] getHeaders()
     {
-        return FlashCardColumns.HEADERS;
+        return (String[]) FlashCardColumns.HEADERS.clone();
     }
 
     /* (non-Javadoc)
@@ -109,7 +109,7 @@ public class FlashCardColumns extends RowColumns
      */
     public String[] getHeaderToolTips()
     {
-        return FlashCardColumns.HEADER_TOOLTIPS;
+        return (String[]) FlashCardColumns.HEADER_TOOLTIPS.clone();
     }
 
     /* (non-Javadoc)
@@ -117,7 +117,7 @@ public class FlashCardColumns extends RowColumns
      */
     public int[] getCharacterWidths()
     {
-        return FlashCardColumns.CHARACTER_WIDTHS;
+        return (int[]) FlashCardColumns.CHARACTER_WIDTHS.clone();
     }
 
     /* (non-Javadoc)
@@ -125,7 +125,7 @@ public class FlashCardColumns extends RowColumns
      */
     public boolean[] getFixedWidths()
     {
-        return FlashCardColumns.FIXED_WIDTHS;
+        return (boolean[]) FlashCardColumns.FIXED_WIDTHS.clone();
     }
 
     /* (non-Javadoc)
@@ -133,7 +133,7 @@ public class FlashCardColumns extends RowColumns
      */
     public Class[] getClasses()
     {
-        return FlashCardColumns.CLASSES;
+        return (Class[]) FlashCardColumns.CLASSES.clone();
     }
 
     /* (non-Javadoc)
@@ -141,7 +141,7 @@ public class FlashCardColumns extends RowColumns
      */
     public int[] getSortKeys()
     {
-        return FlashCardColumns.SORT_KEYS;
+        return (int[]) FlashCardColumns.SORT_KEYS.clone();
     }
 
      /* (non-Javadoc)

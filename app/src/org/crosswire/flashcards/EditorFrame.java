@@ -33,6 +33,7 @@ package org.crosswire.flashcards;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -41,11 +42,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -70,7 +73,7 @@ public class EditorFrame extends JFrame {
     //
     String cwdPath = "./";
 
-    JPanel contentPane;
+    Container contentPane;
     JToolBar jToolBar = new JToolBar();
     JButton jButton1 = new JButton();
     JButton jButton2 = new JButton();
@@ -102,7 +105,7 @@ public class EditorFrame extends JFrame {
     JTextField answers = new JTextField();
     JPanel jPanel7 = new JPanel();
     BorderLayout borderLayout6 = new BorderLayout();
-    Vector words = new Vector();
+    List words = new ArrayList();
     UniTextEdit wordText = new UniTextEdit();
     private boolean standAlone;
 
@@ -130,21 +133,15 @@ public class EditorFrame extends JFrame {
         this.standAlone = standAlone;
         enableEvents( AWTEvent.WINDOW_EVENT_MASK );
 
-        try { jbInit( ); }
-        catch( Exception exception ) {
-
-            Debug.error( this.toString( ), exception.getMessage( ) );
-
-        }
-
+        jbInit( );
     }
 
     //Component initialization
-    private void jbInit() throws Exception  {
+    private void jbInit() {
         image1 = new ImageIcon(EditorFrame.class.getResource("openFile.png"));
         image2 = new ImageIcon(EditorFrame.class.getResource("closeFile.png"));
         image3 = new ImageIcon(EditorFrame.class.getResource("saveDoc.png"));
-        contentPane = (JPanel) this.getContentPane();
+        contentPane = this.getContentPane();
         contentPane.setLayout(borderLayout1);
         this.setSize(new Dimension(512, 300));
         this.setTitle("Editor");
@@ -254,7 +251,7 @@ public class EditorFrame extends JFrame {
         lesson.setProperty("fileName", "NewLesson.flash");
         lesson.setProperty("lessonTitle", "New Lesson");
         lesson.setProperty("wordCount", "0");
-        words = new Vector();
+        words = new ArrayList();
         words.add(new WordEntry(" "));
         showLesson();
     }
@@ -266,23 +263,30 @@ public class EditorFrame extends JFrame {
 
         lesson = new Properties( );
 
+        InputStream inStream = null;
         try {
+            inStream = new FileInputStream(lessonFileName);
+            lesson.load(inStream);
 
-            lesson.load( new FileInputStream( lessonFileName ) );
-
-        } catch( Exception e ) {
-
-            e.printStackTrace( );
-
+        } catch(IOException e) {
+            Debug.error(this.getClass().getName(), e.getMessage());
+        } finally {
+            if (inStream != null) {
+                try {
+                    inStream.close();
+                } catch (IOException e) {
+                    Debug.error(this.getClass().getName(), e.getMessage());
+                }
+            }
         }
 
-        words = new Vector( );
-        int wordCount = Integer.parseInt( lesson.getProperty( "wordCount" ) );
+        words = new ArrayList( );
+        int wordCount = Integer.parseInt(lesson.getProperty("wordCount"));
 
-        for( int i = 0; i < wordCount; ++ i ) {
+        for(int i = 0; i < wordCount; ++i) {
 
-            words.add( new WordEntry( lesson.getProperty( "word" + Integer.toString( i ) ),
-                                      lesson.getProperty( "answers" + Integer.toString( i ) ) ) );
+            words.add( new WordEntry(lesson.getProperty("word" + Integer.toString(i)),
+                                     lesson.getProperty("answers" + Integer.toString(i))));
 
         }
 
@@ -292,6 +296,7 @@ public class EditorFrame extends JFrame {
 
 
     private void saveLesson() {
+        OutputStream outStream = null;
         try {
             lesson.setProperty("wordCount", Integer.toString(words.size()));
             for (int i = 0; i < words.size(); i++) {
@@ -299,9 +304,19 @@ public class EditorFrame extends JFrame {
                 lesson.setProperty("word"+Integer.toString(i), we.word);
                 lesson.setProperty("answers"+Integer.toString(i), we.answers);
             }
-            lesson.store(new FileOutputStream(cwdPath + "/" + lesson.getProperty("fileName")),
-                         "Flash Lesson");
-        } catch (IOException ex) { ex.printStackTrace(); }
+            outStream = new FileOutputStream(cwdPath + "/" + lesson.getProperty("fileName"));
+            lesson.store(outStream, "Flash Lesson");
+        } catch (IOException ex) {
+            Debug.error(this.getClass().getName(), ex.getMessage());
+        } finally {
+            if (outStream != null) {
+                try {
+                    outStream.close();
+                } catch (IOException e) {
+                    Debug.error(this.getClass().getName(), e.getMessage());
+                }
+            }
+        }
     }
 
     ////////////////////////////
@@ -309,7 +324,7 @@ public class EditorFrame extends JFrame {
 
         setTitle( "FlashCards Editor (c) CrossWire Bible Society http://crosswire.org - " +
                   lesson.getProperty( "fileName" ) );
-        wordList.setListData( words );
+        wordList.setListData( words.toArray() );
         wordList.setSelectedIndex( 0 );
         wordList.addListSelectionListener( new EditorFrame_wordList_listSelectionAdapter( this ) );
         String fName = lesson.getProperty( "fileName" );
@@ -327,9 +342,7 @@ public class EditorFrame extends JFrame {
                 wordText.loadFont( new FileInputStream( fontPath.getText( ) ) );
 
             } catch( Exception exception ) {
-
-                exception.printStackTrace( );
-
+                Debug.error(this.getClass().getName(), exception.getMessage());
             }
 
         }
@@ -375,21 +388,14 @@ public class EditorFrame extends JFrame {
 
     void jButton1_actionPerformed(ActionEvent e) {
         JFileChooser dialog = new JFileChooser();
-        dialog.setFileFilter(new FileFilter() {
-                public boolean accept(File f) {
-                    if (f.isDirectory()) return true;
-                    else if (f.getName().endsWith(".flash")) return true;
-                    return false;
-                }
-                public String getDescription() { return "Flash Card Lessons"; }
-            });
+        dialog.setFileFilter(new FlashFileFilter());
         dialog.setCurrentDirectory(new File(cwdPath));
         if (dialog.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
                 loadLesson(dialog.getSelectedFile().getCanonicalPath());
                 cwdPath = dialog.getCurrentDirectory().getCanonicalPath();
             } catch( IOException ioe ) {
-                ioe.printStackTrace( );
+                Debug.error(this.getClass().getName(), ioe.getMessage());
             }
         }
     }
@@ -400,29 +406,34 @@ public class EditorFrame extends JFrame {
 
     void jButton6_actionPerformed(ActionEvent e) {
         JFileChooser dialog = new JFileChooser();
-        dialog.setFileFilter(new FileFilter() {
-                public boolean accept(File f) {
-                    if (f.isDirectory()) return true;
-                    else if (f.getName().endsWith(".ttf")) return true;
-                    return false;
-                }
-                public String getDescription() { return "TrueType Font"; }
-            });
+        dialog.setFileFilter(new TTFFileFilter());
         dialog.setCurrentDirectory(new File("./"));
         if (dialog.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             lesson.setProperty("font", dialog.getSelectedFile().getName());
             fontPath.setText(lesson.getProperty("font"));
+            InputStream inStream = null;
             try {
-                wordText.loadFont(new FileInputStream(fontPath.getText()));
+                inStream = new FileInputStream(fontPath.getText());
+                wordText.loadFont(inStream);
             }
-            catch (FileNotFoundException ex) { ex.printStackTrace(); }
+            catch (Exception ex) {
+                Debug.error(this.getClass().getName(), ex.getMessage());
+            } finally {
+                if (inStream != null) {
+                    try {
+                        inStream.close();
+                    } catch (IOException e1) {
+                        Debug.error(this.getClass().getName(), e1.getMessage());
+                    }
+                }
+            }
         }
 
     }
 
     void addButton_actionPerformed(ActionEvent e) {
         words.add(new WordEntry(" "));
-        wordList.setListData(words);
+        wordList.setListData(words.toArray());
         wordList.setSelectedIndex(words.size()-1);
         wordText.requestFocus();
         wordText.setText("");
@@ -430,7 +441,7 @@ public class EditorFrame extends JFrame {
 
     void updateWordList() {
         int currentWord = wordList.getSelectedIndex();
-        wordList.setListData(words);
+        wordList.setListData(words.toArray());
         wordList.setSelectedIndex(currentWord);
 
     }
@@ -493,6 +504,19 @@ public class EditorFrame extends JFrame {
             words.remove(item);
             updateWordList();
         }
+    }
+    static class FlashFileFilter extends FileFilter {
+        public boolean accept(File f) {
+            return f.isDirectory() || f.getName().endsWith(".flash");
+        }
+        public String getDescription() { return "Flash Card Lessons"; }
+    }
+
+    static class TTFFileFilter extends FileFilter {
+        public boolean accept(File f) {
+            return f.isDirectory() || f.getName().endsWith(".ttf");
+        }
+        public String getDescription() { return "TrueType Font"; }
     }
 }
 

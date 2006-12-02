@@ -166,7 +166,7 @@ class MainMenu extends JMenuBar {
     }
 
     // ---------------
-    class ExitAction extends AbstractAction {
+    static class ExitAction extends AbstractAction {
 
         /**
          * Serialization ID
@@ -195,10 +195,10 @@ class MainMenu extends JMenuBar {
 
         public void actionPerformed( ActionEvent event ) {
 
-            String aboutString = new String( "FlashCards\n" +
-                                             "A Vocabulary Training Tool by CrossWire\n" +
-                                             "(c) 2004 CrossWire Bible Society\n" +
-                                             "http://crosswire.org" );
+            String aboutString = "FlashCards\n" +
+                                 "A Vocabulary Training Tool by CrossWire\n" +
+                                 "(c) 2004 CrossWire Bible Society\n" +
+                                 "http://crosswire.org";
 
             Debug.trace( this.toString( ), "Beginning\n" );
             JOptionPane.showMessageDialog( frame,

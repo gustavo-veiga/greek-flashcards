@@ -20,6 +20,8 @@
  */
 package org.crosswire.flashcards;
 
+import java.io.Serializable;
+
 
 /**
  * A FlashCard has a front and a back. The front has the test
@@ -28,7 +30,7 @@ package org.crosswire.flashcards;
  * @author Troy A. Griffitts [scribe at crosswire dot org]
  * @author DM Smith [ dmsmith555 at yahoo dot com]
  */
-public class FlashCard implements Cloneable, Comparable
+public class FlashCard implements Cloneable, Comparable, Serializable
 {
     /**
      * Create a partial FlashCard.
@@ -152,9 +154,13 @@ public class FlashCard implements Cloneable, Comparable
     public boolean equals(Object obj)
     {
         if (obj == this)
+        {
             return true;
+        }
         if (!(obj instanceof FlashCard))
+        {
             return false;
+        }
         FlashCard otherCard = (FlashCard) obj;
         return copy.equals(otherCard.copy);
     }
@@ -186,4 +192,9 @@ public class FlashCard implements Cloneable, Comparable
 
     private FlashCardRep original;
     private FlashCardRep copy;
+
+    /**
+     * Serialization ID
+     */
+    private static final long serialVersionUID = -4429061155097506281L;
 }

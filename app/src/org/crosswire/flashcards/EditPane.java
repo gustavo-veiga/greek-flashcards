@@ -51,17 +51,10 @@ public class EditPane extends JPanel
     //Construct the frame
     public EditPane()
     {
-        try
-        {
-            jbInit();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        jbInit();
     }
 
-    private void jbInit() throws Exception
+    private void jbInit()
     {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
@@ -69,7 +62,7 @@ public class EditPane extends JPanel
 
         final LessonSetPane lessonSetPanel = new LessonSetPane(true);
         final LessonPane lessonPanel = new LessonPane(true);
-        final FlashCardPane flashCardPanel = new FlashCardPane(true);
+        final FlashCardPane flashCardPanel = new FlashCardPane();
         final FlashCardEditor flashCardEditor = new FlashCardEditor();
         final JButton saveButton = new JButton("Save");
 

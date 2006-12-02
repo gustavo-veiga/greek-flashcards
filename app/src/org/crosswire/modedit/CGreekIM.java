@@ -94,7 +94,7 @@ public class CGreekIM extends SWInputMethod {
 
         if( returnValue == null ) {
 
-            returnValue = new String( ) + input;
+            returnValue = "" + input;
 
         }
 

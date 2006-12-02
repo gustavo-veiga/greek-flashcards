@@ -45,15 +45,21 @@ public class Editor {
     //
 
     // ---------------
-    public Editor(LessonManager lessonManager, boolean standAlone ) {
+    public Editor(boolean standAlone) {
 
-        EditorFrame frame = new EditorFrame( standAlone );
+        EditorFrame frame = new EditorFrame(standAlone);
 
         //Validate frames that have preset sizes
         //Pack frames that have useful preferred size info, e.g. from their layout
 
-        if( packFrame ) { frame.pack( ); }
-        else { frame.validate( ); }
+        if (packFrame)
+        {
+            frame.pack();
+        }
+        else
+        {
+            frame.validate( );
+        }
 
         //Center the window
 
@@ -83,30 +89,26 @@ public class Editor {
 
         // Parse the command line arguments
 
-        for( int index = 0; arguments.length > index; ++ index ) {
-
-            if( ( arguments [ index ] ).equals( "-debug" ) ) {
-
+        for (int index = 0; arguments.length > index; ++index)
+        {
+            if (arguments[index].equals("-debug"))
+            {
                 Debug.setEnabled( true );
-
             }
-
         }
 
         // Set the "Look And Feel"
-
-        try {
-
+        try 
+        {
             UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName( ) );
-
-        } catch( Exception exception ) {
-
-            exception.printStackTrace( );
-
+        }
+        catch (Exception exception)
+        {
+            exception.printStackTrace(System.err);
         }
 
-        new Editor(LessonManager.instance(), true );
-
+        LessonManager.instance();
+        new Editor(true);
     }
 
 }

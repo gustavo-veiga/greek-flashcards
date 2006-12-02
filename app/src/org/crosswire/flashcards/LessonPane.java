@@ -24,6 +24,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -34,7 +35,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionListener;
 
 /**
@@ -54,11 +54,6 @@ public class LessonPane extends JPanel
     private JMenuItem newItem;
     private boolean editable;
 
-    /**
-     * The listeners for handling ViewEvent Listeners
-     */
-    private EventListenerList listenerList = new EventListenerList();
-
     //Construct the frame
     public LessonPane()
     {
@@ -71,14 +66,7 @@ public class LessonPane extends JPanel
     public LessonPane(boolean allowEdits)
     {
         editable = allowEdits;
-        try
-        {
-            jbInit();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        jbInit();
     }
 
     public void setSelectionMode(int mode)
@@ -99,7 +87,7 @@ public class LessonPane extends JPanel
         lessonList.addListSelectionListener(listener);
     }
 
-    private void jbInit() throws Exception
+    private void jbInit()
     {
         setLayout(new BorderLayout());
 
@@ -203,14 +191,14 @@ public class LessonPane extends JPanel
     public void fireLessonChanged(LessonChangeEvent e)
     {
         // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        Object[] list = listenerList.getListenerList();
         // Process the listeners last to first, notifying
         // those that are interested in this event
-        for (int i = listeners.length - 2; i >= 0; i -= 2)
+        for (int i = list.length - 2; i >= 0; i -= 2)
         {
-            if (listeners[i] == LessonChangeEventListener.class)
+            if (list[i] == LessonChangeEventListener.class)
             {
-                ((LessonChangeEventListener) listeners[i + 1]).lessonChanged(e);
+                ((LessonChangeEventListener) list[i + 1]).lessonChanged(e);
             }
         }
     }
@@ -246,9 +234,13 @@ public class LessonPane extends JPanel
         /* (non-Javadoc)
          * @see java.util.Iterator#next()
          */
-        public Object next()
+        public Object next() throws NoSuchElementException
         {
-            return model.get(selectedIndexes[currentIndex++]);
+            if (hasNext())
+            {
+                return model.get(selectedIndexes[currentIndex++]);
+            }
+            throw new NoSuchElementException();
         }
 
         private int[] selectedIndexes;

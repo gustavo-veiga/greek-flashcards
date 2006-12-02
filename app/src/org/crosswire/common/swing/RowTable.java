@@ -142,7 +142,7 @@ public class RowTable extends JTable
         if (first != -1)
         {
             final Rectangle bounds = getRowBounds(aTable, first, last);
-            if (isVerticallyVisible(aTable, bounds) == false)
+            if (!isVerticallyVisible(aTable, bounds))
             {
                 // Is SwingUtilities.invokeLater needed ???
                 aTable.scrollRectToVisible(bounds);
@@ -276,8 +276,7 @@ public class RowTable extends JTable
         final JTableHeader th = getTableHeader();
         final TableCellRenderer renderer = th.getDefaultRenderer();
         Component comp = renderer.getTableCellRendererComponent(this, ONE_STANDARD_CHARACTER, false, false, 0, 0);
-        final int height = comp.getPreferredSize().height;
-        return height;
+        return comp.getPreferredSize().height;
     }
 
     /**
