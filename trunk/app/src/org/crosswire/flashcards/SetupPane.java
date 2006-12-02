@@ -44,7 +44,7 @@ public class SetupPane extends JPanel
     /**
      * Serialization ID
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1904221667403637140L;
     protected LessonPane lessonPanel = new LessonPane();
     private LessonSetPane lessonSetPanel = new LessonSetPane();
     private JCheckBox flipped = new JCheckBox("Flip the Flash Cards");
@@ -53,14 +53,7 @@ public class SetupPane extends JPanel
     //Construct the frame
     public SetupPane()
     {
-        try
-        {
-            jbInit();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        jbInit();
     }
 
     public boolean isFlipped()
@@ -78,49 +71,17 @@ public class SetupPane extends JPanel
         return lessonPanel.iterator();
     }
 
-    private void jbInit() throws Exception
+    private void jbInit()
     {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
                         "Select a Lesson Set, then one or more Lessons: "));
 
-        final FlashCardPane flashCardPanel = new FlashCardPane();
+        FlashCardPane flashCardPanel = new FlashCardPane();
 
-        lessonSetPanel.addListSelectionListener(new ListSelectionListener()
-                        {
-            /* (non-Javadoc)
-             * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-             */
-            public void valueChanged(ListSelectionEvent e)
-            {
-                if (e.getValueIsAdjusting())
-                {
-                    return;
-                }
-                JList list = (JList) e.getSource();
-                lessonPanel.loadLessons((LessonSet) list.getSelectedValue());
-            }
-        });
+        lessonSetPanel.addListSelectionListener(new LessonSetSelectionListener(lessonPanel));
 
-        lessonPanel.addListSelectionListener(new ListSelectionListener()
-                        {
-            /* (non-Javadoc)
-             * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-             */
-            public void valueChanged(ListSelectionEvent e)
-            {
-                if (e.getValueIsAdjusting())
-                {
-                    return;
-                }
-                JList list = (JList) e.getSource();
-                Object[] selections = list.getSelectedValues();
-                if (selections != null && selections.length == 1)
-                {
-                    flashCardPanel.loadFlashCards((Lesson) selections[0]);
-                }
-            }
-        });
+        lessonPanel.addListSelectionListener(new LessonSelectionListener(flashCardPanel));
 
         JSplitPane horizontalSplitPane = new JSplitPane();
         horizontalSplitPane.setResizeWeight(0.3D);
@@ -144,5 +105,54 @@ public class SetupPane extends JPanel
         panel.add(noMultipleChoice);
         add(panel, BorderLayout.SOUTH);
     }
+ 
+    static class LessonSetSelectionListener implements ListSelectionListener
+    {
+        private LessonPane lessonPanel;
 
+        public LessonSetSelectionListener(LessonPane lessonPanel)
+        {
+            this.lessonPanel = lessonPanel;
+        }
+
+        /* (non-Javadoc)
+         * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+         */
+        public void valueChanged(ListSelectionEvent e)
+        {
+            if (e.getValueIsAdjusting())
+            {
+                return;
+            }
+            JList list = (JList) e.getSource();
+            lessonPanel.loadLessons((LessonSet) list.getSelectedValue());
+        }
+    }
+
+    static class LessonSelectionListener implements ListSelectionListener
+    {
+        private FlashCardPane flashCardPanel;
+
+        public LessonSelectionListener(FlashCardPane flashCardPanel)
+        {
+            this.flashCardPanel = flashCardPanel;
+        }
+
+        /* (non-Javadoc)
+         * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+         */
+        public void valueChanged(ListSelectionEvent e)
+        {
+            if (e.getValueIsAdjusting())
+            {
+                return;
+            }
+            JList list = (JList) e.getSource();
+            Object[] selections = list.getSelectedValues();
+            if (selections != null && selections.length == 1)
+            {
+                flashCardPanel.loadFlashCards((Lesson) selections[0]);
+            }
+        }
+}
 }

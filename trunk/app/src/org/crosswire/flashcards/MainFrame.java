@@ -22,12 +22,12 @@ package org.crosswire.flashcards;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 
@@ -58,20 +58,13 @@ public class MainFrame extends JFrame
         testPane = new QuizPane(setupPane);
         editPane = new EditPane();
         JOptionPane.setRootFrame(this);
-        try
-        {
-            jbInit();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        jbInit();
     }
 
     //Component initialization
-    private void jbInit() throws Exception
+    private void jbInit()
     {
-        JPanel contentPane = (JPanel) this.getContentPane();
+        Container contentPane = this.getContentPane();
         contentPane.setLayout(new BorderLayout());
         this.setSize(new Dimension(600, 480));
         this.setTitle("FlashCards  - (c) 2004 CrossWire Bible Society http://crosswire.org");

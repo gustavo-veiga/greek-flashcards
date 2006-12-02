@@ -27,7 +27,6 @@ import java.util.Iterator;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionListener;
 
 import org.crosswire.common.swing.RowTable;
@@ -47,35 +46,13 @@ public class FlashCardPane extends JPanel implements FlashCardEventListener
     private RowTable wordList = new RowTable(new ArrayList(), new FlashCardColumns());
     private Lesson lesson;
 
-    /**
-     * The listeners for handling ViewEvent Listeners
-     */
-    private EventListenerList listenerList = new EventListenerList();
-
-
     public FlashCardPane()
     {
-        this(false);
-    }
-
-    /**
-     * @param b
-     */
-    public FlashCardPane(boolean allowsEdits)
-    {
-        try
-        {
-            jbInit();
-        }
-        catch (Exception exception)
-        {
-            exception.printStackTrace();
-            Debug.error(this.toString(), exception.getMessage());
-        }
+        jbInit();
     }
 
     //Component initialization
-    private void jbInit() throws Exception
+    private void jbInit()
     {
         wordList.setShowGrid(false);
         setLayout(new BorderLayout());
@@ -210,14 +187,14 @@ public class FlashCardPane extends JPanel implements FlashCardEventListener
     public void fireLessonChanged(LessonChangeEvent e)
     {
         // Guaranteed to return a non-null array
-        Object[] listeners = listenerList.getListenerList();
+        Object[] list = listenerList.getListenerList();
         // Process the listeners last to first, notifying
         // those that are interested in this event
-        for (int i = listeners.length - 2; i >= 0; i -= 2)
+        for (int i = list.length - 2; i >= 0; i -= 2)
         {
-            if (listeners[i] == LessonChangeEventListener.class)
+            if (list[i] == LessonChangeEventListener.class)
             {
-                ((LessonChangeEventListener) listeners[i + 1]).lessonChanged(e);
+                ((LessonChangeEventListener) list[i + 1]).lessonChanged(e);
             }
         }
     }

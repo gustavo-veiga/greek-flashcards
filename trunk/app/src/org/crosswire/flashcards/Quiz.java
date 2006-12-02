@@ -99,7 +99,7 @@ public class Quiz {
 
         } catch(Exception e ) {
 
-            e.printStackTrace();
+            e.printStackTrace(System.err);
 
         }
 

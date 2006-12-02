@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -89,16 +91,11 @@ public class UniTextEdit extends JPanel {
   /**Construct the frame*/
   public UniTextEdit() {
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
-      try {
-          jbInit();
-      }
-      catch(Exception e) {
-          e.printStackTrace();
-      }
+      jbInit();
   }
 
 
-  private void jbInit() throws Exception  {
+  private void jbInit() {
     //setIconImage(Toolkit.getDefaultToolkit().createImage(Frame1.class.getResource("[Your Icon]")));
     this.setSize(new Dimension(549, 300));
     fontContentLoader.setLayout(borderLayout5);
@@ -231,7 +228,8 @@ public class UniTextEdit extends JPanel {
   }
 
 
-  void jTextArea1_keyTyped(KeyEvent e) {
+  void jTextArea1_keyTyped(KeyEvent e)
+  {
       char typedChar = e.getKeyChar();
       String pushChar = null;
       statusBar.setText("");
@@ -239,16 +237,19 @@ public class UniTextEdit extends JPanel {
       SWInputMethod inputMethod = (SWInputMethod) imComboBox.getSelectedItem();
 
       pushChar = inputMethod.translate(typedChar);
-      if (inputMethod.getState() > 1) {
+      if (inputMethod.getState() > 1)
+      {
           statusBar.setText("Compound '"+typedChar+"'");
           e.consume();
       }
-      else {
-          if (pushChar.length() > 1) {
-              e.consume();
-              jTextArea1.insert(pushChar, jTextArea1.getCaretPosition());
-          }
-          else e.setKeyChar(pushChar.charAt(0));
+      else if (pushChar.length() > 1)
+      {
+          e.consume();
+          jTextArea1.insert(pushChar, jTextArea1.getCaretPosition());
+      }
+      else
+      {
+          e.setKeyChar(pushChar.charAt(0));
       }
   }
 
@@ -306,15 +307,33 @@ public class UniTextEdit extends JPanel {
     StringWriter out = new StringWriter();
     try {
       jTextArea1.write(out);
-    } catch (IOException ex) { ex.printStackTrace(); }
+    } catch (IOException ex) {
+        ex.printStackTrace(System.err);
+    }
     return out.toString();
   }
 
   public void store(File outFile) {
+    Writer writer = null;
     try {
-        jTextArea1.write(new OutputStreamWriter(new FileOutputStream(outFile), "UTF-8"));
+        writer = new OutputStreamWriter(new FileOutputStream(outFile), "UTF-8");
+        jTextArea1.write(writer);
     }
-    catch (Exception e1) { e1.printStackTrace(); }
+    catch (Exception e1) {
+        e1.printStackTrace(System.err);
+    } finally {
+        if (writer != null) {
+            try
+            {
+                writer.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace(System.err);
+            }
+        }
+    }
+    
 
   }
 
@@ -323,30 +342,39 @@ public class UniTextEdit extends JPanel {
   }
 
   public void load(String url) {
+    InputStream bis = null;
     try {
       statusBar.setText("Loading content...");
       statusBar.paintImmediately(statusBar.getVisibleRect());
       URLConnection connection = new URL(url).openConnection();
-      InputStream is = connection.getInputStream();
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      BufferedInputStream bis = new BufferedInputStream(is);
-      String newText = connection.toString();
+      bis = new BufferedInputStream(connection.getInputStream());
 
       int len;
       byte inBuf[] = new byte[8192];
       do {
         len = bis.read(inBuf, 0, 8192);
         if (len != -1)
+        {
           bos.write(inBuf, 0, len);
+        }
       }
       while (len != -1);
-      newText = new String(bos.toByteArray(), "UTF-8");
+      String newText = new String(bos.toByteArray(), "UTF-8");
       jTextArea1.setText(newText);
       statusBar.setText(Integer.toString(newText.length()) +
                         " characters of content loaded.");
     }
-    catch (Exception ex) {
-      ex.printStackTrace();
+    catch (IOException ex) {
+      ex.printStackTrace(System.err);
+    } finally {
+        if (bis != null) {
+            try {
+                bis.close();
+            } catch (IOException e) {
+                e.printStackTrace(System.err);
+            }
+        }
     }
   }
 
@@ -372,33 +400,43 @@ public class UniTextEdit extends JPanel {
 
 
   public void loadFont(String url) {
-    try {
-      if (url.length() < 3)
+    if (url.length() < 3) {
         return;
+    }
+
+    InputStream is = null;
+    try {
       statusBar.setText("Loading font...");
       statusBar.paintImmediately(statusBar.getVisibleRect());
       URLConnection connection = new URL(url).openConnection();
-      InputStream is = connection.getInputStream();
+      is = connection.getInputStream();
       loadFont(is);
     }
-    catch (Exception ex) {
-      ex.printStackTrace();
+    catch (IOException ex) {
+      ex.printStackTrace(System.err);
+    }
+    catch (FontFormatException e) {
+        e.printStackTrace(System.err);
+    } finally {
+        if (is != null) {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace(System.err);
+            }
+        }
     }
   }
 
 
-  public void loadFont(InputStream is) {
-    try {
+  public void loadFont(InputStream is) throws FontFormatException, IOException {
         statusBar.setText("Loading font...");
         statusBar.paintImmediately(statusBar.getVisibleRect());
         Font font = Font.createFont(Font.TRUETYPE_FONT, is);
         Font newFont = font.deriveFont((float)18.0);
         fontSizer.setValue(18);
         this.jTextArea1.setFont(newFont);
-        is.close();
         statusBar.setText("New Font Loaded.");
-    }
-    catch (Exception ex) { ex.printStackTrace(); }
   }
 
   public void setText(String text) {

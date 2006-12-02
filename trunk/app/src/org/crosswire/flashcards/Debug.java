@@ -45,6 +45,9 @@ class Debug {
     private static boolean error = true;
     private static PrintStream printStream = System.err;
 
+    // Singleton class
+    private Debug() {}
+
     //
     // Methods
     //
@@ -92,7 +95,7 @@ class Debug {
     // ---------------
     static void trace( String identity, String message ) {
 
-        if( null != printStream && false != trace && false != enabled ) {
+        if( null != printStream && trace && enabled ) {
 
             Debug.printStream.print( " TRACE : " + identity + " : " +
                                      Thread.currentThread( ) + "\n" + message );
@@ -104,7 +107,7 @@ class Debug {
     // ---------------
     static void inform( String identity, String message ) {
 
-        if( null != printStream && false != inform && false != enabled ) {
+        if( null != printStream && inform && enabled ) {
 
             Debug.printStream.print( "INFORM : " + identity + " : " +
                                      Thread.currentThread( ) + "\n" + message );
@@ -116,7 +119,7 @@ class Debug {
     // ---------------
     static void warn( String identity, String message ) {
 
-        if( null != printStream && false != warn && false != enabled ) {
+        if( null != printStream && warn && enabled ) {
 
             Debug.printStream.print( "  WARN : " + identity + " : " +
                                      Thread.currentThread( ) + "\n" + message );
@@ -128,7 +131,7 @@ class Debug {
     // ---------------
     static void error( String identity, String message ) {
 
-        if( null != printStream && false != error ) {
+        if( null != printStream && error ) {
 
             Debug.printStream.print( " ERROR : " + identity + " : " +
                                      Thread.currentThread( ) + "\n" + message );

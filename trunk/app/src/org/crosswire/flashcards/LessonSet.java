@@ -21,6 +21,8 @@ package org.crosswire.flashcards;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.Serializable;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -28,6 +30,7 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.jar.JarEntry;
@@ -44,10 +47,9 @@ import java.util.jar.JarFile;
  * @author Troy A. Griffitts [scribe at crosswire dot org]
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
-public class LessonSet
-          implements Comparable {
+public class LessonSet implements Comparable, Serializable {
 
-     /**
+    /**
       * The <code>url</code> of the lesson
       */
      private String url = null;
@@ -66,6 +68,11 @@ public class LessonSet
       * Flag indicating whether this lesson set has been <code>modified</code>
       */
      private boolean modified;
+
+     /**
+      * Serialization ID
+      */
+     private static final long serialVersionUID = -798022075988174038L;
 
      public LessonSet(String url) {
           this.url = url; // .toLowerCase();
@@ -100,16 +107,14 @@ public class LessonSet
                connection = lessonsURL.openConnection();
           }
           catch (Exception e1) {
-               e1.printStackTrace();
+              Debug.error(this.getClass().getName(), e1.getMessage());
           }
           if (connection instanceof JarURLConnection) {
                JarURLConnection jarConnection = (JarURLConnection) connection;
                loadJarLessonSet(jarConnection);
           }
-          else {
-              if (lessonsURL != null) {
-                  loadDirectoryLessonSet(new File(lessonsURL.getFile()));
-              }
+          else if (lessonsURL != null) {
+              loadDirectoryLessonSet(new File(lessonsURL.getFile()));
           }
      }
 
@@ -121,7 +126,7 @@ public class LessonSet
                jarFile = jarConnection.getJarFile();
           }
           catch (Exception e2) {
-               e2.printStackTrace();
+              Debug.error(this.getClass().getName(), e2.getMessage());
           }
           if (jarFile == null) {
                return;
@@ -131,7 +136,7 @@ public class LessonSet
                JarEntry jarEntry = (JarEntry) entries.nextElement();
                String lessonPath = jarEntry.getName();
                if (lessonPath.startsWith(dirName) && !jarEntry.isDirectory() &&
-                   lessonPath.toUpperCase().endsWith(".FLASH")) {
+                   lessonPath.toUpperCase(Locale.ENGLISH).endsWith(".FLASH")) {
                     lessons.add(new Lesson("jar:" + jarConnection.getJarFileURL() + "!/" + lessonPath));
                }
           }
@@ -145,11 +150,7 @@ public class LessonSet
       */
      private void loadDirectoryLessonSet(File directory) {
           try {
-               File[] files = directory.listFiles(new FilenameFilter() {
-                    public boolean accept(File dir, String name) {
-                         return name.toUpperCase().endsWith(".FLASH");
-                    }
-               });
+               File[] files = directory.listFiles(new FlashFileFilter());
                if (files == null) {
                     return;
                }
@@ -158,7 +159,7 @@ public class LessonSet
                     lessons.add(new Lesson(files[i].getCanonicalFile().toURL().toString()));
                }
           }
-          catch (Exception e) {
+          catch (IOException e) {
                // that's fine.  We just failed to load local files.
           }
      }
@@ -292,4 +293,10 @@ public class LessonSet
           }
           return null;
      }
+
+     static class FlashFileFilter implements FilenameFilter {
+         public boolean accept(File dir, String name) {
+              return name.toUpperCase(Locale.ENGLISH).endsWith(".FLASH");
+         }
+    }
 }

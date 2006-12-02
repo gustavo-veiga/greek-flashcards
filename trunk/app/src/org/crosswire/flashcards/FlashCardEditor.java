@@ -20,6 +20,11 @@
  */
 package org.crosswire.flashcards;
 
+import java.awt.BorderLayout;
+import java.awt.ComponentOrientation;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -28,10 +33,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.EventListenerList;
 
 import org.crosswire.modedit.UniTextEdit;
-import java.awt.*;
 
 /**
  * Editor for lessons used by Quiz (part of FlashCards).
@@ -68,19 +71,11 @@ public class FlashCardEditor extends JPanel
     // ---------------
     public FlashCardEditor()
     {
-        try
-        {
-            jbInit();
-        }
-        catch (Exception exception)
-        {
-            exception.printStackTrace();
-            Debug.error(this.toString(), exception.getMessage());
-        }
+        jbInit();
     }
 
     //Component initialization
-    private void jbInit() throws Exception
+    private void jbInit()
     {
         setLayout(gridBagLayout1);
         setBorder(BorderFactory.createEtchedBorder());

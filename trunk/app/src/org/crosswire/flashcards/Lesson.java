@@ -24,13 +24,15 @@ package org.crosswire.flashcards;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
-import java.net.URLConnection;
-import java.net.JarURLConnection;
 
 
 /**
@@ -40,10 +42,9 @@ import java.net.JarURLConnection;
  * @author Troy A. Griffitts [scribe at crosswire dot org]
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
-public class Lesson
-          implements Comparable {
+public class Lesson implements Comparable, Serializable {
 
-     /**
+    /**
       * The <code>filename</code> gives the relative location of the lesson.
       * Typically this is something like lesson/setname/lessonname.flash.
       */
@@ -65,6 +66,12 @@ public class Lesson
      private Set flashCards = new TreeSet();
 
      private boolean modified = false;
+
+     /**
+      * Serialization ID
+      */
+     private static final long serialVersionUID = -4031174832238749375L;
+
      /**
       * Construct a new, empty lesson.
       */
@@ -112,7 +119,7 @@ public class Lesson
                }
                modified = false;
           }
-          catch (Exception e1) {
+          catch (IOException e1) {
                /* ignore it */
           }
      }
@@ -123,6 +130,7 @@ public class Lesson
       */
      public void store() {
           Properties lesson = new Properties();
+          OutputStream outStream = null;
           try {
                lesson.setProperty("lessonTitle", description);
                Iterator iter = flashCards.iterator();
@@ -150,11 +158,23 @@ public class Lesson
                if (!dir.isDirectory()) {
                     dir.mkdirs();
                }
-               lesson.store(new FileOutputStream(file), "Flash Lesson");
+               outStream = new FileOutputStream(file);
+               lesson.store(outStream, "Flash Lesson");
                modified = false;
           }
           catch (IOException ex) {
-               ex.printStackTrace();
+              Debug.error(this.getClass().getName(), ex.getMessage());
+          } finally {
+              if (outStream != null) {
+                  try
+                  {
+                      outStream.close();
+                  }
+                  catch (IOException e)
+                  {
+                      Debug.error(this.getClass().getName(), e.getMessage());
+                  }
+              }
           }
      }
 

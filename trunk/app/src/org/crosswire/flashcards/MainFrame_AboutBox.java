@@ -67,15 +67,10 @@ public class MainFrame_AboutBox extends JDialog implements ActionListener {
   public MainFrame_AboutBox(Frame parent) {
     super(parent);
     enableEvents(AWTEvent.WINDOW_EVENT_MASK);
-    try {
-      jbInit();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
+    jbInit();
   }
   //Component initialization
-  private void jbInit() throws Exception  {
+  private void jbInit()  {
     image1 = new ImageIcon(MainFrame.class.getResource("about.png"));
     imageLabel.setIcon(image1);
     this.setTitle("About");
