@@ -73,6 +73,7 @@ public class QuizPane
      int totalWrong = 0;
      boolean shownAnswer = false;
      JButton startLessonButton = new JButton();
+     JButton playSoundButton = new JButton();
      JButton showAnswerButton = new JButton();
      JLabel wordText = new JLabel();
      JLabel statusBar = new JLabel();
@@ -134,6 +135,9 @@ public class QuizPane
           startLessonButton.setText("Start");
           startLessonButton.addActionListener(new QuizPane_startLessonButton_actionAdapter(this));
 
+          playSoundButton.setText("Listen");
+          playSoundButton.addActionListener(new QuizPane_playSoundButton_actionAdapter(this));
+
           showAnswerButton.setFocusPainted(true);
           showAnswerButton.setMnemonic('A');
           showAnswerButton.setText("Show Answer");
@@ -161,6 +165,10 @@ public class QuizPane
 
           add(startLessonButton,
               new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.WEST,
+                                     GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+
+          add(playSoundButton,
+              new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH,
                                      GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
           add(showAnswerButton,
@@ -248,6 +256,15 @@ public class QuizPane
 //    }
 
      void startLessonButton_actionPerformed(ActionEvent e) {
+          loadTest();
+          notLearned = (List) ((ArrayList) words).clone();
+          totalAsked = 0;
+          totalWrong = 0;
+          showRandomWord(currentWord);
+     }
+
+
+     void playSoundButton_actionPerformed(ActionEvent e) {
           loadTest();
           notLearned = (List) ((ArrayList) words).clone();
           totalAsked = 0;
@@ -438,6 +455,20 @@ class QuizPane_startLessonButton_actionAdapter
 
      public void actionPerformed(ActionEvent e) {
           adaptee.startLessonButton_actionPerformed(e);
+     }
+}
+
+class QuizPane_playSoundButton_actionAdapter
+          implements ActionListener {
+     QuizPane adaptee;
+
+     QuizPane_playSoundButton_actionAdapter(QuizPane adaptee) {
+          this.adaptee = adaptee;
+     }
+
+
+     public void actionPerformed(ActionEvent e) {
+          adaptee.playSoundButton_actionPerformed(e);
      }
 }
 
