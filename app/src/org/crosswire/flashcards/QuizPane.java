@@ -46,6 +46,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import java.awt.*;
+import java.awt.Dimension;
 
 
 /**
@@ -83,7 +85,15 @@ public class QuizPane
      GridLayout choicesPanelGridLayout = new GridLayout();
      JPanel statusPanel = new JPanel();
      BorderLayout statusPanelBorderLayout = new BorderLayout();
-     GridBagLayout gridBagLayout1 = new GridBagLayout();
+     JPanel jPanel1 = new JPanel();
+     JPanel jPanel2 = new JPanel();
+     BorderLayout borderLayout1 = new BorderLayout();
+     BorderLayout borderLayout2 = new BorderLayout();
+     JPanel jPanel3 = new JPanel();
+     BorderLayout borderLayout3 = new BorderLayout();
+     JPanel jPanel4 = new JPanel();
+     JPanel jPanel5 = new JPanel();
+     JPanel jPanel6 = new JPanel();
 
      static class WordEntry implements Serializable {
 
@@ -145,6 +155,8 @@ public class QuizPane
 
           wordText.setBackground(SystemColor.text);
           wordText.setFont(new Font("Dialog", 0, 30));
+          wordText.setMinimumSize(new Dimension(0, 50));
+          wordText.setPreferredSize(new Dimension(0, 50));
           wordText.setHorizontalAlignment(SwingConstants.CENTER);
           wordText.setHorizontalTextPosition(SwingConstants.CENTER);
 
@@ -158,34 +170,24 @@ public class QuizPane
 
           statusPanel.setLayout(statusPanelBorderLayout);
           statusBar.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+          jPanel1.setLayout(borderLayout3);
+          jPanel2.setLayout(borderLayout1);
           statusPanel.add(statusBar, BorderLayout.CENTER);
           statusPanel.add(wCount, BorderLayout.EAST);
+          setLayout(borderLayout2);
 
-          setLayout(gridBagLayout1);
-
-          add(startLessonButton,
-              new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.WEST,
-                                     GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-
-          add(playSoundButton,
-              new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH,
-                                     GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-
-          add(showAnswerButton,
-              new GridBagConstraints(2, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.EAST,
-                                     GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-
-          add(wordText,
-              new GridBagConstraints(0, GridBagConstraints.RELATIVE, 3, 1, 1.0, 1.0, GridBagConstraints.NORTH,
-                                     GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-
-          add(choicesPanel,
-              new GridBagConstraints(0, GridBagConstraints.RELATIVE, 3, 1, 0.0, 1.0, GridBagConstraints.NORTH,
-                                     GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-
-          add(statusPanel,
-              new GridBagConstraints(0, GridBagConstraints.RELATIVE, 3, 1, 1.0, 0.0, GridBagConstraints.NORTH,
-                                     GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 10, 10));
+          jPanel3.add(playSoundButton);
+          jPanel4.add(startLessonButton);
+          jPanel5.add(showAnswerButton);
+          jPanel6.add(choicesPanel);
+          this.add(statusPanel, java.awt.BorderLayout.SOUTH);
+          this.add(jPanel2, java.awt.BorderLayout.CENTER);
+          this.add(jPanel1, java.awt.BorderLayout.NORTH);
+          jPanel1.add(jPanel3, java.awt.BorderLayout.CENTER);
+          jPanel1.add(jPanel4, java.awt.BorderLayout.WEST);
+          jPanel1.add(jPanel5, java.awt.BorderLayout.EAST);
+          jPanel2.add(jPanel6, java.awt.BorderLayout.SOUTH);
+          jPanel2.add(wordText, java.awt.BorderLayout.CENTER);
      }
 
 
