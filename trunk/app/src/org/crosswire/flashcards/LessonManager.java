@@ -152,7 +152,7 @@ public class LessonManager {
 
                     loadJarLessonSets(new File(new java.net.URI(uri)));
                }
-               catch (Exception e) { 
+               catch (Exception e) {
                    Debug.error(this.getClass().getName(), e.getMessage());
                }
           }
@@ -190,7 +190,7 @@ public class LessonManager {
                          String entryName = jarEntry.getName();
                          // remove trailing '/'
                          entryName = entryName.substring(0, entryName.length() - 1);
-                         if (entryName.startsWith(LESSON_ROOT) && !entryName.equals(LESSON_ROOT)) {
+                         if (entryName.startsWith(LESSON_ROOT) && !entryName.equals(LESSON_ROOT) && !entryName.endsWith("/audio")) {
                               // let the description be just the directory name and not the path
                               add(new LessonSet("jar:" + jarFile.getCanonicalFile().toURL().toString() + "!/" +
                                                 entryName));
@@ -216,7 +216,7 @@ public class LessonManager {
                Arrays.sort(files);
                for (int i = 0; i < files.length; i++) {
                     File file = files[i];
-                    if (file.isDirectory()) {
+                    if (file.isDirectory() && !file.getName().equals("audio")) {
                          add(new LessonSet(files[i].toURL().toString()));
                     }
                }
