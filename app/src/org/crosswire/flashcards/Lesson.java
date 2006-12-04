@@ -114,8 +114,25 @@ public class Lesson implements Comparable, Serializable {
                lesson.load(lessonURL.openConnection().getInputStream());
                int wordCount = Integer.parseInt(lesson.getProperty("wordCount"));
                description = lesson.getProperty("lessonTitle", url.substring(url.lastIndexOf('/') + 1));
+
+               int baseOffset = url.lastIndexOf("/");
+               if (baseOffset < 0) {
+                    baseOffset = url.lastIndexOf( ("\\"));
+               }
+               String lname = url.substring(baseOffset+1);
+               lname = lname.substring(0, lname.indexOf(".flash"));
+               String audioPath = url.substring(0, baseOffset) + "/audio";
+
                for (int i = 0; i < wordCount; i++) {
-                    add(new FlashCard(lesson.getProperty("word" + i), lesson.getProperty("answers" + i)));
+                    FlashCard f = new FlashCard(lesson.getProperty("word" + i), lesson.getProperty("answers" + i));
+                    String audioURLString = audioPath + "/" + lname + "_" + Integer.toString(i) + ".wav";
+                    URL audioURL = new URL(audioURLString);
+                    try {
+                         audioURL.openConnection().getInputStream();
+                         f.setAudioURL(audioURLString);
+                    }
+                    catch (Exception e) {}
+                    add(f);
                }
                modified = false;
           }

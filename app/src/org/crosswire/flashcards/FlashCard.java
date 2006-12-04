@@ -6,7 +6,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * 
+ *
  * See the GNU General Public License for more details.
  * The License is available on the internet at:
  *     http://www.gnu.org/copyleft/gpl.html,
@@ -14,7 +14,7 @@
  *     Free Software Foundation, Inc.
  *     59 Temple Place - Suite 330
  *     Boston, MA 02111-1307, USA
- * 
+ *
  * The copyright to this program is held by it's authors
  * Copyright: 2004
  */
@@ -26,7 +26,7 @@ import java.io.Serializable;
 /**
  * A FlashCard has a front and a back. The front has the test
  * and the back has the answer.
- * 
+ *
  * @author Troy A. Griffitts [scribe at crosswire dot org]
  * @author DM Smith [ dmsmith555 at yahoo dot com]
  */
@@ -59,6 +59,15 @@ public class FlashCard implements Cloneable, Comparable, Serializable
             assert false;
         }
     }
+
+    public void setAudioURL(String url) {
+         copy.setAudioURL(url);
+    }
+
+    public String getAudioURL() {
+         return copy.getAudioURL();
+    }
+
 
     /**
      * Get a particular side of this FlashCard.
