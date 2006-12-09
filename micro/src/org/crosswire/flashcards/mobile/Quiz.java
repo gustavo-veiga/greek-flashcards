@@ -5,6 +5,7 @@ import org.crosswire.flashcards.Lesson;
 import org.crosswire.flashcards.Quizer;
 import org.crosswire.flashcards.FlashCard;
 import java.util.Vector;
+import java.io.InputStream;
 
 /**
  * <p>Title: </p>
@@ -20,11 +21,10 @@ import java.util.Vector;
  */
 public class Quiz extends Form implements CommandListener {
 
-  StringItem wordDisplay = new StringItem("", "");
+  ImageItem wordImage = new ImageItem("", null, ImageItem.LAYOUT_DEFAULT, "");
   ChoiceGroup answersDisplay = new ChoiceGroup("", ChoiceGroup.EXCLUSIVE);
   StringItem statusBar = new StringItem("", "");
-  Spacer spacer1 = new Spacer(0, 0);
-  Spacer spacer2 = new Spacer(0, 0);
+
   Quizer quizer = new Quizer();
   FlashCard currentWord = null;
   int wrongThisTime = 0;
@@ -44,31 +44,27 @@ public class Quiz extends Form implements CommandListener {
     setCommandListener(this);
     addCommand(new Command("End", Command.BACK, 1));
     addCommand(new Command("Answer", Command.SCREEN, 2));
-    wordDisplay.setLayout(Item.LAYOUT_CENTER | Item.LAYOUT_TOP |
-                          Item.LAYOUT_NEWLINE_BEFORE |
-                          Item.LAYOUT_NEWLINE_AFTER);
-    wordDisplay.setText("Word");
-    this.append(spacer1);
-    this.append(wordDisplay);
-    this.append(spacer2);
+    this.append(wordImage);
     this.append(answersDisplay);
     this.append(statusBar);
-    answersDisplay.setLabel("Answers");
-    answersDisplay.setLayout(Item.LAYOUT_CENTER | Item.LAYOUT_VCENTER |
+    answersDisplay.setLabel(null);
+    answersDisplay.setLayout(Item.LAYOUT_LEFT | Item.LAYOUT_TOP |
                              Item.LAYOUT_VEXPAND);
-    statusBar.setLayout(Item.LAYOUT_BOTTOM | Item.LAYOUT_VEXPAND |
-                        Item.LAYOUT_NEWLINE_BEFORE);
     statusBar.setText("StatusBar");
-//    spacer1.setPreferredSize();
-    spacer1.setMinimumSize(2, 2);
+    wordImage.setLayout(Item.LAYOUT_LEFT | Item.LAYOUT_TOP |
+                        Item.LAYOUT_VSHRINK);
   }
 
   void show() {
-    int lessonNum = FlashCards.instance.lessons.lessonChoice.getSelectedIndex();
-    String lessonName = FlashCards.instance.lessons.lessonChoice.getString(lessonNum);
-    Lesson l = FlashCards.instance.lessonSet.getLesson(lessonName);
+    int lessonCount = FlashCards.instance.lessons.lessonChoice.size();
     quizer.clear();
-    quizer.loadLesson(l);
+    for (int i = 0; i < lessonCount; i++) {
+      if (FlashCards.instance.lessons.lessonChoice.isSelected(i)) {
+        String lessonName = FlashCards.instance.lessons.lessonChoice.getString(i);
+        Lesson l = FlashCards.instance.lessonSet.getLesson(lessonName);
+        quizer.loadLesson(l);
+      }
+    }
     wordDisplay(-1, "Begin");
     Display.getDisplay(FlashCards.instance).setCurrent(this);
   }
@@ -91,7 +87,7 @@ public class Quiz extends Form implements CommandListener {
           wordDisplay(wrongThisTime, "Correct");
         }
         else {
-          setStatus("Wrong. Try again.");
+          setStatus("Try again.");
           wrongThisTime++;
         }
       }
@@ -108,8 +104,22 @@ public class Quiz extends Form implements CommandListener {
       setStatus("Great Job!");
       return;
     }
-    wordDisplay.setText(currentWord.getFront());
-    Vector answers = quizer.getRandomAnswers(4);
+    InputStream is = null;
+    try {
+      Class c = currentWord.getClass();
+      is = c.getResourceAsStream(currentWord.getImageURL());
+      if (is != null) {
+	Image image = Image.createImage(is);
+	wordImage.setImage(image);
+	wordImage.setLabel(null);
+      }
+    }
+    catch (Exception e) { e.printStackTrace();}
+    if (is == null) {
+      wordImage.setImage(null);
+      wordImage.setLabel(currentWord.getFront());
+    }
+    Vector answers = quizer.getRandomAnswers(5);
     answersDisplay.deleteAll();
     for (int i = 0; i < answers.size(); i++) {
       String a = (String) answers.elementAt(i);

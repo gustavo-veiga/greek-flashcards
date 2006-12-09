@@ -254,6 +254,17 @@ public class LessonManager {
           }
      }
 
+     /**
+      * Save all the modified lesson sets to persistent store named by the lesson's <code>LESSON_ROOT</code>.
+      */
+     public void genImages() {
+          Iterator iter = lessonSets.iterator();
+          while (iter.hasNext()) {
+               ComplexLessonSet lessonSet = (ComplexLessonSet) iter.next();
+               lessonSet.generateImages();
+          }
+     }
+
 
      public Iterator iterator() {
           return lessonSets.iterator();

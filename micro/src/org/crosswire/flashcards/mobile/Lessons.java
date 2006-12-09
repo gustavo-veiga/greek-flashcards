@@ -18,7 +18,7 @@ import org.crosswire.flashcards.Lesson;
  */
 public class Lessons extends Form implements CommandListener {
 
-  ChoiceGroup lessonChoice = new ChoiceGroup("", ChoiceGroup.EXCLUSIVE);
+  ChoiceGroup lessonChoice = new ChoiceGroup("", ChoiceGroup.MULTIPLE);
 
   public Lessons() {
     super("Choose Lessons");

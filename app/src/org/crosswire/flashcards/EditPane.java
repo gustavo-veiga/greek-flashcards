@@ -47,8 +47,9 @@ public class EditPane extends JPanel
      * Serialization ID
      */
     private static final long serialVersionUID = 8637424690635575114L;
+     JButton imageGenButton = new JButton();
 
-    //Construct the frame
+     //Construct the frame
     public EditPane()
     {
         jbInit();
@@ -182,10 +183,32 @@ public class EditPane extends JPanel
         verticalSplitPane.setResizeWeight(0.35D);
         verticalSplitPane.setTopComponent(lessonSplitPane);
         verticalSplitPane.setBottomComponent(flashCardSplitPane);
-        add(verticalSplitPane, BorderLayout.CENTER);
+          imageGenButton.setText("Prerender Word Images");
+          imageGenButton.addActionListener(new EditPane_imageGenButton_actionAdapter(this));
+          add(verticalSplitPane, BorderLayout.CENTER);
 
         JPanel buttonPane = new JPanel();
         buttonPane.add(saveButton);
-        add(buttonPane, BorderLayout.SOUTH);
-    }
+          buttonPane.add(imageGenButton);
+          add(buttonPane, BorderLayout.SOUTH);
+     }
+
+
+     public void imageGenButton_actionPerformed(ActionEvent e) {
+	      LessonManager.instance().genImages();
+     }
+}
+
+
+class EditPane_imageGenButton_actionAdapter
+          implements ActionListener {
+     private EditPane adaptee;
+     EditPane_imageGenButton_actionAdapter(EditPane adaptee) {
+          this.adaptee = adaptee;
+     }
+
+
+     public void actionPerformed(ActionEvent e) {
+          adaptee.imageGenButton_actionPerformed(e);
+     }
 }

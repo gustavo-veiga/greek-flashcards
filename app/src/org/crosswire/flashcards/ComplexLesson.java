@@ -33,6 +33,10 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+import java.awt.Color;
 
 
 /**
@@ -42,15 +46,18 @@ import java.util.Vector;
  * @author Troy A. Griffitts [scribe at crosswire dot org]
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
-public class ComplexLesson extends Lesson {
+public class ComplexLesson
+          extends Lesson {
 
      public ComplexLesson(String url) throws Exception {
           super(url);
      }
 
+
      public ComplexLesson(String url, String description) throws Exception {
           super(url, description);
      }
+
 
      /**
       * Load this lesson from persistent store named by the lesson's <code>filename</code>.
@@ -67,7 +74,7 @@ public class ComplexLesson extends Lesson {
                if (baseOffset < 0) {
                     baseOffset = getURL().lastIndexOf( ("\\"));
                }
-               String lname = getURL().substring(baseOffset+1);
+               String lname = getURL().substring(baseOffset + 1);
                lname = lname.substring(0, lname.indexOf(".flash"));
                String audioPath = getURL().substring(0, baseOffset) + "/audio";
 
@@ -99,7 +106,7 @@ public class ComplexLesson extends Lesson {
           try {
                lesson.setProperty("lessonTitle", getDescription());
                int i = 0;
-               for (;i < getFlashcards().size(); i++) {
+               for (; i < getFlashcards().size(); i++) {
                     FlashCard flashCard = (FlashCard) getFlashcards().get(i);
                     lesson.setProperty("word" + i, flashCard.getFront());
                     lesson.setProperty("answers" + i, flashCard.getBack());
@@ -112,7 +119,8 @@ public class ComplexLesson extends Lesson {
                File file = null;
                URLConnection connection = filePath.openConnection();
                if (connection instanceof JarURLConnection) {
-                    file = new File(LessonManager.instance().getHomeProjectPath() + File.separator + ((JarURLConnection)connection).getEntryName());
+                    file = new File(LessonManager.instance().getHomeProjectPath() + File.separator +
+                                    ( (JarURLConnection) connection).getEntryName());
                }
                else {
                     file = new File(filePath.getFile());
@@ -127,18 +135,98 @@ public class ComplexLesson extends Lesson {
                setModified(false);
           }
           catch (IOException ex) {
-              Debug.error(this.getClass().getName(), ex.getMessage());
-          } finally {
-              if (outStream != null) {
-                  try
-                  {
-                      outStream.close();
-                  }
-                  catch (IOException e)
-                  {
-                      Debug.error(this.getClass().getName(), e.getMessage());
-                  }
-              }
+               Debug.error(this.getClass().getName(), ex.getMessage());
+          }
+          finally {
+               if (outStream != null) {
+                    try {
+                         outStream.close();
+                    }
+                    catch (IOException e) {
+                         Debug.error(this.getClass().getName(), e.getMessage());
+                    }
+               }
+          }
+     }
+
+
+     /**
+      * Save this lesson to persistent store named by the lesson's <code>filename</code>.
+      */
+     public void generateImages() {
+          OutputStream outStream = null;
+          try {
+               // Create an image to save
+               int baseOffset = getURL().lastIndexOf("/");
+               if (baseOffset < 0) {
+                    baseOffset = getURL().lastIndexOf( ("\\"));
+               }
+               String lname = getURL().substring(baseOffset + 1);
+               lname = lname.substring(0, lname.indexOf(".flash"));
+               String imagesPath = getURL().substring(0, baseOffset) + "/images";
+
+               int i = 0;
+               for (; i < getFlashcards().size(); i++) {
+                    FlashCard f = (FlashCard)getFlashcards().elementAt(i);
+                    String imageURLString = imagesPath + "/" + lname + "_" + Integer.toString(i) + ".png";
+                    // Save it as a "home" resource.
+                    URL filePath = new URL(imageURLString);
+                    File file = null;
+                    URLConnection connection = filePath.openConnection();
+                    if (connection instanceof JarURLConnection) {
+                         file = new File(LessonManager.instance().getHomeProjectPath() + File.separator +
+                                         ( (JarURLConnection) connection).getEntryName());
+                    }
+                    else {
+                         file = new File(filePath.getFile());
+                    }
+                    File dir = file.getParentFile();
+                    // Is it already a directory ?
+                    if (!dir.isDirectory()) {
+                         dir.mkdirs();
+                    }
+                    outStream = new FileOutputStream(file);
+                    int width = 100;
+                    int height = 20;
+
+                    // Create a buffered image in which to draw
+                    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+                    // Create a graphics contents on the buffered image
+                    Graphics2D g2d = bufferedImage.createGraphics();
+
+                    // Draw graphics
+                    g2d.setColor(Color.white);
+                    g2d.fillRect(0, 0, width, height);
+                    g2d.setColor(Color.black);
+                    g2d.drawString(f.getFront(), 2, 15);
+
+                    // Graphics context no longer needed so dispose it
+                    g2d.dispose();
+
+                    // Write generated image to a file
+                    try {
+                         // Save as PNG
+                         ImageIO.write(bufferedImage, "png", outStream);
+
+                    }
+                    catch (IOException e) {
+                    }
+
+               }
+          }
+          catch (IOException ex) {
+               Debug.error(this.getClass().getName(), ex.getMessage());
+          }
+          finally {
+               if (outStream != null) {
+                    try {
+                         outStream.close();
+                    }
+                    catch (IOException e) {
+                         Debug.error(this.getClass().getName(), e.getMessage());
+                    }
+               }
           }
      }
 }
