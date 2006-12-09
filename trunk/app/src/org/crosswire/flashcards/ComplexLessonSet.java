@@ -96,7 +96,10 @@ public class ComplexLessonSet extends LessonSet {
                String lessonPath = jarEntry.getName();
                if (lessonPath.startsWith(dirName) && !jarEntry.isDirectory() &&
                    lessonPath.toUpperCase(Locale.ENGLISH).endsWith(".FLASH")) {
-                    add(new ComplexLesson("jar:" + jarConnection.getJarFileURL() + "!/" + lessonPath));
+                    try {
+                         add(new ComplexLesson("jar:" + jarConnection.getJarFileURL() + "!/" + lessonPath));
+                    }
+                    catch (Exception e) {}
                }
           }
      }
@@ -108,20 +111,18 @@ public class ComplexLessonSet extends LessonSet {
       * @param lessonSet
       */
      private void loadDirectoryLessonSet(File directory) {
-          try {
                File[] files = directory.listFiles(new FlashFileFilter());
                if (files == null) {
                     return;
                }
                Arrays.sort(files);
                for (int i = 0; i < files.length; i++) {
-                    add(new ComplexLesson(files[i].getCanonicalFile().toURL().toString()));
+                    try {
+                         add(new ComplexLesson(files[i].getCanonicalFile().toURL().toString()));
+                    }
+                    catch (Exception e) {}
                }
           }
-          catch (IOException e) {
-               // that's fine.  We just failed to load local files.
-          }
-     }
 
 
      public String getNextLessonFilename() {

@@ -44,11 +44,11 @@ import java.util.Vector;
  */
 public class ComplexLesson extends Lesson {
 
-     public ComplexLesson(String url) {
+     public ComplexLesson(String url) throws Exception {
           super(url);
      }
 
-     public ComplexLesson(String url, String description) {
+     public ComplexLesson(String url, String description) throws Exception {
           super(url, description);
      }
 

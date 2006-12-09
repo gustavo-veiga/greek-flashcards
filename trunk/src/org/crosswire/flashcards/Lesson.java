@@ -63,8 +63,8 @@ public class Lesson {
      /**
       * Construct a new, empty lesson.
       */
-     public Lesson() {
-          this("NewLesson.flash", "New Lesson");
+     public Lesson() throws Exception {
+         this("NewLesson.flash", "New Lesson");
      }
 
 
@@ -72,7 +72,7 @@ public class Lesson {
       * Construct a lesson from URL.
       * @param url
       */
-     public Lesson(String url) {
+     public Lesson(String url) throws Exception {
           this(url, null);
      }
 
@@ -82,7 +82,7 @@ public class Lesson {
       * @param url
       * @param description
       */
-     public Lesson(String url, String description) {
+     public Lesson(String url, String description) throws Exception {
           this.url = url;
           load();
 
@@ -95,7 +95,7 @@ public class Lesson {
      /**
       * Load this lesson from persistent store named by the lesson's <code>filename</code>.
       */
-     protected void load() {
+     protected void load() throws Exception {
      }
 
 

@@ -128,7 +128,11 @@ public class LessonPane extends JPanel
 
     public void createLesson(String description)
     {
-        Lesson lesson = new ComplexLesson(lessonSet.getNextLessonFilename(), description);
+	    Lesson lesson = null;
+         try {
+              lesson = new ComplexLesson(lessonSet.getNextLessonFilename(), description);
+         }
+         catch (Exception e) {}
         DefaultListModel model = (DefaultListModel) lessonList.getModel();
         if (!model.contains(lesson))
         {

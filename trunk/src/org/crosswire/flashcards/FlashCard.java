@@ -15,8 +15,7 @@
  *     59 Temple Place - Suite 330
  *     Boston, MA 02111-1307, USA
  *
- * The copyright to this program is held by it's authors
- * Copyright: 2004
+ * Copyright 2006: CrossWire Bible Society
  */
 package org.crosswire.flashcards;
 
@@ -36,6 +35,7 @@ public class FlashCard {
   private final String front = "front";
   private final String back = "back";
   private final String audioURL = "audioURL";
+  private final String imageURL = "imageURL";
 
   /**
    * Create a partial FlashCard.
@@ -103,6 +103,14 @@ public class FlashCard {
 
   public void setAudioURL(String newAudioURL) {
     values.put(audioURL, newAudioURL);
+  }
+
+  public String getImageURL() {
+    return (String) values.get(imageURL);
+  }
+
+  public void setImageURL(String newImageURL) {
+    values.put(imageURL, newImageURL);
   }
 
   /**
