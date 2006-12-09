@@ -19,22 +19,7 @@
  */
 package org.crosswire.flashcards;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.Vector;
 
 
 /**
@@ -47,7 +32,7 @@ import java.util.jar.JarFile;
  * @author Troy A. Griffitts [scribe at crosswire dot org]
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
-public class LessonSet implements Comparable, Serializable {
+public class LessonSet {
 
     /**
       * The <code>url</code> of the lesson
@@ -62,7 +47,7 @@ public class LessonSet implements Comparable, Serializable {
      /**
       * An ordered list of <code>lessons</code>
       */
-     private Set lessons = new TreeSet();
+     private Vector lessons = new Vector();
 
      /**
       * Flag indicating whether this lesson set has been <code>modified</code>
@@ -95,73 +80,7 @@ public class LessonSet implements Comparable, Serializable {
       * Load this lesson set from persistent store named by the lesson set's <code>dirname</code>.
       * This is the union of lessons in the Jar and in the user's flashcard home directory.
       */
-     private void load() {
-          if (url == null) { // assert we have an URL
-               return;
-          }
-
-          URL lessonsURL = null;
-          URLConnection connection = null;
-          try {
-               lessonsURL = new URL(url);
-               connection = lessonsURL.openConnection();
-          }
-          catch (Exception e1) {
-              Debug.error(this.getClass().getName(), e1.getMessage());
-          }
-          if (connection instanceof JarURLConnection) {
-               JarURLConnection jarConnection = (JarURLConnection) connection;
-               loadJarLessonSet(jarConnection);
-          }
-          else if (lessonsURL != null) {
-              loadDirectoryLessonSet(new File(lessonsURL.getFile()));
-          }
-     }
-
-
-     private void loadJarLessonSet(JarURLConnection jarConnection) {
-          String dirName = jarConnection.getEntryName();
-          JarFile jarFile = null;
-          try {
-               jarFile = jarConnection.getJarFile();
-          }
-          catch (Exception e2) {
-              Debug.error(this.getClass().getName(), e2.getMessage());
-          }
-          if (jarFile == null) {
-               return;
-          }
-          Enumeration entries = jarFile.entries();
-          while (entries.hasMoreElements()) {
-               JarEntry jarEntry = (JarEntry) entries.nextElement();
-               String lessonPath = jarEntry.getName();
-               if (lessonPath.startsWith(dirName) && !jarEntry.isDirectory() &&
-                   lessonPath.toUpperCase(Locale.ENGLISH).endsWith(".FLASH")) {
-                    lessons.add(new Lesson("jar:" + jarConnection.getJarFileURL() + "!/" + lessonPath));
-               }
-          }
-     }
-
-
-     /**
-      * Get the relative path names of the lessons in this lesson set from
-      * the user's program home.
-      * @param lessonSet
-      */
-     private void loadDirectoryLessonSet(File directory) {
-          try {
-               File[] files = directory.listFiles(new FlashFileFilter());
-               if (files == null) {
-                    return;
-               }
-               Arrays.sort(files);
-               for (int i = 0; i < files.length; i++) {
-                    lessons.add(new Lesson(files[i].getCanonicalFile().toURL().toString()));
-               }
-          }
-          catch (IOException e) {
-               // that's fine.  We just failed to load local files.
-          }
+     protected void load() {
      }
 
 
@@ -169,9 +88,8 @@ public class LessonSet implements Comparable, Serializable {
       * Save this lesson to persistent store named by the lesson's <code>dirname</code>.
       */
      public void store() {
-          Iterator iter = lessons.iterator();
-          while (iter.hasNext()) {
-               Lesson lesson = (Lesson) iter.next();
+          for (int i = 0; i < lessons.size(); i++) {
+               Lesson lesson = (Lesson) lessons.elementAt(i);
                if (lesson.isModified()) {
                     lesson.store();
                }
@@ -187,9 +105,8 @@ public class LessonSet implements Comparable, Serializable {
                return true;
           }
 
-          Iterator iter = lessons.iterator();
-          while (iter.hasNext()) {
-               Lesson lesson = (Lesson) iter.next();
+          for (int i = 0; i < lessons.size(); i++) {
+               Lesson lesson = (Lesson) lessons.elementAt(i);
                if (lesson.isModified()) {
                     return true;
                }
@@ -198,8 +115,8 @@ public class LessonSet implements Comparable, Serializable {
      }
 
 
-     public Iterator iterator() {
-          return lessons.iterator();
+     public Vector getLessons() {
+          return lessons;
      }
 
 
@@ -210,7 +127,7 @@ public class LessonSet implements Comparable, Serializable {
       */
      public void add(Lesson lesson) {
           modified = true;
-          lessons.add(lesson);
+          lessons.addElement(lesson);
      }
 
 
@@ -241,18 +158,6 @@ public class LessonSet implements Comparable, Serializable {
      }
 
 
-     public String getNextLessonFilename() {
-          // This needs work: It should check for collisions
-          String result = null;
-          int next = lessons.size();
-          Object[] params = {
-                    url, new Integer(next)};
-          MessageFormat format = new MessageFormat("{0}/lesson{1,number,00}.flash");
-          result = format.format(params);
-          return result;
-     }
-
-
      /* (non-Javadoc)
       * @see java.lang.Comparable#compareTo(java.lang.Object)
       */
@@ -271,32 +176,24 @@ public class LessonSet implements Comparable, Serializable {
 
 
      public void augment(LessonSet other) {
-          Iterator i = other.iterator();
-          while (i.hasNext()) {
-               Lesson l = (Lesson) i.next();
+          for (int i = 0; i < other.getLessons().size(); i++) {
+               Lesson l = (Lesson) other.getLessons().elementAt(i);
                Lesson exists = getLesson(l.getDescription());
                if (exists != null) {
-                    lessons.remove(exists);
+                    lessons.removeElement(exists);
                }
-               lessons.add(l);
+               lessons.addElement(l);
           }
      }
 
 
      public Lesson getLesson(String desc) {
-          Iterator i = iterator();
-          while (i.hasNext()) {
-               Lesson ls = (Lesson) i.next();
+          for (int i = 0; i < lessons.size(); i++) {
+               Lesson ls = (Lesson) lessons.elementAt(i);
                if (desc.equals(ls.getDescription())) {
                     return ls;
                }
           }
           return null;
      }
-
-     static class FlashFileFilter implements FilenameFilter {
-         public boolean accept(File dir, String name) {
-              return name.toUpperCase(Locale.ENGLISH).endsWith(".FLASH");
-         }
-    }
 }

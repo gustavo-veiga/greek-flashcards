@@ -35,6 +35,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.Iterator;
 import java.util.List;
 
@@ -107,6 +108,7 @@ public class QuizPane
      JPanel jPanel4 = new JPanel();
      JPanel jPanel5 = new JPanel();
      JPanel jPanel6 = new JPanel();
+     BorderLayout borderLayout4 = new BorderLayout();
 
      static class WordEntry implements Serializable {
 
@@ -189,6 +191,7 @@ public class QuizPane
           statusBar.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
           jPanel1.setLayout(borderLayout3);
           jPanel2.setLayout(borderLayout1);
+          jPanel6.setLayout(borderLayout4);
           statusPanel.add(statusBar, BorderLayout.CENTER);
           statusPanel.add(wCount, BorderLayout.EAST);
           setLayout(borderLayout2);
@@ -196,7 +199,6 @@ public class QuizPane
           jPanel3.add(playSoundButton);
           jPanel4.add(startLessonButton);
           jPanel5.add(showAnswerButton);
-          jPanel6.add(choicesPanel);
           this.add(statusPanel, java.awt.BorderLayout.SOUTH);
           this.add(jPanel2, java.awt.BorderLayout.CENTER);
           this.add(jPanel1, java.awt.BorderLayout.NORTH);
@@ -205,6 +207,7 @@ public class QuizPane
           jPanel1.add(jPanel5, java.awt.BorderLayout.EAST);
           jPanel2.add(jPanel6, java.awt.BorderLayout.SOUTH);
           jPanel2.add(wordText, java.awt.BorderLayout.CENTER);
+          jPanel6.add(choicesPanel, java.awt.BorderLayout.CENTER);
      }
 
 
@@ -221,9 +224,9 @@ public class QuizPane
           Iterator lessonIter = setupPane.iterator();
           while (lessonIter.hasNext()) {
                Lesson lesson = (Lesson) lessonIter.next();
-               Iterator cardIter = lesson.iterator();
-               while (cardIter.hasNext()) {
-                    words.add(new WordEntry( (FlashCard) cardIter.next()));
+               Vector cards = lesson.getFlashcards();
+               for (int i = 0; i < cards.size(); i++) {
+                    words.add(new WordEntry( (FlashCard) cards.get(i)));
                }
 //            if (!loadedFont)
 //            {

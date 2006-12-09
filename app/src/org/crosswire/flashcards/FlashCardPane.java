@@ -6,7 +6,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * 
+ *
  * See the GNU General Public License for more details.
  * The License is available on the internet at:
  *     http://www.gnu.org/copyleft/gpl.html,
@@ -14,7 +14,7 @@
  *     Free Software Foundation, Inc.
  *     59 Temple Place - Suite 330
  *     Boston, MA 02111-1307, USA
- * 
+ *
  * The copyright to this program is held by it's authors
  * Copyright: 2004
  */
@@ -22,7 +22,7 @@ package org.crosswire.flashcards;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Vector;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -34,7 +34,7 @@ import org.crosswire.common.swing.RowTableModel;
 
 /**
  * A panel listing the Flash Cards in a Lesson.
- * 
+ *
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
 public class FlashCardPane extends JPanel implements FlashCardEventListener
@@ -127,10 +127,9 @@ public class FlashCardPane extends JPanel implements FlashCardEventListener
         lesson = aLesson;
         if (lesson != null)
         {
-            Iterator flashCardIterator = lesson.iterator();
-            while (flashCardIterator.hasNext())
-            {
-                FlashCard flashCard = (FlashCard) flashCardIterator.next();
+            Vector flashcards = lesson.getFlashcards();
+            for (int i = 0; i < flashcards.size(); i++) {
+                FlashCard flashCard = (FlashCard) flashcards.get(i);
                 model.addRow(flashCard);
             }
         }

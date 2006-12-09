@@ -23,6 +23,7 @@ package org.crosswire.flashcards;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -39,7 +40,7 @@ import javax.swing.event.ListSelectionListener;
 
 /**
  * A panel listing the lessons in a lesson set.
- * 
+ *
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
 public class LessonPane extends JPanel
@@ -49,7 +50,7 @@ public class LessonPane extends JPanel
      */
     private static final long serialVersionUID = -4950398737983745837L;
     private JList lessonList = new JList(new DefaultListModel());
-    private LessonSet lessonSet;
+    private ComplexLessonSet lessonSet;
 
     private JMenuItem newItem;
     private boolean editable;
@@ -121,13 +122,13 @@ public class LessonPane extends JPanel
 //        JMenuItem renameLesson = new JMenuItem("Rename Lesson");
 //        lessonEditMenu.add(editLesson);
 //        lessonEditMenu.add(renameLesson);
-        
+
         enableControls();
     }
 
     public void createLesson(String description)
     {
-        Lesson lesson = new Lesson(lessonSet.getNextLessonFilename(), description);
+        Lesson lesson = new ComplexLesson(lessonSet.getNextLessonFilename(), description);
         DefaultListModel model = (DefaultListModel) lessonList.getModel();
         if (!model.contains(lesson))
         {
@@ -136,24 +137,23 @@ public class LessonPane extends JPanel
             fireLessonChanged(new LessonChangeEvent(this));
         }
         lessonList.setSelectedValue(lesson, true);
-        
+
     }
 
-    public void loadLessons(LessonSet aLessonSet)
+    public void loadLessons(ComplexLessonSet aLessonSet)
     {
         lessonSet = aLessonSet;
         DefaultListModel model = (DefaultListModel) lessonList.getModel();
         model.clear();
         if (lessonSet != null)
         {
-            Iterator lessonIterator = lessonSet.iterator();
-            while (lessonIterator.hasNext())
-            {
-                Lesson lesson = (Lesson) lessonIterator.next();
+            Vector lessons = lessonSet.getLessons();
+            for (int i = 0; i < lessons.size(); i++) {
+                Lesson lesson = (Lesson) lessons.elementAt(i);
                 model.addElement(lesson);
             }
         }
-        enableControls();        
+        enableControls();
     }
 
     private void enableControls()

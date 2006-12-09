@@ -109,7 +109,7 @@ public class EditPane extends JPanel
                     return;
                 }
                 JList list = (JList) e.getSource();
-                lessonPanel.loadLessons((LessonSet) list.getSelectedValue());
+                lessonPanel.loadLessons((ComplexLessonSet) list.getSelectedValue());
             }
         });
 

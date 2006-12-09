@@ -6,7 +6,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * 
+ *
  * See the GNU General Public License for more details.
  * The License is available on the internet at:
  *     http://www.gnu.org/copyleft/gpl.html,
@@ -14,7 +14,7 @@
  *     Free Software Foundation, Inc.
  *     59 Temple Place - Suite 330
  *     Boston, MA 02111-1307, USA
- * 
+ *
  * The copyright to this program is held by it's authors
  * Copyright: 2004
  */
@@ -368,7 +368,7 @@ public class EditorFrame extends JFrame {
                         (frmSize.height - dlgSize.height) / 2 + loc.y);
         dlg.setModal(true);
         dlg.pack();
-        dlg.show();
+        dlg.setVisible(true);
     }
 
     // Overridden so we can exit when window is closed
