@@ -137,14 +137,7 @@ public class FlashCardEditor extends JPanel
         if (newFlashCard != null)
         {
             selected = true;
-            try
-            {
-                flashCard = (FlashCard) newFlashCard.clone();
-            }
-            catch (CloneNotSupportedException e)
-            {
-                assert false;
-            }
+		  flashCard = (FlashCard) newFlashCard.clone();
             wordText.setText(flashCard.getFront());
             answers.setText(flashCard.getBack());
         }
@@ -175,7 +168,7 @@ public class FlashCardEditor extends JPanel
 
     protected void modifyFlashCard()
     {
-        assert flashCard != null;
+        if (flashCard == null) return;
 
         flashCard.setFront(wordText.getText());
         flashCard.setBack(answers.getText());

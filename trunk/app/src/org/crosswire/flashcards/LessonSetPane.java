@@ -115,7 +115,7 @@ public class LessonSetPane extends JPanel
 
     public void createLessonSet(String name)
     {
-        LessonSet lessonSet = new LessonSet("file:"+LessonManager.instance().getHomeProjectPath() + "/" + LessonManager.LESSON_ROOT + '/' + name);
+        LessonSet lessonSet = new ComplexLessonSet("file:"+LessonManager.instance().getHomeProjectPath() + "/" + LessonManager.LESSON_ROOT + '/' + name);
         DefaultListModel model = (DefaultListModel) lessonSetList.getModel();
         if (!model.contains(lessonSet))
         {

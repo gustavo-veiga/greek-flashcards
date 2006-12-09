@@ -105,7 +105,7 @@ public class SetupPane extends JPanel
         panel.add(noMultipleChoice);
         add(panel, BorderLayout.SOUTH);
     }
- 
+
     static class LessonSetSelectionListener implements ListSelectionListener
     {
         private LessonPane lessonPanel;
@@ -125,7 +125,7 @@ public class SetupPane extends JPanel
                 return;
             }
             JList list = (JList) e.getSource();
-            lessonPanel.loadLessons((LessonSet) list.getSelectedValue());
+            lessonPanel.loadLessons((ComplexLessonSet) list.getSelectedValue());
         }
     }
 

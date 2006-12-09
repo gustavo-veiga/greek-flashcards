@@ -192,8 +192,7 @@ public class LessonManager {
                          entryName = entryName.substring(0, entryName.length() - 1);
                          if (entryName.startsWith(LESSON_ROOT) && !entryName.equals(LESSON_ROOT) && !entryName.endsWith("/audio")) {
                               // let the description be just the directory name and not the path
-                              add(new LessonSet("jar:" + jarFile.getCanonicalFile().toURL().toString() + "!/" +
-                                                entryName));
+                              add(new ComplexLessonSet("jar:" + jarFile.getCanonicalFile().toURL().toString() + "!/" + entryName));
                          }
                     }
                }
@@ -217,7 +216,7 @@ public class LessonManager {
                for (int i = 0; i < files.length; i++) {
                     File file = files[i];
                     if (file.isDirectory() && !file.getName().equals("audio")) {
-                         add(new LessonSet(files[i].toURL().toString()));
+                         add(new ComplexLessonSet(files[i].toURL().toString()));
                     }
                }
           }

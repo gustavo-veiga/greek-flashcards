@@ -21,19 +21,7 @@
 
 package org.crosswire.flashcards;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
-
+import java.util.Vector;
 
 /**
  * A Lesson is an ordered list of FlashCards.
@@ -42,7 +30,7 @@ import java.util.TreeSet;
  * @author Troy A. Griffitts [scribe at crosswire dot org]
  * @author DM Smith [dmsmith555 at yahoo dot com]
  */
-public class Lesson implements Comparable, Serializable {
+public class Lesson {
 
     /**
       * The <code>filename</code> gives the relative location of the lesson.
@@ -63,7 +51,7 @@ public class Lesson implements Comparable, Serializable {
      /**
       * An ordered list of <code>flashCards</code>
       */
-     private Set flashCards = new TreeSet();
+     private Vector flashCards = new Vector();
 
      private boolean modified = false;
 
@@ -107,92 +95,14 @@ public class Lesson implements Comparable, Serializable {
      /**
       * Load this lesson from persistent store named by the lesson's <code>filename</code>.
       */
-     public void load() {
-          try {
-               URL lessonURL = new URL(url);
-               Properties lesson = new Properties();
-               lesson.load(lessonURL.openConnection().getInputStream());
-               int wordCount = Integer.parseInt(lesson.getProperty("wordCount"));
-               description = lesson.getProperty("lessonTitle", url.substring(url.lastIndexOf('/') + 1));
-
-               int baseOffset = url.lastIndexOf("/");
-               if (baseOffset < 0) {
-                    baseOffset = url.lastIndexOf( ("\\"));
-               }
-               String lname = url.substring(baseOffset+1);
-               lname = lname.substring(0, lname.indexOf(".flash"));
-               String audioPath = url.substring(0, baseOffset) + "/audio";
-
-               for (int i = 0; i < wordCount; i++) {
-                    FlashCard f = new FlashCard(lesson.getProperty("word" + i), lesson.getProperty("answers" + i));
-                    String audioURLString = audioPath + "/" + lname + "_" + Integer.toString(i) + ".wav";
-                    URL audioURL = new URL(audioURLString);
-                    try {
-                         audioURL.openConnection().getInputStream();
-                         f.setAudioURL(audioURLString);
-                    }
-                    catch (Exception e) {}
-                    add(f);
-               }
-               modified = false;
-          }
-          catch (IOException e1) {
-               /* ignore it */
-          }
+     protected void load() {
      }
 
 
      /**
       * Save this lesson to persistent store named by the lesson's <code>filename</code>.
       */
-     public void store() {
-          Properties lesson = new Properties();
-          OutputStream outStream = null;
-          try {
-               lesson.setProperty("lessonTitle", description);
-               Iterator iter = flashCards.iterator();
-               int i = 0;
-               while (iter.hasNext()) {
-                    FlashCard flashCard = (FlashCard) iter.next();
-                    lesson.setProperty("word" + i, flashCard.getFront());
-                    lesson.setProperty("answers" + i, flashCard.getBack());
-                    i++;
-               }
-               lesson.setProperty("wordCount", Integer.toString(i));
-
-               // Save it as a "home" resource.
-               URL filePath = new URL(url);
-               File file = null;
-               URLConnection connection = filePath.openConnection();
-               if (connection instanceof JarURLConnection) {
-                    file = new File(LessonManager.instance().getHomeProjectPath() + File.separator + ((JarURLConnection)connection).getEntryName());
-               }
-               else {
-                    file = new File(filePath.getFile());
-               }
-               File dir = file.getParentFile();
-               // Is it already a directory ?
-               if (!dir.isDirectory()) {
-                    dir.mkdirs();
-               }
-               outStream = new FileOutputStream(file);
-               lesson.store(outStream, "Flash Lesson");
-               modified = false;
-          }
-          catch (IOException ex) {
-              Debug.error(this.getClass().getName(), ex.getMessage());
-          } finally {
-              if (outStream != null) {
-                  try
-                  {
-                      outStream.close();
-                  }
-                  catch (IOException e)
-                  {
-                      Debug.error(this.getClass().getName(), e.getMessage());
-                  }
-              }
-          }
+     protected void store() {
      }
 
 
@@ -202,7 +112,7 @@ public class Lesson implements Comparable, Serializable {
       * @param flashCard to be added.
       */
      public void add(FlashCard flashCard) {
-          flashCards.add(flashCard);
+          flashCards.addElement(flashCard);
           modified = true;
      }
 
@@ -213,7 +123,7 @@ public class Lesson implements Comparable, Serializable {
       * @param flashCard to be removed.
       */
      public void remove(FlashCard flashCard) {
-          flashCards.remove(flashCard);
+          flashCards.removeElement(flashCard);
           modified = true;
      }
 
@@ -281,10 +191,14 @@ public class Lesson implements Comparable, Serializable {
      /**
       * @return Returns the flashCards.
       */
-     public Iterator iterator() {
-          return flashCards.iterator();
+     public Vector getFlashcards() {
+          return flashCards;
      }
 
+
+     public void setModified(boolean mod) {
+          modified = mod;
+     }
 
      /**
       * @return whether this lesson has been modified
@@ -294,9 +208,8 @@ public class Lesson implements Comparable, Serializable {
                return true;
           }
 
-          Iterator iter = iterator();
-          while (iter.hasNext()) {
-               FlashCard flashCard = (FlashCard) iter.next();
+          for (int i = 0; i < flashCards.size(); i++) {
+               FlashCard flashCard = (FlashCard) flashCards.elementAt(i);
                if (flashCard.isModified()) {
                     return true;
                }
