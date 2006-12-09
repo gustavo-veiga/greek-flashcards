@@ -142,4 +142,16 @@ public class ComplexLessonSet extends LessonSet {
               return name.toUpperCase(Locale.ENGLISH).endsWith(".FLASH");
          }
     }
+
+
+     /**
+      * Save this lesson to persistent store named by the lesson's <code>dirname</code>.
+      */
+     public void generateImages() {
+          for (int i = 0; i < getLessons().size(); i++) {
+               ComplexLesson lesson = (ComplexLesson) getLessons().elementAt(i);
+		     lesson.generateImages();
+          }
+     }
+
 }

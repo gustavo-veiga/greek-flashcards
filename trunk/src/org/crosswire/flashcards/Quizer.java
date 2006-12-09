@@ -113,11 +113,11 @@ public class Quizer {
       }
       else {
         lastWord.incrementFailures(-1);
-        // if we're the last word, don't ask again
-        if ((notLearned.size() == 1) || (lastWord.getFailures() < 0)) {
-          notLearned.removeElement(lastWord);
-	  notLearned.trimToSize();
-        }
+      }
+      // if we're the last word, don't ask again
+      if ((notLearned.size() == 1) || (lastWord.getFailures() < 0)) {
+	notLearned.removeElement(lastWord);
+	notLearned.trimToSize();
       }
     }
 
@@ -125,7 +125,15 @@ public class Quizer {
     if (numToLearn == 0) {
       return null;
     }
-    WordEntry currentWord = lastWord;
+
+    WordEntry currentWord = null;
+
+    // if there are more than 1 words available be sure we don't get the same word
+    if (numToLearn != 1) currentWord = lastWord;
+
+    // if we just want a new word and not report anything, find the NEXT word
+    // because we're likely cycling throw the words looking at answers and don't
+    // want random answers which might include repeats
     if ( (wrongCount < 0) && (currentWord != null)) {
       int next = notLearned.indexOf(lastWord) + 1;
       if (next >= notLearned.size()) {
@@ -133,10 +141,13 @@ public class Quizer {
       }
       currentWord = (WordEntry) notLearned.elementAt(next);
     }
+
+    // if we need to randomly find a new word, let's do it
     while (currentWord == lastWord) {
       int wordNum = rand.nextInt(notLearned.size());
       currentWord = (WordEntry) notLearned.elementAt(wordNum);
     }
+
     lastWord = currentWord;
     return currentWord.getFlashCard();
   }
