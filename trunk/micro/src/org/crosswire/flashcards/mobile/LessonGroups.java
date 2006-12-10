@@ -1,6 +1,8 @@
 package org.crosswire.flashcards.mobile;
 
 import javax.microedition.lcdui.*;
+import java.util.Vector;
+import org.crosswire.flashcards.LessonSet;
 
 /**
  * <p>Title: </p>
@@ -55,8 +57,17 @@ public class LessonGroups extends Form implements CommandListener {
 
   ChoiceGroup lessonGroupChoice = new ChoiceGroup("", ChoiceGroup.EXCLUSIVE);
 
+  public LessonSet getLessonSet() {
+    int lessonGroup = FlashCards.instance.lessonGroups.lessonGroupChoice.getSelectedIndex();
+    return (LessonSet)FlashCards.instance.lessonSets.elementAt(lessonGroup);
+
+  }
+
   public void loadLessonGroups() {
     lessonGroupChoice.deleteAll();
-    lessonGroupChoice.append(FlashCards.instance.lessonSet.getDescription(), null);
+    Vector l = FlashCards.instance.lessonSets;
+    for (int i = 0; i < l.size(); i++) {
+      lessonGroupChoice.append(((LessonSet)l.elementAt(i)).getDescription(), null);
+    }
   }
 }
