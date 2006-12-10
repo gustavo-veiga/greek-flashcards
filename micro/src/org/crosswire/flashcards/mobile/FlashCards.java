@@ -4,6 +4,7 @@ import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
 
 import org.crosswire.flashcards.*;
+import java.util.Vector;
 /**
  * <p>Title: </p>
  *
@@ -21,10 +22,33 @@ public class FlashCards extends MIDlet {
   public LessonGroups lessonGroups = new LessonGroups();
   public Lessons lessons = new Lessons();
   public Quiz quiz = new Quiz();
-  public LessonSet lessonSet = new MicroLessonSet("lessons");
+
+  public Vector lessonSets = new Vector();
   public FlashCards() {
     instance = this;
-    lessonSet.setDescription("Greek Top Freq");
+    Properties l = new Properties();
+    try {
+      l.load("lessons.properties");
+    }
+    catch (Exception e) {}
+    if (l != null) {
+      for (int i = 0; true; i++) {
+        String ld = l.getProperty("LessonSet" + Integer.toString(i));
+        if (ld != null) {
+          LessonSet ls = new MicroLessonSet(ld);
+          String desc = l.getProperty("LessonDescription" + Integer.toString(i));
+          ls.setDescription( (desc != null) ? desc : ld);
+          lessonSets.addElement(ls);
+        }
+        else
+          break;
+      }
+    }
+    if (lessonSets.size() < 1) {
+      LessonSet ls = new MicroLessonSet("lessons");
+      ls.setDescription("All Lessons");
+      lessonSets.addElement(ls);
+    }
   }
 
   public void startApp() {

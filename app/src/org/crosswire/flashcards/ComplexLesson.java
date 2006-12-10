@@ -37,14 +37,12 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import java.awt.Color;
+import java.awt.Font;
 
 
 /**
  * A Lesson is an ordered list of FlashCards.
  * The lesson also has a description which is useful for showing to a user.
- *
- * @author Troy A. Griffitts [scribe at crosswire dot org]
- * @author DM Smith [dmsmith555 at yahoo dot com]
  */
 public class ComplexLesson
           extends Lesson {
@@ -186,8 +184,8 @@ public class ComplexLesson
                          dir.mkdirs();
                     }
                     outStream = new FileOutputStream(file);
-                    int width = 100;
-                    int height = 20;
+                    final int width = 120;
+                    final int height = 20;
 
                     // Create a buffered image in which to draw
                     BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -199,7 +197,8 @@ public class ComplexLesson
                     g2d.setColor(Color.white);
                     g2d.fillRect(0, 0, width, height);
                     g2d.setColor(Color.black);
-                    g2d.drawString(f.getFront(), 2, 15);
+                    g2d.setFont(new Font(g2d.getFont().getName(), Font.BOLD, 15));
+                    g2d.drawString(f.getFront(), 4, 14);
 
                     // Graphics context no longer needed so dispose it
                     g2d.dispose();

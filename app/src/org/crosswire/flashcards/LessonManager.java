@@ -30,7 +30,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -50,7 +50,7 @@ public class LessonManager {
      /**
       * An ordered list of <code>lessonSets</code>
       */
-     private Set lessonSets = new TreeSet();
+     private Vector lessonSets = new Vector();
      private File homeLessonDir = null;
      private String homeProjectPath = null;
 

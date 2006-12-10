@@ -61,7 +61,7 @@ public class Quiz extends Form implements CommandListener {
     for (int i = 0; i < lessonCount; i++) {
       if (FlashCards.instance.lessons.lessonChoice.isSelected(i)) {
         String lessonName = FlashCards.instance.lessons.lessonChoice.getString(i);
-        Lesson l = FlashCards.instance.lessonSet.getLesson(lessonName);
+        Lesson l = FlashCards.instance.lessonGroups.getLessonSet().getLesson(lessonName);
         quizer.loadLesson(l);
       }
     }

@@ -3,6 +3,7 @@ package org.crosswire.flashcards.mobile;
 import javax.microedition.lcdui.*;
 import java.util.Vector;
 import org.crosswire.flashcards.Lesson;
+import org.crosswire.flashcards.LessonSet;
 
 /**
  * <p>Title: </p>
@@ -59,11 +60,9 @@ public class Lessons extends Form implements CommandListener {
   }
 
   public void loadLessons() {
-    int lessonGroup = FlashCards.instance.lessonGroups.lessonGroupChoice.getSelectedIndex();
-    String lessonGroupName = FlashCards.instance.lessonGroups.lessonGroupChoice.getString(lessonGroup);
-    lessonChoice.setLabel(lessonGroupName);
+    lessonChoice.setLabel(FlashCards.instance.lessonGroups.getLessonSet().getDescription());
     lessonChoice.deleteAll();
-    Vector lessons = FlashCards.instance.lessonSet.getLessons();
+    Vector lessons = FlashCards.instance.lessonGroups.getLessonSet().getLessons();
     for (int i = 0; i < lessons.size(); i++) {
        Lesson l = (Lesson) lessons.elementAt(i);
       lessonChoice.append(l.getDescription(), null);
