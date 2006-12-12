@@ -121,6 +121,7 @@ public class Quizer {
       }
     }
 
+
     int numToLearn = notLearned.size();
     if (numToLearn == 0) {
       return null;
@@ -129,23 +130,28 @@ public class Quizer {
     WordEntry currentWord = null;
 
     // if there are more than 1 words available be sure we don't get the same word
-    if (numToLearn != 1) currentWord = lastWord;
+    if (numToLearn != 1) {
+      currentWord = lastWord;
 
-    // if we just want a new word and not report anything, find the NEXT word
-    // because we're likely cycling throw the words looking at answers and don't
-    // want random answers which might include repeats
-    if ( (wrongCount < 0) && (currentWord != null)) {
-      int next = notLearned.indexOf(lastWord) + 1;
-      if (next >= notLearned.size()) {
-        next = 0;
+      // if we just want a new word and not report anything, find the NEXT word
+      // because we're likely cycling throw the words looking at answers and don't
+      // want random answers which might include repeats
+      if ( (wrongCount < 0) && (currentWord != null)) {
+        int next = notLearned.indexOf(lastWord) + 1;
+        if (next >= notLearned.size()) {
+          next = 0;
+        }
+        currentWord = (WordEntry) notLearned.elementAt(next);
       }
-      currentWord = (WordEntry) notLearned.elementAt(next);
+  
+      // if we need to randomly find a new word, let's do it
+      while (currentWord == lastWord) {
+        int wordNum = getRandomInt(notLearned.size());
+        currentWord = (WordEntry) notLearned.elementAt(wordNum);
+      }
     }
-
-    // if we need to randomly find a new word, let's do it
-    while (currentWord == lastWord) {
-      int wordNum = rand.nextInt(notLearned.size());
-      currentWord = (WordEntry) notLearned.elementAt(wordNum);
+    else {
+      currentWord = (WordEntry) notLearned.elementAt(0);
     }
 
     lastWord = currentWord;
@@ -155,8 +161,8 @@ public class Quizer {
   public int getPercentage() {
     int percent = 100;
     if (totalAsked > 0) {
-      percent = (int) ( ( ( (float) (totalAsked - totalWrong)) /
-                         (float) totalAsked) * 100);
+      percent = ( (totalAsked - totalWrong) * 100) /
+                          totalAsked;
     }
     return percent;
   }
@@ -168,7 +174,7 @@ public class Quizer {
     }
 
     while (count > 0) {
-      int wordNum = rand.nextInt(words.size());
+      int wordNum = getRandomInt(words.size());
       String b = ( (WordEntry) words.elementAt(wordNum)).flashCard.getBack();
       if (ret.indexOf(b) < 0) {
         ret.addElement(b);
@@ -177,7 +183,7 @@ public class Quizer {
     }
     // be sure the right answer is in there
     if (ret.indexOf(lastWord.flashCard.getBack()) < 0) {
-      int wordNum = rand.nextInt(ret.size());
+      int wordNum = getRandomInt(ret.size());
       ret.setElementAt(lastWord.flashCard.getBack(), wordNum);
     }
     return ret;
@@ -193,5 +199,13 @@ public class Quizer {
 
   public int getNotLearnedCount() {
     return notLearned.size();
+  }
+
+  public int getRandomInt(int upperLimit) {
+    int ret = rand.nextInt()%upperLimit;
+    if (ret < 0) {
+      ret *= -1;
+    }
+    return ret;
   }
 }

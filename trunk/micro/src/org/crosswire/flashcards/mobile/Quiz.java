@@ -2,10 +2,10 @@ package org.crosswire.flashcards.mobile;
 
 import javax.microedition.lcdui.*;
 import org.crosswire.flashcards.Lesson;
+import org.crosswire.flashcards.MicroLesson;
 import org.crosswire.flashcards.Quizer;
 import org.crosswire.flashcards.FlashCard;
 import java.util.Vector;
-import java.io.InputStream;
 
 /**
  * <p>Title: </p>
@@ -48,11 +48,11 @@ public class Quiz extends Form implements CommandListener {
     this.append(answersDisplay);
     this.append(statusBar);
     answersDisplay.setLabel(null);
-    answersDisplay.setLayout(Item.LAYOUT_LEFT | Item.LAYOUT_TOP |
-                             Item.LAYOUT_VEXPAND);
+//    answersDisplay.setLayout(Item.LAYOUT_LEFT | Item.LAYOUT_TOP |
+//                             Item.LAYOUT_VEXPAND);
     statusBar.setText("StatusBar");
-    wordImage.setLayout(Item.LAYOUT_LEFT | Item.LAYOUT_TOP |
-                        Item.LAYOUT_VSHRINK);
+//    wordImage.setLayout(Item.LAYOUT_LEFT | Item.LAYOUT_TOP |
+//                        Item.LAYOUT_VSHRINK);
   }
 
   void show() {
@@ -104,23 +104,22 @@ public class Quiz extends Form implements CommandListener {
       setStatus("Great Job!");
       return;
     }
-    InputStream is = null;
+    boolean hasImage = false;
     try {
-      Class c = currentWord.getClass();
-      is = c.getResourceAsStream(currentWord.getImageURL());
-      if (is != null) {
-	Image image = Image.createImage(is);
+	Image image = MicroLesson.getImage(currentWord);
 	wordImage.setImage(image);
 	wordImage.setLabel(null);
-      }
+        hasImage = true;
     }
     catch (Exception e) { e.printStackTrace();}
-    if (is == null) {
+    if (!hasImage) {
       wordImage.setImage(null);
       wordImage.setLabel(currentWord.getFront());
     }
     Vector answers = quizer.getRandomAnswers(5);
-    answersDisplay.deleteAll();
+    while (answersDisplay.size() > 0) {
+      answersDisplay.delete(0);
+    }
     for (int i = 0; i < answers.size(); i++) {
       String a = (String) answers.elementAt(i);
       if (a.length() > 23) {

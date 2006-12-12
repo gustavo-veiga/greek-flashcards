@@ -64,7 +64,9 @@ public class LessonGroups extends Form implements CommandListener {
   }
 
   public void loadLessonGroups() {
-    lessonGroupChoice.deleteAll();
+    while (lessonGroupChoice.size() > 0) {
+      lessonGroupChoice.delete(0);
+    }
     Vector l = FlashCards.instance.lessonSets;
     for (int i = 0; i < l.size(); i++) {
       lessonGroupChoice.append(((LessonSet)l.elementAt(i)).getDescription(), null);
