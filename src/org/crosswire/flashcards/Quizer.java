@@ -20,8 +20,8 @@
  */
 package org.crosswire.flashcards;
 
-import java.util.Vector;
 import java.util.Random;
+import java.util.Vector;
 
 /**
  * A panel that quizzes over a selection of lessons.
