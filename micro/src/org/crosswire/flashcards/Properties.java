@@ -59,7 +59,7 @@ public class Properties {
 
   }
 
-  private String getInputStreamContents(InputStream is) {
+  public static String getInputStreamContents(InputStream is) {
     InputStreamReader isr = null;
     StringBuffer buffer = null;
     try {

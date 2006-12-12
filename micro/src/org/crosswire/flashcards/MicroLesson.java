@@ -22,6 +22,10 @@
 package org.crosswire.flashcards;
 
 import java.util.Vector;
+import javax.microedition.lcdui.Image;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ByteArrayOutputStream;
 
 /**
  * A Lesson is an ordered list of FlashCards.
@@ -72,5 +76,38 @@ public class MicroLesson
       add(f);
     }
     setModified(false);
+  }
+
+  static public Image getImage(FlashCard f) throws Exception {
+    String url = f.getImageURL();
+    InputStream is = null;
+    Class c = f.getClass();
+    is = c.getResourceAsStream(url);
+    if (is != null) {
+      byte [] imgBytes = getInputStreamContents(is);
+      return Image.createImage(imgBytes, 0, imgBytes.length);
+    }
+    return null;
+  }
+
+  public static byte [] getInputStreamContents(InputStream is) {
+    InputStreamReader isr = null;
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    try {
+      isr = new InputStreamReader(is, "iso8859-1");
+
+      int ch;
+      while ( (ch = isr.read()) > -1) {
+        buffer.write(ch);
+      }
+      if (isr != null) {
+        isr.close();
+      }
+    }
+    catch (Exception ex) {
+      System.out.println(ex);
+    }
+    return buffer.toByteArray();
+
   }
 }

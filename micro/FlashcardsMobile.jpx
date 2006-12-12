@@ -32,7 +32,6 @@
 <property category="sys" name="MakeStable" value="0"/>
 <property category="sys" name="OutPath" value="classes"/>
 <property category="sys" name="SourcePath" value="src;test;../src"/>
-<property category="sys" name="SourceVersion" value="1.5"/>
 <property category="sys" name="TestPath" value="test"/>
 <property category="sys" name="Title" value=""/>
 <property category="sys" name="TitleLabel" value="Title:"/>
@@ -43,20 +42,21 @@
 <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.micro.archive.MidletArchiver"/>
 <property category="archiving" name="contentRules.1" value="I:**/*.*"/>
 <property category="archiving" name="ignoreClasses.1" value="org.crosswire.flashcards.mobile.FlashCards"/>
-<property category="archiving" name="miscTargetPath.1" value="FlashcardsMobile.jad"/>
+<property category="archiving" name="miscTargetPath.1" value="fcm.jad"/>
 <property category="archiving" name="obfuscator" value="RetroGuard for J2ME"/>
 <property category="archiving" name="targetCompressed" value="1"/>
-<property category="archiving" name="targetPath" value="FlashcardsMobile.jar"/>
+<property category="archiving" name="targetPath" value="fcm.jar"/>
 <property category="archiving" name="usingRules" value="1"/>
-<property category="archiving.micro" name="microEditionConfiguration" value="CLDC-1.1"/>
+<property category="archiving.micro" name="microEditionConfiguration" value="CLDC-1.0"/>
 <property category="archiving.micro" name="microEditionProfile" value="MIDP-2.0"/>
 <property category="archiving.micro" name="midlet-n-IconPath.1" value=""/>
 <property category="archiving.micro" name="midlet-n-MainClass.1" value="org.crosswire.flashcards.mobile.FlashCards"/>
 <property category="archiving.micro" name="midlet-n-Name.1" value="FlashCards"/>
+<property category="archiving.micro" name="midletIconPath" value="cbs.png"/>
 <property category="archiving.micro" name="midletIgnoreClasses.1" value="org.crosswire.flashcards.mobile.FlashCards"/>
-<property category="archiving.micro" name="midletName" value="FlashcardsMobile"/>
+<property category="archiving.micro" name="midletName" value="Flashcards"/>
 <property category="archiving.micro" name="midletObfuscator" value="RetroGuard for J2ME"/>
-<property category="archiving.micro" name="midletVendor" value="CrossWire Bible Society"/>
+<property category="archiving.micro" name="midletVendor" value="CrossWire"/>
 <property category="archiving.micro" name="midletVersion" value="1.0"/>
 </node>
 <node name="HebrewFlashcards" type="MicroArchive">

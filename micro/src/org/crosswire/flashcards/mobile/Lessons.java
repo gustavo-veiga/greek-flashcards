@@ -61,7 +61,9 @@ public class Lessons extends Form implements CommandListener {
 
   public void loadLessons() {
     lessonChoice.setLabel(FlashCards.instance.lessonGroups.getLessonSet().getDescription());
-    lessonChoice.deleteAll();
+    while (lessonChoice.size() > 0) {
+      lessonChoice.delete(0);
+    }
     Vector lessons = FlashCards.instance.lessonGroups.getLessonSet().getLessons();
     for (int i = 0; i < lessons.size(); i++) {
        Lesson l = (Lesson) lessons.elementAt(i);
