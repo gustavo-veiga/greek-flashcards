@@ -19,8 +19,8 @@
  */
 package org.crosswire.flashcards;
 
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * A FlashCard has a front and a back. The front has the test

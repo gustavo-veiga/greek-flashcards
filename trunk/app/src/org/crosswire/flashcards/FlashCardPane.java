@@ -27,6 +27,7 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionListener;
 
 import org.crosswire.common.swing.RowTable;
