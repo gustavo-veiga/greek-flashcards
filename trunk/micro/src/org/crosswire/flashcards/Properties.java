@@ -3,6 +3,8 @@ package org.crosswire.flashcards;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Hashtable;
+import javax.microedition.io.StreamConnection;
+import javax.microedition.io.Connector;
 
 /**
  * <p>Title: </p>
@@ -31,6 +33,23 @@ public class Properties {
       throw new Exception("File Does Not Exist");
     }
     load(is);
+    is.close();
+  }
+
+  public void loadURL(String url) throws Exception {
+    StreamConnection c = null;
+    InputStream is = null;
+    try {
+        c = (StreamConnection)Connector.open(url);
+        is = c.openInputStream();
+        load(is);
+    }
+    finally {
+       if (is != null)
+           is.close();
+       if (c != null)
+           c.close();
+   }
   }
 
   public void load(InputStream is) {
@@ -56,7 +75,6 @@ public class Properties {
       String value = line.substring(divider + 1);
       setProperty(key, value);
     }
-
   }
 
   public static String getInputStreamContents(InputStream is) {
