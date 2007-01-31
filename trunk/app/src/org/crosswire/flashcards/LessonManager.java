@@ -27,7 +27,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
 import java.util.jar.JarEntry;
@@ -44,7 +43,7 @@ public class LessonManager {
 
      public static final String LESSON_ROOT = "lessons";
      private static final String DIR_PROJECT = ".flashcards";
-     private static final LessonManager INSTANCE = new LessonManager();
+     private static LessonManager instance = new LessonManager();
 
      /**
       * An ordered list of <code>lessonSets</code>
@@ -54,7 +53,7 @@ public class LessonManager {
      private String homeProjectPath = null;
 
      public static LessonManager instance() {
-          return INSTANCE;
+          return instance;
      }
 
 
@@ -62,7 +61,6 @@ public class LessonManager {
          homeProjectPath = System.getProperty("user.home") + File.separator + DIR_PROJECT;
          homeLessonDir = new File(homeProjectPath + File.separator + LESSON_ROOT);
          load();
-         jbInit();
      }
 
 
@@ -82,10 +80,13 @@ public class LessonManager {
      }
 
 
+     public Vector getLessonSets() {
+          return lessonSets;
+     }
+
      public LessonSet getLessonSet(String description) {
-          Iterator i = iterator();
-          while (i.hasNext()) {
-               LessonSet ls = (LessonSet) i.next();
+          for (int i = 0; i < lessonSets.size(); i++) {
+               LessonSet ls = (LessonSet) lessonSets.elementAt(i);
                if (description.equals(ls.getDescription())) {
                     return ls;
                }
@@ -161,15 +162,18 @@ public class LessonManager {
       * Load lesson sets from the jar file
       */
      private void loadLessonSetsFromJarDir(String path) {
-          File lessonDir = new File(path);
-          if (lessonDir.isDirectory()) {
-               File[] files = lessonDir.listFiles(new JarFileFilter());
-               if (files != null) {
-                    for (int i = 0; i < files.length; i++) {
-                         loadJarLessonSets(files[i]);
+          try {
+               File lessonDir = new File(path);
+               if (lessonDir.isDirectory()) {
+                    File[] files = lessonDir.listFiles(new JarFileFilter());
+                    if (files != null) {
+                         for (int i = 0; i < files.length; i++) {
+                              loadJarLessonSets(files[i]);
+                         }
                     }
                }
           }
+          catch (Exception e) { e.printStackTrace(); }
      }
 
 
@@ -229,9 +233,8 @@ public class LessonManager {
       * See if any LessonSet has changes that need to be saved
       */
      public boolean isModified() {
-          Iterator iter = lessonSets.iterator();
-          while (iter.hasNext()) {
-               LessonSet lessonSet = (LessonSet) iter.next();
+          for (int i = 0; i < lessonSets.size(); i++) {
+               LessonSet lessonSet = (LessonSet) lessonSets.elementAt(i);
                if (lessonSet.isModified()) {
                     return true;
                }
@@ -244,9 +247,8 @@ public class LessonManager {
       * Save all the modified lesson sets to persistent store named by the lesson's <code>LESSON_ROOT</code>.
       */
      public void store() {
-          Iterator iter = lessonSets.iterator();
-          while (iter.hasNext()) {
-               LessonSet lessonSet = (LessonSet) iter.next();
+          for (int i = 0; i < lessonSets.size(); i++) {
+               LessonSet lessonSet = (LessonSet) lessonSets.elementAt(i);
                if (lessonSet.isModified()) {
                     lessonSet.store();
                }
@@ -257,16 +259,10 @@ public class LessonManager {
       * Save all the modified lesson sets to persistent store named by the lesson's <code>LESSON_ROOT</code>.
       */
      public void genImages() {
-          Iterator iter = lessonSets.iterator();
-          while (iter.hasNext()) {
-               ComplexLessonSet lessonSet = (ComplexLessonSet) iter.next();
+          for (int i = 0; i < lessonSets.size(); i++) {
+               ComplexLessonSet lessonSet = (ComplexLessonSet) lessonSets.elementAt(i);
                lessonSet.generateImages();
           }
-     }
-
-
-     public Iterator iterator() {
-          return lessonSets.iterator();
      }
 
 
@@ -274,9 +270,6 @@ public class LessonManager {
           return homeProjectPath;
      }
 
-
-     private void jbInit() {
-     }
 
      static class JarFileFilter implements FilenameFilter {
          public boolean accept(File dir, String name) {

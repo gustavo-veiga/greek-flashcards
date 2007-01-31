@@ -33,7 +33,6 @@ public class Properties {
       throw new Exception("File Does Not Exist");
     }
     load(is);
-    is.close();
   }
 
   public void loadURL(String url) throws Exception {

@@ -37,6 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionListener;
+import java.util.Vector;
 
 
 /**
@@ -129,10 +130,10 @@ public class LessonSetPane extends JPanel
 
     private void loadLessonSets()
     {
-        Iterator lessonSetIterator = LessonManager.instance().iterator();
-        while (lessonSetIterator.hasNext())
-        {
-            LessonSet lessonSet = (LessonSet) lessonSetIterator.next();
+        LessonManager lm = LessonManager.instance();
+        Vector ls =lm.getLessonSets();
+        for (int i = 0; i < ls.size(); i++) {
+            LessonSet lessonSet = (LessonSet) ls.elementAt(i);
             DefaultListModel model = (DefaultListModel) lessonSetList.getModel();
             model.addElement(lessonSet);
         }

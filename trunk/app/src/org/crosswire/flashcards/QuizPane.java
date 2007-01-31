@@ -423,7 +423,14 @@ public class QuizPane
 
 
      void answer_itemStateChanged(ItemEvent e) {
-          JCheckBox ck = (JCheckBox) e.getItem();
+		JCheckBox ck = null;
+          try {
+		     ck = (JCheckBox) e.getItem();
+          }
+          catch (Exception e1) { e1.printStackTrace(); }
+
+          if (ck == null) return;
+
           if (ck.isSelected()) {
                totalAsked++;
                if (ck.getText().compareTo(currentWord.getSide(setupPane.isFlipped())) != 0) {

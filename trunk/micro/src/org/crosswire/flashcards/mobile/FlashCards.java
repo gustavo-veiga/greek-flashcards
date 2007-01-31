@@ -28,14 +28,14 @@ public class FlashCards extends MIDlet {
     instance = this;
     Properties l = new Properties();
     try {
-      l.load("lessons.properties");
+      l.load("/lessons.properties");
     }
     catch (Exception e) {}
     if (l != null) {
       for (int i = 0; true; i++) {
         String ld = l.getProperty("LessonSet" + Integer.toString(i));
         if (ld != null) {
-          LessonSet ls = new MicroLessonSet(ld);
+          LessonSet ls = new MicroLessonSet("/"+ld);
           String desc = l.getProperty("LessonDescription" + Integer.toString(i));
           ls.setDescription( (desc != null) ? desc : ld);
           lessonSets.addElement(ls);
