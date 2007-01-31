@@ -105,7 +105,6 @@ public class ComplexLesson
                     FlashCard flashCard = (FlashCard) getFlashcards().get(i);
                     lesson.setProperty("word" + i, flashCard.getFront());
                     lesson.setProperty("answers" + i, flashCard.getBack());
-                    i++;
                }
                lesson.setProperty("wordCount", Integer.toString(i));
 
