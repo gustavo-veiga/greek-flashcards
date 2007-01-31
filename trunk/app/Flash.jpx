@@ -154,21 +154,14 @@
 <property category="sys" name="VersionLabel" value="@version"/>
 <property category="sys" name="WorkingDirectory" value="."/>
 <property category="sys" name="palette.bean.chooser.beans" value="org.crosswire.modedit.UniTextEdit;"/>
-<node name="Flash" type="Archive">
+<node name="Flashcards" type="Archive">
 <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ApplicationArchiver"/>
 <property category="archiving" name="contentRules.1" value="I:**/*.*"/>
 <property category="archiving" name="includeDeps" value="1"/>
 <property category="archiving" name="libraryStates.1" value="2:../../../Documents and Settings/scribe/Application Data/Sun/Java/Deployment/javaws/cache/http/Dwww.crosswire.org/P80/DMflashcards/DMwebstart/RMlessons.jar"/>
 <property category="archiving" name="manifestConfigFile" value="0"/>
 <property category="archiving" name="obfuscator" value="RetroGuard for J2ME"/>
-<property category="archiving" name="targetPath" value="Flash.jar"/>
-<property category="archiving" name="usingRules" value="1"/>
-</node>
-<node name="FlashEditor" type="Archive">
-<property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ApplicationArchiver"/>
-<property category="archiving" name="contentRules.1" value="I:**/*.*"/>
-<property category="archiving" name="manifestMainClass" value="org.crosswire.flashcards.Editor"/>
-<property category="archiving" name="targetPath" value="FlashEditor.jar"/>
+<property category="archiving" name="targetPath" value="Flashcards.jar"/>
 <property category="archiving" name="usingRules" value="1"/>
 </node>
 <file path="../build.xml">
