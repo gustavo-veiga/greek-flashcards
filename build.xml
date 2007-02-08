@@ -12,6 +12,7 @@
     =========================================================================-->
   <property name="source.root"    value="."/>
   <property name="source.java"    value="${source.root}/app/src"/>
+  <property name="source.java.common"    value="${source.root}/src"/>
   <property name="source.res"     value="${source.root}"/>
   <property name="target.root"    value="${source.root}/target"/>
   <property name="target.classes" value="${target.root}/classes"/>
@@ -25,6 +26,7 @@
     =========================================================================-->
   <path id="source.path">
     <dirset dir="${source.java}" includes="*"/>
+    <dirset dir="${source.java.common}" includes="*"/>
   </path>
 
   <!--=======================================================================
@@ -121,6 +123,13 @@
     =========================================================================-->
   <target name="compile" description="Compile the source">
     <mkdir dir="${target.classes}"/>
+    <javac debug="on"
+           srcdir="${source.java.common}"
+           includes="**/*.java"
+           destdir="${target.classes}"
+           source="1.4">
+      <exclude name="**/migrate/*"/>
+    </javac>
     <javac debug="on"
            srcdir="${source.java}"
            includes="**/*.java"
