@@ -22,37 +22,18 @@ public class FlashCards extends MIDlet {
   public LessonGroups lessonGroups = new LessonGroups();
   public Lessons lessons = new Lessons();
   public Quiz quiz = new Quiz();
+  public boolean loaded = false;
 
   public Vector lessonSets = new Vector();
   public FlashCards() {
     instance = this;
-    Properties l = new Properties();
-    try {
-      l.load("/lessons.properties");
-    }
-    catch (Exception e) {}
-    if (l != null) {
-      for (int i = 0; true; i++) {
-        String ld = l.getProperty("LessonSet" + Integer.toString(i));
-        if (ld != null) {
-          LessonSet ls = new MicroLessonSet("/"+ld);
-          String desc = l.getProperty("LessonDescription" + Integer.toString(i));
-          ls.setDescription( (desc != null) ? desc : ld);
-          lessonSets.addElement(ls);
-        }
-        else
-          break;
-      }
-    }
-    if (lessonSets.size() < 1) {
-      LessonSet ls = new MicroLessonSet("lessons");
-      ls.setDescription("All Lessons");
-      lessonSets.addElement(ls);
-    }
   }
 
   public void startApp() {
     lessonGroups.show();
+    if (!loaded) {
+      loadLessons();
+    }
   }
 
   public void pauseApp() {
@@ -66,5 +47,33 @@ public class FlashCards extends MIDlet {
     instance.notifyDestroyed();
     instance = null;
   }
-
+  public void loadLessons() {
+    Properties l = new Properties();
+    try {
+      l.load("/lessons.properties");
+    }
+    catch (Exception e) {}
+    if (l != null) {
+      for (int i = 0; true; i++) {
+        String ld = l.getProperty("LessonSet" + Integer.toString(i));
+        if (ld != null) {
+          String desc = l.getProperty("LessonDescription" + Integer.toString(i));
+          lessonGroups.lessonGroupChoice.setLabel("Loading ["+desc+"]...");
+          LessonSet ls = new MicroLessonSet("/" + ld);
+          ls.setDescription( (desc != null) ? desc : ld);
+          lessonSets.addElement(ls);
+        }
+        else
+          break;
+      }
+    }
+    if (lessonSets.size() < 1) {
+      LessonSet ls = new MicroLessonSet("lessons");
+      ls.setDescription("All Lessons");
+      lessonSets.addElement(ls);
+    }
+    loaded = true;
+    lessonGroups.lessonGroupChoice.setLabel("Lesson Groups");
+    lessonGroups.loadLessonGroups();
+  }
 }

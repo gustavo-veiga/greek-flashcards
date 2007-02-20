@@ -14,9 +14,9 @@ import java.util.Hashtable;
 public class HebrewMCIM
     extends SWInputMethod {
 
-  char subst[] = new char[255];
-  Hashtable subst2[] = new Hashtable[12];
-  Hashtable multiChars = new Hashtable();
+  private char subst[] = new char[255];
+  private Hashtable subst2[] = new Hashtable[12];
+  private Hashtable multiChars = new Hashtable();
 
   public HebrewMCIM(String name) {
     super(name);
@@ -147,6 +147,7 @@ public class HebrewMCIM
 
     }
     subst[':'] = 2;
+    subst2[2].put(new Integer(':'), new Integer(1456));
     subst2[2].put(new Integer('A'), new Integer(1458));
     subst2[2].put(new Integer('E'), new Integer(1457));
     subst2[2].put(new Integer('F'), new Integer(1459));
