@@ -81,7 +81,7 @@ public class Quiz extends Form implements CommandListener {
         String ans = answersDisplay.getString(a);
         String right = currentWord.getBack();
 	if (right.length() > 23) {
-	  right = right.substring(0, 21) + "...";
+	  right = right.substring(0, 20) + "...";
 	}
         if (ans.equals(right)) {
           wordDisplay(wrongThisTime, "Correct");
@@ -116,14 +116,14 @@ public class Quiz extends Form implements CommandListener {
       wordImage.setImage(null);
       wordImage.setLabel(currentWord.getFront());
     }
-    Vector answers = quizer.getRandomAnswers(5);
+    Vector answers = quizer.getRandomAnswers(4);
     while (answersDisplay.size() > 0) {
       answersDisplay.delete(0);
     }
     for (int i = 0; i < answers.size(); i++) {
       String a = (String) answers.elementAt(i);
       if (a.length() > 23) {
-        a = a.substring(0, 21) + "...";
+        a = a.substring(0, 20) + "...";
       }
       answersDisplay.append(a, null);
     }

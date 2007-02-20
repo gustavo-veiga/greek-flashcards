@@ -180,8 +180,8 @@ public class ComplexLesson
                          dir.mkdirs();
                     }
                     outStream = new FileOutputStream(file);
-                    final int width = 120;
-                    final int height = 20;
+                    final int width = 140;
+                    final int height = 40;
 
                     // Create a buffered image in which to draw
                     BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -193,8 +193,8 @@ public class ComplexLesson
                     g2d.setColor(Color.white);
                     g2d.fillRect(0, 0, width, height);
                     g2d.setColor(Color.black);
-                    g2d.setFont(new Font(g2d.getFont().getName(), Font.BOLD, 15));
-                    g2d.drawString(f.getFront(), 4, 14);
+                    g2d.setFont(new Font(g2d.getFont().getName(), Font.BOLD, (int)(height*.75)));
+                    g2d.drawString(f.getFront(), 4, (int)(height*.67));
 
                     // Graphics context no longer needed so dispose it
                     g2d.dispose();
