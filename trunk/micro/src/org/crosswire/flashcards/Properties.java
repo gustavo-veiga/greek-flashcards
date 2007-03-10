@@ -79,13 +79,14 @@ public class Properties {
   public static String getInputStreamContents(InputStream is) {
     InputStreamReader isr = null;
     StringBuffer buffer = null;
+    char buf[] = new char[50];
     try {
       isr = new InputStreamReader(is, "UTF8");
 
       buffer = new StringBuffer();
-      int ch;
-      while ( (ch = isr.read()) > -1) {
-        buffer.append( (char) ch);
+      int len;
+      while ( (len = isr.read(buf, 0, 50)) > -1) {
+        buffer.append( buf, 0, len);
       }
       if (isr != null) {
         isr.close();
@@ -133,6 +134,23 @@ public class Properties {
       String val = in.substring(offset+2,offset+6);
       short valueAsShort = Short.parseShort(val.trim(),16);
       in = in.substring(0,offset) + (char)valueAsShort + in.substring(offset+6);
+    }
+    return in;
+  }
+
+  private String processEscapes(String in) {
+    int offset = 0;
+    while (true) {
+      offset = in.indexOf("\\", offset);
+      if ((offset < 0) || (offset > in.length() - 1)) {
+        break;
+      }
+      String val = in.substring(offset+2,offset+6);
+      short valueAsShort = Short.parseShort(val.trim(),16);
+      in = in.substring(0,offset) + in.substring(offset+2);
+      if (in.charAt(offset) == '\\') {
+        offset++;
+      }
     }
     return in;
   }
