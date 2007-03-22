@@ -50,7 +50,7 @@ public class FlashCards extends MIDlet {
   public void loadLessons() {
     Properties l = new Properties();
     try {
-      l.load("/lessons.properties");
+      l.load("/lessons/lessons.properties");
     }
     catch (Exception e) {}
     if (l != null) {
@@ -59,7 +59,7 @@ public class FlashCards extends MIDlet {
         if (ld != null) {
           String desc = l.getProperty("LessonDescription" + Integer.toString(i));
           lessonGroups.lessonGroupChoice.setLabel("Loading ["+desc+"]...");
-          LessonSet ls = new MicroLessonSet("/" + ld);
+          LessonSet ls = new MicroLessonSet("/lessons/" + ld);
           ls.setDescription( (desc != null) ? desc : ld);
           lessonSets.addElement(ls);
         }
