@@ -76,6 +76,7 @@ public class Properties {
     }
   }
 
+/*
   public static String getInputStreamContents(InputStream is) {
     InputStreamReader isr = null;
     StringBuffer buffer = null;
@@ -96,8 +97,30 @@ public class Properties {
       System.out.println(ex);
     }
     return buffer.toString();
-
   }
+*/
+public static String getInputStreamContents(InputStream is) {
+  InputStreamReader isr = null;
+  StringBuffer buffer = null;
+  try {
+    isr = new InputStreamReader(is);//, "UTF8");
+
+    buffer = new StringBuffer();
+    int ch;
+    while ( (ch = isr.read()) > -1) {
+      buffer.append( (char) ch);
+    }
+    if (isr != null) {
+      isr.close();
+    }
+  }
+  catch (Exception ex) {
+    System.out.println(ex);
+  }
+  return buffer.toString();
+
+}
+
 
   public void setProperty(String key, String value) {
     values.put(key, value);

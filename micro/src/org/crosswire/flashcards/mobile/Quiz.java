@@ -24,6 +24,8 @@ public class Quiz extends Form implements CommandListener {
   ImageItem wordImage = new ImageItem("", null, ImageItem.LAYOUT_DEFAULT, "");
   ChoiceGroup answersDisplay = new ChoiceGroup("", ChoiceGroup.EXCLUSIVE);
   StringItem statusBar = new StringItem("", "");
+  int maxWidth = 10000;
+  int maxHeight = 10000;
 
   Quizer quizer = new Quizer();
   FlashCard currentWord = null;
@@ -48,11 +50,38 @@ public class Quiz extends Form implements CommandListener {
     this.append(answersDisplay);
     this.append(statusBar);
     answersDisplay.setLabel(null);
-//    answersDisplay.setLayout(Item.LAYOUT_LEFT | Item.LAYOUT_TOP |
+    try {
+      // MIDP 2.0 only.  can we avoid this?
+      answersDisplay.setFitPolicy(Choice.TEXT_WRAP_OFF);
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      maxWidth = 20;
+    }
+    //    answersDisplay.setLayout(Item.LAYOUT_LEFT | Item.LAYOUT_TOP |
 //                             Item.LAYOUT_VEXPAND);
     statusBar.setText("StatusBar");
 //    wordImage.setLayout(Item.LAYOUT_LEFT | Item.LAYOUT_TOP |
 //                        Item.LAYOUT_VSHRINK);
+//    maxWidth =
+    try {
+      // MIDP 2.0 only.  can we avoid this?
+      int thisHeight = this.getHeight();
+
+      thisHeight -= 40; // subtract image height
+      thisHeight -= 4; // subtract likely border
+//      Font choiceFont = answersDisplay.getFont(0);
+      // MIDP 2.0 only.  can we avoid this?
+      Font choiceFont = statusBar.getFont();
+      int fontHeight = choiceFont.getHeight();
+      fontHeight += 1;  // likely buffer space between entries
+      maxHeight = thisHeight / fontHeight;
+      maxHeight -= 1; // space for status bar
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      maxHeight = 4;
+    }
   }
 
   void show() {
@@ -80,14 +109,14 @@ public class Quiz extends Form implements CommandListener {
         int a = answersDisplay.getSelectedIndex();
         String ans = answersDisplay.getString(a);
         String right = currentWord.getBack();
-	if (right.length() > 23) {
-	  right = right.substring(0, 20) + "...";
+	if (right.length() > maxWidth) {
+	  right = right.substring(0, maxWidth-3) + "...";
 	}
         if (ans.equals(right)) {
           wordDisplay(wrongThisTime, "Correct");
         }
         else {
-          setStatus("Try again.");
+          setStatus("Try again");
           wrongThisTime++;
         }
       }
@@ -116,20 +145,21 @@ public class Quiz extends Form implements CommandListener {
       wordImage.setImage(null);
       wordImage.setLabel(currentWord.getFront());
     }
-    Vector answers = quizer.getRandomAnswers(4);
+    Vector answers = quizer.getRandomAnswers(maxHeight);
     while (answersDisplay.size() > 0) {
       answersDisplay.delete(0);
     }
     for (int i = 0; i < answers.size(); i++) {
       String a = (String) answers.elementAt(i);
-      if (a.length() > 23) {
-        a = a.substring(0, 20) + "...";
+      if (a.length() > maxWidth) {
+        a = a.substring(0, maxWidth-3) + "...";
       }
       answersDisplay.append(a, null);
+//      if (answersDisplay.get
     }
   }
 
   private void setStatus(String text) {
-    statusBar.setText(text + " | " + Integer.toString(quizer.getNotLearnedCount()) + " | " + Integer.toString(quizer.getTotalAsked() - quizer.getTotalWrong()) + "/" + Integer.toString(quizer.getTotalAsked()) + "("+quizer.getPercentage()+"%)");
+    statusBar.setText(text + "|" + Integer.toString(quizer.getNotLearnedCount()) + "|" + Integer.toString(quizer.getTotalAsked() - quizer.getTotalWrong()) + "/" + Integer.toString(quizer.getTotalAsked()) + "|"+quizer.getPercentage()+"%");
   }
 }
