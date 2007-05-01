@@ -1,0 +1,51 @@
+<project name="flashcards" default="preverify">
+  <property name="WTK.dir"  value="/usr/local/WTK2.2"/>
+  <property name="MIDP.lib" value="${WTK.dir}/lib/midpapi10.jar"  />
+  <property name="CLDC.lib" value="${WTK.dir}/lib/cldcapi10.jar" />
+
+  <path id="microbootclasspath">
+    <pathelement path="${MIDP.lib}"/>
+    <pathelement path="${CLDC.lib}"/>
+  </path>
+
+  <path id="microclasspath">
+  </path>
+
+  <target name="microcompile" depends="init">
+    <mkdir dir="microbuild/classes" />
+    <javac destdir="microbuild/classes" srcdir="src" target="1.1">
+      <bootclasspath refid="microbootclasspath"/>
+      <classpath refid="microclasspath"/>
+    </javac>
+    <javac destdir="microbuild/classes" srcdir="micro/src" target="1.1">
+      <bootclasspath refid="microbootclasspath"/>
+      <classpath refid="microclasspath"/>
+    </javac>
+  </target>
+
+  <target name="init" description="Prepare for other tasks">
+    <echo message="Initializing ${ant.project.name}"/>
+    <tstamp/>
+  </target>
+
+<target name="preverify" depends="microcompile">
+      <mkdir dir="microbuild/preverified"/>
+      <exec executable="${WTK.dir}/bin/preverify1.0">
+        <arg line="-classpath ${MIDP.lib}:${CLDC.lib}"/>
+        <arg line="-d microbuild/preverified"/>
+        <arg line="microbuild/classes"/>
+      </exec>
+</target>
+
+<target name="microdist" depends="preverify">
+    <mkdir dir="microbuild/bin"/>
+    <jar basedir="microbuild/preverified"
+        jarfile="microbuild/bin/fc.jar"
+        manifest="micro/bin/MANIFEST.MF">
+      <fileset dir="micro/res"/>
+    </jar>
+    <copy file="micro/bin/fc.jad"
+        tofile="microbuild/bin/fc.jad"/>
+</target>
+
+</project>
