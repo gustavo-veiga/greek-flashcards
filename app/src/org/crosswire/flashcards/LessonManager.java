@@ -256,7 +256,7 @@ public class LessonManager {
      }
 
      /**
-      * Save all the modified lesson sets to persistent store named by the lesson's <code>LESSON_ROOT</code>.
+      * Generate pre-rendered images for each card (useful on mobile phones)
       */
      public void genImages() {
           for (int i = 0; i < lessonSets.size(); i++) {
@@ -275,5 +275,13 @@ public class LessonManager {
          public boolean accept(File dir, String name) {
               return name.toUpperCase(Locale.ENGLISH).endsWith(".JAR");
          }
+    }
+    public static void main( String [ ] arguments ) {
+        // Parse the command line arguments
+        for( int index = 0; arguments.length > index; ++ index ) {
+            if( ( arguments [ index ] ).equals( "-genImages" ) ) {
+                LessonManager.instance().genImages();
+            }
+        }
     }
 }

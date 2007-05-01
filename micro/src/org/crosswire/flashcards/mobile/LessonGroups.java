@@ -59,8 +59,7 @@ public class LessonGroups extends Form implements CommandListener {
 
   public LessonSet getLessonSet() {
     int lessonGroup = FlashCards.instance.lessonGroups.lessonGroupChoice.getSelectedIndex();
-    return (LessonSet)FlashCards.instance.lessonSets.elementAt(lessonGroup);
-
+    return (lessonGroup < 0) ? null : (LessonSet)FlashCards.instance.lessonSets.elementAt(lessonGroup);
   }
 
   public void loadLessonGroups() {

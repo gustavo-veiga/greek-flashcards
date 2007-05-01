@@ -25,13 +25,14 @@ public class FlashCards extends MIDlet {
   public boolean loaded = false;
 
   public Vector lessonSets = new Vector();
+
   public FlashCards() {
     instance = this;
   }
 
   public void startApp() {
-    lessonGroups.show();
     if (!loaded) {
+      lessonGroups.show();
       loadLessons();
     }
   }
