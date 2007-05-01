@@ -1,7 +1,7 @@
 all:
 	ant -emacs
 
-clean: zipclean
+clean: zipclean mobileclean
 	ant clean
 
 serverinstallzip: zipclean
@@ -23,5 +23,9 @@ serverinstalllessons: serverinstallzip
 	cp -f FlashCards/lessons.jar /home/flashcards/html/webstart/
 
 mobile: 
+	JAVA_HOME=/usr/java/j2sdk1.4.2_05 ant -f build.micro1.xml
 	./genfcmobile.sh
 
+mobileclean:
+	rm -rf microbuild
+	rm -rf fcMobilePackage*

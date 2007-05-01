@@ -1,5 +1,6 @@
 #!/bin/sh
 
+JAVA_HOME=/usr/java/j2sdk1.4.2_05
 WORKDIR=fcMobilePackage.$$
 
 echo setting up workspace at $WORKDIR
@@ -11,7 +12,7 @@ cp target/install/flashcards.jar $WORKDIR
 cd $WORKDIR
 
 echo unjarring lessons
-jar -xfv lessons.jar
+jar -xf lessons.jar
 
 #so we don't find when we run flashcards, below
 mv lessons lessons.orig
@@ -22,9 +23,9 @@ cat > index.html <<!
 <a href="/fc/FlashcardsMobile.jad">Flashcards - Hebrew</a><br/>
 <a href="/fc/oldphone/FlashcardsMobile.jad">Flashcards(old phones) - Hebrew</a><br/>
 <a href="/fc/test/FlashcardsMobile.jad">Flashcards - Phone Test</a><br/>
+Other Lessons:<br/>
 !
 
-echo generating pre-rendered images
 
 for i in `cd lessons.orig; ls`
 do
@@ -42,6 +43,7 @@ do
 #yeah, I know, it outputs to $HOME/.flashcards, lame.  FIXME
   rm -rf ~/.flashcards/lessons/$i/images
   jar cf lessons.jar lessons
+  echo generating pre-rendered images for \[$i\]
   java -cp flashcards.jar org.crosswire.flashcards.LessonManager -genImages
   mv ~/.flashcards/lessons/$i/images lessons/$i/
   mv lessons res/

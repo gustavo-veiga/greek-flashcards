@@ -72,7 +72,7 @@
     == where project is replaced with the name of the project.
     == This jar is built to the target.install directory.
     =========================================================================-->
-  <target name="build" depends="compile, resource, jar.check, keygen, microcompile" unless="jar.uptodate" description="Run a full build">
+  <target name="build" depends="compile, resource, jar.check, keygen" unless="jar.uptodate" description="Run a full build">
     <mkdir dir="${target.install}"/>
     <jar jarfile="${target.install}/${ant.project.name}.jar" manifest="${target.classes}/org/crosswire/flashcards/flashcards.manifest">
       <fileset dir="${target.classes}"/>
