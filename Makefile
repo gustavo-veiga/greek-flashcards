@@ -21,3 +21,7 @@ serverinstallapp: serverinstallzip
 
 serverinstalllessons: serverinstallzip
 	cp -f FlashCards/lessons.jar /home/flashcards/html/webstart/
+
+mobile: 
+	./genfcmobile.sh
+

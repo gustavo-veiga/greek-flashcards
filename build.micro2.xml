@@ -1,0 +1,23 @@
+<project name="flashcards" default="microdist">
+  <property name="WTK.dir"  value="/usr/local/WTK2.2"/>
+  <property name="MIDP.lib" value="${WTK.dir}/lib/midpapi10.jar"  />
+  <property name="CLDC.lib" value="${WTK.dir}/lib/cldcapi10.jar" />
+
+  <path id="microbootclasspath">
+    <pathelement path="${MIDP.lib}"/>
+    <pathelement path="${CLDC.lib}"/>
+  </path>
+
+  <path id="microclasspath">
+  </path>
+
+<target name="microdist">
+    <mkdir dir="microbuild/bin"/>
+    <jar basedir="microbuild/preverified"
+        jarfile="${dest.path}/${dest.name}.jar"
+        manifest="${dest.path}/MANIFEST.MF">
+      <fileset dir="${dest.path}/res"/>
+    </jar>
+</target>
+
+</project>
