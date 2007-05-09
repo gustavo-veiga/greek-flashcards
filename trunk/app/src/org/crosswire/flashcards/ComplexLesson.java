@@ -35,6 +35,7 @@ import java.net.URLConnection;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
+import java.awt.geom.Rectangle2D;
 
 
 /**
@@ -180,7 +181,7 @@ public class ComplexLesson
                          dir.mkdirs();
                     }
                     outStream = new FileOutputStream(file);
-                    final int width = 140;
+                    final int width = 800;
                     final int height = 40;
 
                     // Create a buffered image in which to draw
@@ -193,8 +194,11 @@ public class ComplexLesson
                     g2d.setColor(Color.white);
                     g2d.fillRect(0, 0, width, height);
                     g2d.setColor(Color.black);
-                    g2d.setFont(new Font(g2d.getFont().getName(), Font.BOLD, (int)(height*.75)));
-                    g2d.drawString(f.getFront(), 4, (int)(height*.67));
+                    Font font = new Font(g2d.getFont().getName(), Font.BOLD, (int)(height*.75));
+                    g2d.setFont(font);
+                    Rectangle2D rect = font.getStringBounds(f.getFront(), g2d.getFontRenderContext());
+                    g2d.drawString(f.getFront(), 4, (int)(height*.70));
+                    bufferedImage = bufferedImage.getSubimage(0, 0, (int)(rect.getWidth()+8), 40);
 
                     // Graphics context no longer needed so dispose it
                     g2d.dispose();
