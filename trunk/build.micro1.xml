@@ -13,11 +13,11 @@
 
   <target name="microcompile" depends="init">
     <mkdir dir="microbuild/classes" />
-    <javac destdir="microbuild/classes" srcdir="src" target="1.1">
+    <javac destdir="microbuild/classes" srcdir="src" target="1.1" source="1.2">
       <bootclasspath refid="microbootclasspath"/>
       <classpath refid="microclasspath"/>
     </javac>
-    <javac destdir="microbuild/classes" srcdir="micro/src" target="1.1">
+    <javac destdir="microbuild/classes" srcdir="micro/src" target="1.1" source="1.2">
       <bootclasspath refid="microbootclasspath"/>
       <classpath refid="microclasspath"/>
     </javac>
