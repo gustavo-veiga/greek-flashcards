@@ -14,6 +14,10 @@ serverinstallzip: zipclean
 zipclean:
 	rm -rf FlashCards
 
+extraLessons:
+	make -C ../sword-tools/flashtools lessons
+	cp -r ../sword-tools/flashtools/lessons/* lessons
+
 serverinstall: serverinstalllessons serverinstallapp
 
 serverinstallapp: serverinstallzip
