@@ -42,11 +42,18 @@ public class MicroLessonSet extends LessonSet {
       */
      protected void load() {
 		for (int i = 0; true; i++) {
-			String path = getURL() + "/" + "lesson" + Integer.toString(i) + ".flash";
+			String path = getURL() + "/" + "lesson" + padInt(i) + ".flash";
 			try {
 				add(new MicroLesson(path));
 			}
 			catch (Exception e) { break; }
 		}
      }
+
+	String padInt(int i) {
+		String ret = Integer.toString(i);
+		if (i < 100) ret = "0"+ret;
+		if (i < 10 ) ret = "0"+ret;
+		return ret;
+	}
 }

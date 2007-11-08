@@ -21,7 +21,7 @@ genpackage() {
   mv ~/.flashcards/lessons/$1/images lessons/$1/
   mv lessons res/
   rm lessons.jar
-  echo LessonSet0=$1$partNumber > res/lessons/lessons.properties
+  echo LessonSet0=$1 > res/lessons/lessons.properties
   echo LessonDescription0=$1$partNumber >> res/lessons/lessons.properties
   PKGNAME=fc$i$partNumber
   sed s/##NAME##/${PKGNAME}/ ../micro/bin/MANIFEST.MF > MANIFEST.MF
@@ -31,18 +31,29 @@ genpackage() {
   cd ${WORKDIR}
   JARSIZE=`ls -l ${PKGNAME}.jar |cut -f5 -d' '`
   sed -i s/##SIZE##/${JARSIZE}/ ${PKGNAME}.jad
-  cat >> index.html <<!
+  cat >> packages/index.html <<!
   <a href="/fc/${PKGNAME}.jad">$i$partNumber</a><br/>
 !
+  mv ${PKGNAME}.ja[dr] packages
+}
+
+padjNum() {
+    jNumPad=$jNum
+    if [ "$jNum" -lt 10 ]; then
+		jNumPad=0$jNumPad
+    fi
+    if [ "$jNum" -lt 100 ]; then
+		jNumPad=0$jNumPad
+    fi
 }
 
 
-JAVA_HOME=/usr/java/j2sdk1.4.2_05
+#JAVA_HOME=/usr/java/j2sdk1.4.2_05
 WORKDIR=fcMobilePackage.$$
 MAX_LESSON_WORDS=200
 
 echo setting up workspace at $WORKDIR
-mkdir $WORKDIR
+mkdir -p $WORKDIR/packages
 
 echo copying jars
 cp target/install/lessons.jar $WORKDIR
@@ -56,7 +67,7 @@ jar -xf lessons.jar
 mv lessons lessons.orig
 rm lessons.jar
 
-cat > index.html <<!
+cat > packages/index.html <<!
 <html><head><title>CrossWire</title></head><body><b>Flashcards</b><br/>This is an early release of a micro edition of Flashcards from CrossWire Bible Society. To try it out, click on the link below below:<br/>
 <a href="/fc/FlashcardsMobile.jad">Flashcards - Hebrew</a><br/>
 <a href="/fc/oldphone/FlashcardsMobile.jad">Flashcards(old phones) - Hebrew</a><br/>
@@ -91,7 +102,8 @@ do
       mkdir -p res
       cd lessons.orig/$i
     fi
-    cp $j ../../lessons/$i/lesson${jNum}.flash
+    padjNum
+    cp $j ../../lessons/$i/lesson${jNumPad}.flash
     jNum=$(($jNum+1))
   done
   cd ../../
@@ -103,6 +115,6 @@ do
     genpackage $i
   fi
 done
-cat >> index.html <<!
+cat >> packages/index.html <<!
 </body></html>
 !
