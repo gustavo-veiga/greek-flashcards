@@ -1,5 +1,5 @@
 <project name="flashcards" default="preverify">
-  <property name="WTK.dir"  value="/usr/local/WTK2.2"/>
+  <property name="WTK.dir"  value="/opt/WTK"/>
   <property name="MIDP.lib" value="${WTK.dir}/lib/midpapi10.jar"  />
   <property name="CLDC.lib" value="${WTK.dir}/lib/cldcapi10.jar" />
 
