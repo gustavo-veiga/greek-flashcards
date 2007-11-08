@@ -23,7 +23,8 @@ serverinstalllessons: serverinstallzip
 	cp -f FlashCards/lessons.jar /home/flashcards/html/webstart/
 
 mobile: 
-	JAVA_HOME=/usr/java/j2sdk1.4.2_05 ant -f build.micro1.xml
+#	JAVA_HOME=/usr/java/j2sdk1.4.2_05 ant -f build.micro1.xml
+	ant -f build.micro1.xml
 	./genfcmobile.sh
 
 mobileclean:
