@@ -31,7 +31,7 @@ genpackage() {
   cd ${WORKDIR}
   JARSIZE=`ls -l ${PKGNAME}.jar |cut -f5 -d' '`
   sed -i s/##SIZE##/${JARSIZE}/ ${PKGNAME}.jad
-  cat >> packages/index.html <<!
+  cat >> packages/index.jsp <<!
   <a href="/fc/${PKGNAME}.jad">$i$partNumber</a><br/>
 !
   mv ${PKGNAME}.ja[dr] packages
@@ -67,12 +67,24 @@ jar -xf lessons.jar
 mv lessons lessons.orig
 rm lessons.jar
 
-cat > packages/index.html <<!
-<html><head><title>CrossWire</title></head><body><b>Flashcards</b><br/>This is an early release of a micro edition of Flashcards from CrossWire Bible Society. To try it out, click on the link below below:<br/>
+cat > packages/index.jsp <<!
+<%
+String section = request.getParameter("s");
+%>
+<html><head><title>CrossWire</title></head>
+<body>
+<b>Flashcards</b><br/>
+<%
+if (section == null) {
+%>
+This is an early release of a micro edition of Flashcards from CrossWire Bible Society. To try it out, click on the link below below:<br/>
 <a href="/fc/FlashcardsMobile.jad">Flashcards - Hebrew</a><br/>
 <a href="/fc/oldphone/FlashcardsMobile.jad">Flashcards(old phones) - Hebrew</a><br/>
 <a href="/fc/test/FlashcardsMobile.jad">Flashcards - Phone Test</a><br/>
 Other Lessons:<br/>
+<%
+}
+%>
 !
 
 
@@ -85,6 +97,18 @@ do
   jNum=0
   wCount=0
   part=1
+  cat >> ../../packages/index.jsp <<!
+<%
+if (section == null) {
+%>
+  <a href="?s=$i">$i</a><br/>
+<%
+}
+if ("$i".equals(section)) {
+%>
+  <a href="index.jsp">Back To Index</a><br/>
+<br/><b>$i</b><br/><br/>
+!
   for j in *
   do
     words=`grep wordCount $j|sed s/\[^0-9\]//g`
@@ -114,7 +138,12 @@ do
     echo "Generating package" $i "with" $(($jNum-1)) "lessons and" $(($wCount)) "words"
     genpackage $i
   fi
+  cat >> packages/index.jsp <<!
+<%
+}
+%>
+!
 done
-cat >> packages/index.html <<!
+cat >> packages/index.jsp <<!
 </body></html>
 !
