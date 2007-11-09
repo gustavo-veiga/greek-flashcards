@@ -18,6 +18,9 @@ extraLessons:
 	make -C ../sword-tools/flashtools lessons
 	cp -r ../sword-tools/flashtools/lessons/* lessons
 
+extraLessonsClean:
+	rm -rf lessons/greekFreq lessons/greekFreqKJV lessons/hebrewFreq lessons/hebrewFreqKJV
+
 serverinstall: serverinstalllessons serverinstallapp
 
 serverinstallapp: serverinstallzip
