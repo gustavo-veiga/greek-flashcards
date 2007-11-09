@@ -77,11 +77,8 @@ String section = request.getParameter("s");
 <%
 if (section == null) {
 %>
-This is an early release of a micro edition of Flashcards from CrossWire Bible Society. To try it out, click on the link below below:<br/>
-<a href="/fc/FlashcardsMobile.jad">Flashcards - Hebrew</a><br/>
-<a href="/fc/oldphone/FlashcardsMobile.jad">Flashcards(old phones) - Hebrew</a><br/>
-<a href="/fc/test/FlashcardsMobile.jad">Flashcards - Phone Test</a><br/>
-Other Lessons:<br/>
+<b>Micro Flashcards from CrossWire Bible Society.</b><br/>
+May God bless your efforts to understand Him more.<br/><br/>
 <%
 }
 %>
