@@ -248,11 +248,11 @@ public class ComplexLesson extends Lesson {
                    // We need more intelligent font handling here.  Maybe in load(), when we
                    // grab the font name, we could also look in the lesson for the font file
                    // itself, otherwise look for it app-wide (whatever that means)
-                    g2d.setFont((font != null) ? font : g2d.getFont().deriveFont(Font.BOLD, (int)(height*.75)));
+                    g2d.setFont((font != null) ? font : g2d.getFont().deriveFont(Font.BOLD, (int)(height*.74)));
 //System.out.println("### Using Font: " + g2d.getFont().getName());
 
                     Rectangle2D rect = g2d.getFont().getStringBounds(f.getFront(), g2d.getFontRenderContext());
-                    g2d.drawString(f.getFront(), 4, (int)(height*.70));
+                    g2d.drawString(f.getFront(), 4, (int)(height*.72));
                     bufferedImage = bufferedImage.getSubimage(0, 0, (int)(rect.getWidth()+8), 40);
 
                     // Graphics context no longer needed so dispose it
