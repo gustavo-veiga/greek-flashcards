@@ -275,13 +275,22 @@ public class LessonManager {
          public boolean accept(File dir, String name) {
               return name.toUpperCase(Locale.ENGLISH).endsWith(".JAR");
          }
-    }
-    public static void main( String [ ] arguments ) {
-        // Parse the command line arguments
-        for( int index = 0; arguments.length > index; ++ index ) {
-            if( ( arguments [ index ] ).equals( "-genImages" ) ) {
-                LessonManager.instance().genImages();
-            }
-        }
-    }
+     }
+
+
+     public static void main(String argv[]) {
+          // Parse the command line arguments
+          String font = null;
+          int action = 0;
+          for (int i = 0; i < argv.length; i++) {
+               if ("-genImages".equals(argv[i])) {
+                    action = 1;
+               }
+          }
+          switch (action) {
+               case 0: System.out.println("usage: LessonManager [-genImages]"); break;
+               case 1: LessonManager.instance().genImages(); break;
+               default: break;
+          }
+     }
 }
