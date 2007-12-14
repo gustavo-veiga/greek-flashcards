@@ -58,8 +58,11 @@ public class LessonManager {
 
 
      private LessonManager() {
+         try {
          homeProjectPath = System.getProperty("user.home") + File.separator + DIR_PROJECT;
          homeLessonDir = new File(homeProjectPath + File.separator + LESSON_ROOT);
+         }
+         catch (Exception e) { e.printStackTrace(); }
          load();
      }
 
@@ -223,7 +226,7 @@ public class LessonManager {
                     }
                }
           }
-          catch (IOException e) {
+          catch (Exception e) {
                // that's fine.  We just failed to load local files.
           }
      }

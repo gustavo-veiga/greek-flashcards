@@ -77,6 +77,10 @@
     <jar jarfile="${target.install}/${ant.project.name}.jar" manifest="${target.classes}/org/crosswire/flashcards/flashcards.manifest">
       <fileset dir="${target.classes}"/>
     </jar>
+    <jar jarfile="${target.install}/${ant.project.name}_ws.jar" manifest="${target.classes}/org/crosswire/flashcards/flashcards.manifest">
+      <fileset dir="${target.classes}"/>
+      <fileset dir="${source.root}" includes="lessons/**/*"/>
+    </jar>
     <copy todir="${target.install}">
       <fileset dir="${source.root}/app/webstart">
         <include name="Flashcards.jnlp"/>
@@ -90,6 +94,12 @@
           keystore="${keystore.file}"
           keypass="${keystore.pswd}"
           jar="${target.install}/${ant.project.name}.jar"/>
+    <signjar
+          storepass="${keystore.pswd}"
+          alias="${keystore.alias}"
+          keystore="${keystore.file}"
+          keypass="${keystore.pswd}"
+          jar="${target.install}/${ant.project.name}_ws.jar"/>
   </target>
   <target name="jar.check">
     <uptodate property="jar.uptodate"

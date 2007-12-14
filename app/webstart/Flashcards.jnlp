@@ -22,14 +22,14 @@
     We need disk io to read lessons from disk,
     and the ability to read system vars.
     I'm not sure there is much point in asking for less that everything
-    -->
     <all-permissions/>
+    -->
   </security>
 
   <resources>
     <j2se version="1.4+"/>
     <jar href="flashcards.jar"/>
-    <jar href="lessons.jar"/>
+<!--    <jar href="lessons.jar"/> -->
     <!-- if on the Apple Mac, make it play well -->
     <property name="apple.laf.useScreenMenuBar" value="true"/>
     <property name="com.apple.mrj.application.apple.menu.about.name" value="Flashcards"/>

@@ -1,5 +1,10 @@
 #!/bin/sh
 
+MAX_LESSON_WORDS=75
+
+#JAVA_HOME=/usr/java/j2sdk1.4.2_05
+WORKDIR=fcMobilePackage.$$
+
 # prepares a lessons/ directory and packages into a jar for a mobile phone
 genpackage() {
   # Test syntax.
@@ -48,9 +53,6 @@ padjNum() {
 }
 
 
-#JAVA_HOME=/usr/java/j2sdk1.4.2_05
-WORKDIR=fcMobilePackage.$$
-MAX_LESSON_WORDS=200
 
 echo setting up workspace at $WORKDIR
 mkdir -p $WORKDIR/packages

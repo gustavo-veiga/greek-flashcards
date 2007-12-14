@@ -21,13 +21,11 @@ extraLessons:
 extraLessonsClean:
 	rm -rf lessons/greekFreq lessons/greekFreqKJV lessons/hebrewFreq lessons/hebrewFreqKJV
 
-serverinstall: serverinstalllessons serverinstallapp
+serverinstall: serverinstallapp
 
 serverinstallapp: serverinstallzip
-	cp -f FlashCards/flashcards.jar /home/flashcards/html/webstart/
-
-serverinstalllessons: serverinstallzip
-	cp -f FlashCards/lessons.jar /home/flashcards/html/webstart/
+	cp -f target/install/flashcards_ws.jar /home/flashcards/html/webstart/flashcards.jar
+	cp -f target/install/Flashcards.jnlp /home/flashcards/html/webstart/
 
 mobile: 
 #	JAVA_HOME=/usr/java/j2sdk1.4.2_05 ant -f build.micro1.xml
