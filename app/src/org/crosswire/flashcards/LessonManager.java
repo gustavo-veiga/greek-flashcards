@@ -121,7 +121,7 @@ public class LessonManager {
               thisCon = thisURL.openConnection();
           }
           catch (Exception e1) {
-              assert false;
+              e1.printStackTrace();
           }
           if (thisCon instanceof JarURLConnection) {
                JarURLConnection jarConnection = (JarURLConnection) thisCon;
@@ -139,7 +139,7 @@ public class LessonManager {
               connection = lessonsURL.openConnection();
           }
           catch (Exception e1) {
-              assert false;
+              e1.printStackTrace();
           }
           if (connection instanceof JarURLConnection) {
                JarURLConnection jarConnection = (JarURLConnection) connection;
