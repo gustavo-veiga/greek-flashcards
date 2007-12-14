@@ -145,6 +145,7 @@ public class LessonManager {
                JarURLConnection jarConnection = (JarURLConnection) connection;
                try {
 
+/*
                     String uri = jarConnection.getJarFileURL().toString();
                     //stupid bug with webstart
                     if ((uri.startsWith("file:")) && (!uri.startsWith("file:/"))) {
@@ -154,9 +155,11 @@ public class LessonManager {
 //                                     "Text Edit", JOptionPane.OK_OPTION) ;
 
                     loadJarLessonSets(new File(new java.net.URI(uri)));
+*/
+                    loadJarLessonSets(jarConnection.getJarFile());
                }
                catch (Exception e) {
-                   Debug.error(this.getClass().getName(), e.getMessage());
+                   e.printStackTrace();
                }
           }
      }
@@ -189,6 +192,20 @@ public class LessonManager {
           JarFile jjarFile = null;
           try {
                jjarFile = new JarFile(jarFile);
+               loadJarLessonSets(jjarFile);
+          }
+          catch (IOException e2) {
+              e2.printStackTrace();
+          }
+     }
+
+
+     /**
+      * Load lesson sets from the jar file
+      */
+     private void loadJarLessonSets(JarFile jjarFile) {
+
+          try {
                Enumeration entries = jjarFile.entries();
                while (entries.hasMoreElements()) {
                     JarEntry jarEntry = (JarEntry) entries.nextElement();
@@ -198,13 +215,13 @@ public class LessonManager {
                          entryName = entryName.substring(0, entryName.length() - 1);
                          if (entryName.startsWith(LESSON_ROOT) && !entryName.equals(LESSON_ROOT) && !entryName.endsWith("/audio")) {
                               // let the description be just the directory name and not the path
-                              add(new ComplexLessonSet("jar:" + jarFile.getCanonicalFile().toURL().toString() + "!/" + entryName));
+                              add(new ComplexLessonSet("jar:" + new File(jjarFile.getName()).getCanonicalFile().toURL().toString() + "!/" + entryName));
                          }
                     }
                }
           }
           catch (IOException e2) {
-              Debug.error(this.getClass().getName(), e2.getMessage());
+              e2.printStackTrace();
           }
      }
 
