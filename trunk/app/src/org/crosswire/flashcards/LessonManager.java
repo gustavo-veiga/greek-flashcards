@@ -59,8 +59,8 @@ public class LessonManager {
 
      private LessonManager() {
          try {
-         homeProjectPath = System.getProperty("user.home") + File.separator + DIR_PROJECT;
-         homeLessonDir = new File(homeProjectPath + File.separator + LESSON_ROOT);
+           homeProjectPath = System.getProperty("user.home") + File.separator + DIR_PROJECT;
+           homeLessonDir = new File(homeProjectPath + File.separator + LESSON_ROOT);
          }
          catch (Exception e) { e.printStackTrace(); }
          load();
@@ -145,8 +145,9 @@ public class LessonManager {
                JarURLConnection jarConnection = (JarURLConnection) connection;
                try {
 
-/*
-                    String uri = jarConnection.getJarFileURL().toString();
+//                    String uri = jarConnection.getJarFileURL().toString();
+                    String uri = new File(jarConnection.getJarFile().getName()).getCanonicalFile().toURL().toString();
+System.out.println("uri = " + uri);
                     //stupid bug with webstart
                     if ((uri.startsWith("file:")) && (!uri.startsWith("file:/"))) {
                          uri = "file:/" + uri.substring(5);
@@ -154,9 +155,11 @@ public class LessonManager {
 //                    int value =  JOptionPane.showConfirmDialog(null, uri,
 //                                     "Text Edit", JOptionPane.OK_OPTION) ;
 
+System.out.println("uri = " + uri);
                     loadJarLessonSets(new File(new java.net.URI(uri)));
-*/
+/*
                     loadJarLessonSets(jarConnection.getJarFile());
+*/
                }
                catch (Exception e) {
                    e.printStackTrace();
@@ -186,6 +189,7 @@ public class LessonManager {
      /**
       * Load lesson sets from the jar file
       */
+/*
      private void loadJarLessonSets(File jarFile) {
 
           // Dig into the jar for lessonSets
@@ -199,6 +203,31 @@ public class LessonManager {
           }
      }
 
+*/
+     private void loadJarLessonSets(File jarFile) {
+
+          // Dig into the jar for lessonSets
+          JarFile jjarFile = null;
+          try {
+               jjarFile = new JarFile(jarFile);
+               Enumeration entries = jjarFile.entries();
+               while (entries.hasMoreElements()) {
+                    JarEntry jarEntry = (JarEntry) entries.nextElement();
+                    if (jarEntry.isDirectory()) {
+                         String entryName = jarEntry.getName();
+                         // remove trailing '/'
+                         entryName = entryName.substring(0, entryName.length() - 1);
+                         if (entryName.startsWith(LESSON_ROOT) && !entryName.equals(LESSON_ROOT) && !entryName.endsWith("/audio")) {
+                              // let the description be just the directory name and not the path
+                              add(new ComplexLessonSet("jar:" + jarFile.getCanonicalFile().toURL().toString() + "!/" + entryName));
+                         }
+                    }
+               }
+          }
+          catch (IOException e2) {
+              e2.printStackTrace();
+          }
+     }
 
      /**
       * Load lesson sets from the jar file
@@ -215,6 +244,7 @@ public class LessonManager {
                          entryName = entryName.substring(0, entryName.length() - 1);
                          if (entryName.startsWith(LESSON_ROOT) && !entryName.equals(LESSON_ROOT) && !entryName.endsWith("/audio")) {
                               // let the description be just the directory name and not the path
+System.out.println("jar:" + new File(jjarFile.getName()).getCanonicalFile().toURL().toString() + "!/" + entryName);
                               add(new ComplexLessonSet("jar:" + new File(jjarFile.getName()).getCanonicalFile().toURL().toString() + "!/" + entryName));
                          }
                     }

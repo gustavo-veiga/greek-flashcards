@@ -269,13 +269,13 @@ public class EditorFrame extends JFrame {
             lesson.load(inStream);
 
         } catch(IOException e) {
-            Debug.error(this.getClass().getName(), e.getMessage());
+            e.printStackTrace();
         } finally {
             if (inStream != null) {
                 try {
                     inStream.close();
                 } catch (IOException e) {
-                    Debug.error(this.getClass().getName(), e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }
@@ -307,13 +307,13 @@ public class EditorFrame extends JFrame {
             outStream = new FileOutputStream(cwdPath + "/" + lesson.getProperty("fileName"));
             lesson.store(outStream, "Flash Lesson");
         } catch (IOException ex) {
-            Debug.error(this.getClass().getName(), ex.getMessage());
+            ex.printStackTrace();
         } finally {
             if (outStream != null) {
                 try {
                     outStream.close();
                 } catch (IOException e) {
-                    Debug.error(this.getClass().getName(), e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }
@@ -342,7 +342,7 @@ public class EditorFrame extends JFrame {
                 wordText.loadFont( new FileInputStream( fontPath.getText( ) ) );
 
             } catch( Exception exception ) {
-                Debug.error(this.getClass().getName(), exception.getMessage());
+                exception.printStackTrace();
             }
 
         }
@@ -395,7 +395,7 @@ public class EditorFrame extends JFrame {
                 loadLesson(dialog.getSelectedFile().getCanonicalPath());
                 cwdPath = dialog.getCurrentDirectory().getCanonicalPath();
             } catch( IOException ioe ) {
-                Debug.error(this.getClass().getName(), ioe.getMessage());
+                ioe.printStackTrace();
             }
         }
     }
@@ -417,13 +417,13 @@ public class EditorFrame extends JFrame {
                 wordText.loadFont(inStream);
             }
             catch (Exception ex) {
-                Debug.error(this.getClass().getName(), ex.getMessage());
+                ex.printStackTrace();
             } finally {
                 if (inStream != null) {
                     try {
                         inStream.close();
                     } catch (IOException e1) {
-                        Debug.error(this.getClass().getName(), e1.getMessage());
+                        e1.printStackTrace();
                     }
                 }
             }

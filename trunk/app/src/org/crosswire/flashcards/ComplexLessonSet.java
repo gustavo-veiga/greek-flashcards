@@ -65,7 +65,7 @@ public class ComplexLessonSet extends LessonSet {
                connection = lessonsURL.openConnection();
           }
           catch (Exception e1) {
-              Debug.error(this.getClass().getName(), e1.getMessage());
+              e1.printStackTrace();
           }
           if (connection instanceof JarURLConnection) {
                JarURLConnection jarConnection = (JarURLConnection) connection;
@@ -84,7 +84,7 @@ public class ComplexLessonSet extends LessonSet {
                jarFile = jarConnection.getJarFile();
           }
           catch (Exception e2) {
-              Debug.error(this.getClass().getName(), e2.getMessage());
+              e2.printStackTrace();
           }
           if (jarFile == null) {
                return;
@@ -98,7 +98,7 @@ public class ComplexLessonSet extends LessonSet {
                     try {
                          add(new ComplexLesson("jar:" + jarConnection.getJarFileURL() + "!/" + lessonPath));
                     }
-                    catch (Exception e) {}
+                    catch (Exception e) {e.printStackTrace();}
                }
           }
      }

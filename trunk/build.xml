@@ -17,6 +17,7 @@
   <property name="target.root"    value="${source.root}/target"/>
   <property name="target.classes" value="${target.root}/classes"/>
   <property name="target.install" value="${target.root}/install"/>
+  <property name="font.dir"       value="${source.root}/fonts"/>
   <property name="keystore.file"  value="flshcrds.keystore"/>
   <property name="keystore.alias" value="flshcrds"/>
   <property name="keystore.pswd"  value="p455w0rd"/>
@@ -76,9 +77,11 @@
     <mkdir dir="${target.install}"/>
     <jar jarfile="${target.install}/${ant.project.name}.jar" manifest="${target.classes}/org/crosswire/flashcards/flashcards.manifest">
       <fileset dir="${target.classes}"/>
+      <fileset dir="${font.dir}"/>
     </jar>
     <jar jarfile="${target.install}/${ant.project.name}_ws.jar" manifest="${target.classes}/org/crosswire/flashcards/flashcards.manifest">
       <fileset dir="${target.classes}"/>
+      <fileset dir="${font.dir}"/>
       <fileset dir="${source.root}" includes="lessons/**/*"/>
     </jar>
     <copy todir="${target.install}">
