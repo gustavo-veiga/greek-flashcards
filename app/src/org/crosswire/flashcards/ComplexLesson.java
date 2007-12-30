@@ -45,8 +45,15 @@ import java.awt.geom.Rectangle2D;
  * The lesson also has a description which is useful for showing to a user.
  */
 public class ComplexLesson extends Lesson {
-
      private static final String DIR_PROJECT = ".flashcards";
+     static String homeProjectPath = "";
+     static {
+     try {
+         homeProjectPath = System.getProperty("user.home") + File.separator + DIR_PROJECT;
+     }
+     catch (Exception e) { e.printStackTrace(); }
+     }
+
 
      public ComplexLesson(String url) throws Exception {
           super(url);
@@ -63,21 +70,60 @@ public class ComplexLesson extends Lesson {
       */
      public void load() {
           try {
-               String homeProjectPath = System.getProperty("user.home") + File.separator + DIR_PROJECT;
                URL lessonURL = new URL(getURL());
                Properties lesson = new Properties();
                lesson.load(lessonURL.openConnection().getInputStream());
                int wordCount = Integer.parseInt(lesson.getProperty("wordCount"));
                setDescription(lesson.getProperty("lessonTitle", getURL().substring(getURL().lastIndexOf('/') + 1)));
+
+               // try to find font if we've been given a lessonFont
                String font = lesson.getProperty("lessonFont");
-               if (font != null && font.length() > 0) {
-                    String fontPath = homeProjectPath + File.separator + font+ ".ttf";
-                    File fontFile = new File(fontPath);
-                    if (fontFile.exists()) {
-                         String url = fontFile.toURL().toString();
-                         setFont(url);
+               // while loop is not really to loop, but instead for break when we find the font
+               while (font != null && font.length() > 0) {
+
+                    // try to find font in ./<FONT>.ttf
+                    try {
+                        String fontPath = "./" + File.separator + font + ".ttf";
+                        File fontFile = new File(fontPath);
+                        if (fontFile.exists()) {
+                             String url = fontFile.toURL().toString();
+                             setFont(url);
+System.out.println("found font in ./");
+                             break;
+                        }
                     }
+                    catch (Exception e) { e.printStackTrace(); }
+
+                    // try to find font in ~/.flashcards/<FONT>.ttf
+                    try {
+                        String fontPath = homeProjectPath + File.separator + font + ".ttf";
+                        File fontFile = new File(fontPath);
+                        if (fontFile.exists()) {
+                             String url = fontFile.toURL().toString();
+                             setFont(url);
+System.out.println("found font in ~/.flashcards");
+                             break;
+                        }
+                    }
+                    catch (Exception e) { e.printStackTrace(); }
+
+                    // try to find font on our classpath
+                    try {
+                        URL fontURL = ComplexLesson.class.getResource("/" + font + ".ttf");
+                        if (fontURL != null) {
+                            URLConnection connection = null;
+                            connection = fontURL.openConnection();
+                            setFont(fontURL.toString());
+System.out.println("found font on classpath");
+                            break;
+                        }
+                    }
+                    catch (Exception e) { e.printStackTrace(); }
+
+System.out.println("didn't find font");
+                    break;	// didn't find the font, must break out of while
                }
+
                int baseOffset = getURL().lastIndexOf("/");
                if (baseOffset < 0) {
                     baseOffset = getURL().lastIndexOf( ("\\"));
@@ -142,7 +188,7 @@ public class ComplexLesson extends Lesson {
                setModified(false);
           }
           catch (IOException ex) {
-               Debug.error(this.getClass().getName(), ex.getMessage());
+               ex.printStackTrace();
           }
           finally {
                if (outStream != null) {
@@ -150,7 +196,7 @@ public class ComplexLesson extends Lesson {
                          outStream.close();
                     }
                     catch (IOException e) {
-                         Debug.error(this.getClass().getName(), e.getMessage());
+                         e.printStackTrace();
                     }
                }
           }
@@ -270,7 +316,7 @@ public class ComplexLesson extends Lesson {
                }
           }
           catch (IOException ex) {
-               Debug.error(this.getClass().getName(), ex.getMessage());
+               ex.printStackTrace();
           }
           finally {
                if (outStream != null) {
@@ -278,7 +324,7 @@ public class ComplexLesson extends Lesson {
                          outStream.close();
                     }
                     catch (IOException e) {
-                         Debug.error(this.getClass().getName(), e.getMessage());
+                         e.printStackTrace();
                     }
                }
           }

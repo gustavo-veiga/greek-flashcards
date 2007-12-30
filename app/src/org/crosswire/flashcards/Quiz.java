@@ -82,13 +82,6 @@ public class Quiz {
         // Parse the command line arguments
 
         for( int index = 0; arguments.length > index; ++ index ) {
-
-            if( ( arguments [ index ] ).equals( "-debug" ) ) {
-
-                Debug.setEnabled( true );
-
-            }
-
         }
 
         // Set the "Look And Feel"

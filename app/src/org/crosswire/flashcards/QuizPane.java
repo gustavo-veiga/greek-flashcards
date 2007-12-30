@@ -33,11 +33,14 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.Hashtable;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -68,6 +71,8 @@ public class QuizPane
      private static final int NUM_COLUMNS = 2;
      // NUM_ANSWERS should be a multiple of NUM_COLUMNS.
      private static final int NUM_ANSWERS = 10;
+     private static Hashtable fontCache = new Hashtable();
+
      /**
       * Serialization ID
       */
@@ -108,6 +113,7 @@ public class QuizPane
           protected String back;
           protected FlashCard flashCard;
           protected int attempts;
+          protected String fontURL = null;
           /**
            * Serialization ID
            */
@@ -136,6 +142,14 @@ public class QuizPane
 
           public String getAudioURL() {
                return flashCard.getAudioURL();
+          }
+
+          public void setFontURL(String fontURL) {
+               this.fontURL = fontURL;
+          }
+
+          public String getFontURL() {
+               return fontURL;
           }
 
           public String toString() {
@@ -212,30 +226,16 @@ public class QuizPane
 
 
      public void loadTest() {
-//        boolean loadedFont = false;
           words = new ArrayList();
           Iterator lessonIter = setupPane.iterator();
           while (lessonIter.hasNext()) {
                Lesson lesson = (Lesson) lessonIter.next();
                Vector cards = lesson.getFlashcards();
                for (int i = 0; i < cards.size(); i++) {
-                    words.add(new WordEntry( (FlashCard) cards.get(i)));
+                    WordEntry we = new WordEntry( (FlashCard) cards.get(i));
+                    we.setFontURL(lesson.getFont());
+                    words.add(we);
                }
-//            if (!loadedFont)
-//            {
-//                String font = lesson.getFont();
-//                if (font.length() > 1)
-//                {
-//                    try
-//                    {
-//                        loadFont(new FileInputStream(font));
-//                        loadedFont = true;
-//                    }
-//                    catch (FileNotFoundException ex)
-//                    {
-//                    }
-//                }
-//            }
           }
           // let's combine duplicate words
           for (int i = 0; i < words.size() - 1; i++) {
@@ -252,23 +252,30 @@ public class QuizPane
      }
 
 
-//    public void loadFont(InputStream is)
-//    {
-//        try
-//        {
-//            statusBar.setText("Loading font...");
-//            statusBar.paintImmediately(statusBar.getVisibleRect());
-//            Font font = Font.createFont(Font.TRUETYPE_FONT, is);
-//            Font newFont = font.deriveFont((float) 18.0);
-//            wordText.setFont(newFont);
-//            is.close();
-//            statusBar.setText("New Font Loaded.");
-//        }
-//        catch (Exception ex)
-//        {
-//            ex.printStackTrace();
-//        }
-//    }
+    public Font loadFont(String url) {
+        Font retVal = null;
+        try {
+            // see if our font is already loaded...
+            retVal = (Font)fontCache.get(url);
+            if (retVal == null) {
+                statusBar.setText("Loading font...");
+                statusBar.paintImmediately(statusBar.getVisibleRect());
+                URL fontURL = new URL(url);
+                URLConnection uc = fontURL.openConnection();
+                InputStream is = uc.getInputStream();
+                retVal = Font.createFont(Font.TRUETYPE_FONT, is);
+//                Font newFont = font.deriveFont((float) 18.0);
+//                wordText.setFont(newFont);
+                is.close();
+                fontCache.put(url, retVal);
+                statusBar.setText("New Font Loaded.");
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return retVal;
+    }
 
      void startLessonButton_actionPerformed(ActionEvent e) {
           loadTest();
@@ -355,6 +362,15 @@ public class QuizPane
           currentWord = w;
 
           playSoundButton.setVisible(currentWord.getAudioURL() != null);
+
+          if (currentWord.getFontURL() != null) {
+               Font newFont = loadFont(currentWord.getFontURL());
+               if (newFont != null) {
+                    newFont = newFont.deriveFont((float) 30.0);
+                    wordText.setFont(newFont);
+               }
+          }
+
 
           wordText.setText(w.getSide(!setupPane.isFlipped()));
           if (setupPane.isNoMultipleChoice()) {

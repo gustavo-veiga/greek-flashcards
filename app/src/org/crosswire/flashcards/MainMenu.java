@@ -70,32 +70,6 @@ class MainMenu extends JMenuBar {
 
         // Application Menu -> Editor
 
-         // Application Menu -> Debugging
-
-        if( Debug.getEnabled( ) ) {
-
-            menu2 = new JMenu( "Debugging" );
-            DebugAction debugAction = new DebugAction( );
-            trace = new JRadioButtonMenuItem( "Trace" );
-            if( Debug.getTrace( ) ) { trace.setSelected( true ); }
-            trace.addActionListener( debugAction );
-            menu2.add( trace );
-            inform = new JRadioButtonMenuItem( "Inform" );
-            if( Debug.getInform( ) ) { inform.setSelected( true ); }
-            inform.addActionListener( debugAction );
-            menu2.add( inform );
-            warn = new JRadioButtonMenuItem( "Warn" );
-            if( Debug.getWarn( ) ) { warn.setSelected( true ); }
-            warn.addActionListener( debugAction );
-            menu2.add( warn );
-            error = new JRadioButtonMenuItem( "Error" );
-            if( Debug.getError( ) ) { error.setSelected( true ); }
-            error.addActionListener( debugAction );
-            menu2.add( error );
-            menu1.add( menu2 );
-
-        }
-
         // Application Menu -> Exit
 
         item = new JMenuItem( "Exit" );
@@ -119,51 +93,6 @@ class MainMenu extends JMenuBar {
 
     }
 
-    //
-    // Classes
-    //
-
-    // ---------------
-    class DebugAction extends AbstractAction {
-
-        /**
-         * Serialization ID
-         */
-        private static final long serialVersionUID = 3017480579590120226L;
-
-        public void actionPerformed( ActionEvent event ) {
-
-            Debug.trace( this.toString( ), "Beginning\n" );
-            Debug.inform( this.toString( ),
-                          "event.getActionCommand( ) = " + event.getActionCommand( ) + "\n" );
-
-            if( event.getActionCommand( ).equals( "Trace" ) ) {
-
-                if( trace.isSelected( ) ) { Debug.setTrace( true ); }
-                else { Debug.setTrace( false ); }
-
-            } else if( event.getActionCommand( ).equals( "Inform" ) ) {
-
-                if( inform.isSelected( ) ) { Debug.setInform( true ); }
-                else { Debug.setInform( false ); }
-
-            } else if( event.getActionCommand( ).equals( "Warn" ) ) {
-
-                if( warn.isSelected( ) ) { Debug.setWarn( true ); }
-                else { Debug.setWarn( false ); }
-
-            } else if( event.getActionCommand( ).equals( "Error" ) ) {
-
-                if( error.isSelected( ) ) { Debug.setError( true ); }
-                else { Debug.setError( false ); }
-
-            }
-
-            Debug.trace( this.toString( ), "Ending\n" );
-
-        }
-
-    }
 
     // ---------------
     static class ExitAction extends AbstractAction {
@@ -176,11 +105,7 @@ class MainMenu extends JMenuBar {
         public ExitAction( ) { super( ); }
 
         public void actionPerformed( ActionEvent event ) {
-
-            Debug.trace( this.toString( ), "Beginning\n" );
             System.exit( 0 );
-            Debug.trace( this.toString( ), "Ending\n" );
-
         }
 
     }
@@ -197,16 +122,13 @@ class MainMenu extends JMenuBar {
 
             String aboutString = "FlashCards\n" +
                                  "A Vocabulary Training Tool by CrossWire\n" +
-                                 "(c) 2004 CrossWire Bible Society\n" +
+                                 "(c) 2004-2007 CrossWire Bible Society\n" +
                                  "http://crosswire.org";
 
-            Debug.trace( this.toString( ), "Beginning\n" );
             JOptionPane.showMessageDialog( frame,
                                            aboutString,
                                            "About FlashCards",
                                            JOptionPane.INFORMATION_MESSAGE );
-            Debug.trace( this.toString( ), "Ending\n" );
-
         }
 
     }
