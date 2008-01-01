@@ -25,12 +25,17 @@ import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.InputStream;
@@ -73,6 +78,8 @@ public class QuizPane
      private static final int NUM_ANSWERS = 10;
      private static Hashtable fontCache = new Hashtable();
 
+     float optimalFontSize = 30;
+     List picks = new ArrayList();
      /**
       * Serialization ID
       */
@@ -215,6 +222,11 @@ public class QuizPane
           jPanel2.add(jPanel6, java.awt.BorderLayout.SOUTH);
           jPanel2.add(wordText, java.awt.BorderLayout.CENTER);
           jPanel6.add(choicesPanel, java.awt.BorderLayout.CENTER);
+          jPanel2.addComponentListener(new java.awt.event.ComponentAdapter() {
+              public void componentResized(java.awt.event.ComponentEvent e) {
+                  windowResized();
+              }
+          });
      }
 
 
@@ -253,26 +265,26 @@ public class QuizPane
 
 
     public Font loadFont(String url) {
-        Font retVal = null;
-        try {
-            // see if our font is already loaded...
-            retVal = (Font)fontCache.get(url);
-            if (retVal == null) {
-                statusBar.setText("Loading font...");
-                statusBar.paintImmediately(statusBar.getVisibleRect());
-                URL fontURL = new URL(url);
-                URLConnection uc = fontURL.openConnection();
-                InputStream is = uc.getInputStream();
-                retVal = Font.createFont(Font.TRUETYPE_FONT, is);
-//                Font newFont = font.deriveFont((float) 18.0);
-//                wordText.setFont(newFont);
-                is.close();
-                fontCache.put(url, retVal);
-                statusBar.setText("New Font Loaded.");
+        Font retVal = new Font("Dialog", 0, 30);
+        if ((url != null) && (url.length() > 0)) {
+            try {
+                // see if our font is already loaded...
+                retVal = (Font)fontCache.get(url);
+                if (retVal == null) {
+                    statusBar.setText("Loading font...");
+                    statusBar.paintImmediately(statusBar.getVisibleRect());
+                    URL fontURL = new URL(url);
+                    URLConnection uc = fontURL.openConnection();
+                    InputStream is = uc.getInputStream();
+                    retVal = Font.createFont(Font.TRUETYPE_FONT, is);
+                    is.close();
+                    fontCache.put(url, retVal);
+                    statusBar.setText("New Font Loaded.");
+                }
             }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return retVal;
     }
@@ -363,14 +375,8 @@ public class QuizPane
 
           playSoundButton.setVisible(currentWord.getAudioURL() != null);
 
-          if (currentWord.getFontURL() != null) {
-               Font newFont = loadFont(currentWord.getFontURL());
-               if (newFont != null) {
-                    newFont = newFont.deriveFont((float) 30.0);
-                    wordText.setFont(newFont);
-               }
-          }
-
+          Font newFont = loadFont(currentWord.getFontURL()).deriveFont(optimalFontSize);
+          wordText.setFont(newFont);
 
           wordText.setText(w.getSide(!setupPane.isFlipped()));
           if (setupPane.isNoMultipleChoice()) {
@@ -384,7 +390,7 @@ public class QuizPane
 
               // randomly pick answers
               boolean flipped = setupPane.isFlipped();
-              List picks = new ArrayList();
+              picks = new ArrayList();
               picks.add(createAnswerEntry(w.getSide(flipped)));
               int size = words.size();
               while (picks.size() < Math.min(NUM_ANSWERS, size)) {
@@ -412,6 +418,7 @@ public class QuizPane
               }
               wrong = 0;
               shownAnswer = false;
+              setOptimalFontSizes();
               updateStats();
               choicesPanel.invalidate();
               choicesPanel.validate();
@@ -530,8 +537,75 @@ public class QuizPane
                showAnswer();
           }
      }
+     
+     
+     public Rectangle getMaxBounds(float fontSize) {
+         Graphics2D g2d = (Graphics2D)wordText.getGraphics();
+         Rectangle biggest = new Rectangle(0, 0, 0, 0);
+         FontRenderContext fc = g2d.getFontRenderContext();
+         Iterator it = notLearned.iterator();
+         while (it.hasNext()) {
+             WordEntry we = (WordEntry)it.next();
+             Font f = loadFont(we.getFontURL());
+             if (f != null) {
+                 f = f.deriveFont(fontSize);
+                 TextLayout tlo = new TextLayout(we.getSide(!setupPane.isFlipped()), f, fc);
+                 Rectangle2D rect = tlo.getBounds();
+                 if (rect.getWidth() > biggest.width) biggest.width = (int)rect.getWidth();
+                 if (rect.getHeight() > biggest.height) biggest.height = (int)rect.getHeight();
+             }
+         }
+         return biggest;
+     }
 
+     
+     public float getOptimalFontSize(Rectangle bounds) {
+         float fontSize = 30;
+         Rectangle referenceBounds = getMaxBounds(fontSize);
+System.out.println("30 pt Max Bound: " + referenceBounds.toString());
+
+         float xmult = (float)bounds.width / (float)referenceBounds.width;
+         float ymult = (float)bounds.height / (float)referenceBounds.height;
+         fontSize *= (xmult < ymult) ? xmult : ymult;
+         fontSize *= 0.75;
+         return fontSize;
+     }
+
+     public void setOptimalFontSizes() {
+         jPanel2.invalidate();
+         jPanel2.validate();
+         jPanel2.repaint();
+         // make a first pass at the font size to approximate the choices font
+         Rectangle bounds = jPanel2.getBounds();
+         bounds.height /= 2;
+         optimalFontSize = getOptimalFontSize(bounds);
+System.out.println("optimal Font Size: " + optimalFontSize);
+         Font newFont = loadFont(currentWord.getFontURL()).deriveFont(optimalFontSize);
+         Font choiceFont = newFont.deriveFont(optimalFontSize/(NUM_ANSWERS/NUM_COLUMNS));
+         Iterator iter = picks.iterator();
+         while (iter.hasNext()) {
+             ((Component) iter.next()).setFont(choiceFont);
+         }
+         // Now that bottom layout is adjusted for new font size, computer real
+         // font size for top
+         optimalFontSize = getOptimalFontSize(wordText.getBounds());
+         newFont = loadFont(currentWord.getFontURL()).deriveFont(optimalFontSize);
+System.out.println("optimal Font Size: " + optimalFontSize);
+         wordText.setFont(newFont);
+     }
+     
+     
+     protected void windowResized() {
+         if (wordText != null) {
+             if (wordText.getText() != null) {
+                 if (wordText.getText().length() > 0) {
+                     setOptimalFontSizes();
+                 }
+             }
+         }
+     }
 }
+
 
 
 class QuizPane_startLessonButton_actionAdapter

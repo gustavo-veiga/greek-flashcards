@@ -88,7 +88,7 @@ public class ComplexLesson extends Lesson {
                         if (fontFile.exists()) {
                              String url = fontFile.toURL().toString();
                              setFont(url);
-System.out.println("found font in ./");
+System.out.println("found font in ./; URL: " + url);
                              break;
                         }
                     }
@@ -101,7 +101,7 @@ System.out.println("found font in ./");
                         if (fontFile.exists()) {
                              String url = fontFile.toURL().toString();
                              setFont(url);
-System.out.println("found font in ~/.flashcards");
+System.out.println("found font in ~/.flashcards; URL: " + url);
                              break;
                         }
                     }
