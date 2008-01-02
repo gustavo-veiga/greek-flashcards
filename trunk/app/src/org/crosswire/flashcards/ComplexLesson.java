@@ -35,6 +35,8 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
+import java.util.Hashtable;
+import java.security.AccessControlException;
 
 import javax.imageio.ImageIO;
 import java.awt.geom.Rectangle2D;
@@ -47,6 +49,7 @@ import java.awt.geom.Rectangle2D;
 public class ComplexLesson extends Lesson {
      private static final String DIR_PROJECT = ".flashcards";
      static String homeProjectPath = "";
+     static Hashtable fontURLCache = new Hashtable();
      static {
      try {
          homeProjectPath = System.getProperty("user.home") + File.separator + DIR_PROJECT;
@@ -81,6 +84,13 @@ public class ComplexLesson extends Lesson {
                // while loop is not really to loop, but instead for break when we find the font
                while (font != null && font.length() > 0) {
 
+                    // try to find font in cache
+                    String cachedURL = (String)fontURLCache.get(font);
+                    if (cachedURL != null) {
+                             setFont(cachedURL);
+                             break;
+                    }
+
                     // try to find font in ./<FONT>.ttf
                     try {
                         String fontPath = "./" + File.separator + font + ".ttf";
@@ -88,10 +98,12 @@ public class ComplexLesson extends Lesson {
                         if (fontFile.exists()) {
                              String url = fontFile.toURL().toString();
                              setFont(url);
+                             fontURLCache.put(font, url);
 System.out.println("found font in ./; URL: " + url);
                              break;
                         }
                     }
+                    catch (AccessControlException ea) {}
                     catch (Exception e) { e.printStackTrace(); }
 
                     // try to find font in ~/.flashcards/<FONT>.ttf
@@ -101,23 +113,27 @@ System.out.println("found font in ./; URL: " + url);
                         if (fontFile.exists()) {
                              String url = fontFile.toURL().toString();
                              setFont(url);
+                             fontURLCache.put(font, url);
 System.out.println("found font in ~/.flashcards; URL: " + url);
                              break;
                         }
                     }
+                    catch (AccessControlException ea) {}
                     catch (Exception e) { e.printStackTrace(); }
 
                     // try to find font on our classpath
                     try {
                         URL fontURL = ComplexLesson.class.getResource("/" + font + ".ttf");
                         if (fontURL != null) {
-                            URLConnection connection = null;
-                            connection = fontURL.openConnection();
-                            setFont(fontURL.toString());
+                             URLConnection connection = null;
+                             connection = fontURL.openConnection();
+                             setFont(fontURL.toString());
+                             fontURLCache.put(font, fontURL.toString());
 System.out.println("found font on classpath");
-                            break;
+                             break;
                         }
                     }
+                    catch (AccessControlException ea) {}
                     catch (Exception e) { e.printStackTrace(); }
 
 System.out.println("didn't find font");

@@ -152,8 +152,7 @@ System.out.println("uri = " + uri);
                     if ((uri.startsWith("file:")) && (!uri.startsWith("file:/"))) {
                          uri = "file:/" + uri.substring(5);
                     }
-//                    int value =  JOptionPane.showConfirmDialog(null, uri,
-//                                     "Text Edit", JOptionPane.OK_OPTION) ;
+                    uri = uri.replace(" ", "%20");
 
 System.out.println("uri = " + uri);
                     loadJarLessonSets(new File(new java.net.URI(uri)));
