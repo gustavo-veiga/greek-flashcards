@@ -562,8 +562,6 @@ public class QuizPane
      public float getOptimalFontSize(Rectangle bounds) {
          float fontSize = 30;
          Rectangle referenceBounds = getMaxBounds(fontSize);
-System.out.println("30 pt Max Bound: " + referenceBounds.toString());
-
          float xmult = (float)bounds.width / (float)referenceBounds.width;
          float ymult = (float)bounds.height / (float)referenceBounds.height;
          fontSize *= (xmult < ymult) ? xmult : ymult;
@@ -579,18 +577,16 @@ System.out.println("30 pt Max Bound: " + referenceBounds.toString());
          Rectangle bounds = jPanel2.getBounds();
          bounds.height /= 2;
          optimalFontSize = getOptimalFontSize(bounds);
-System.out.println("optimal Font Size: " + optimalFontSize);
-         Font newFont = loadFont(currentWord.getFontURL()).deriveFont(optimalFontSize);
-         Font choiceFont = newFont.deriveFont(optimalFontSize/(NUM_ANSWERS/NUM_COLUMNS));
+         Font newFont = loadFont(currentWord.getFontURL());
+         Font choiceFont = newFont.deriveFont((float)(optimalFontSize * 0.90) / (NUM_ANSWERS/NUM_COLUMNS));
          Iterator iter = picks.iterator();
          while (iter.hasNext()) {
              ((Component) iter.next()).setFont(choiceFont);
          }
          // Now that bottom layout is adjusted for new font size, computer real
          // font size for top
-         optimalFontSize = getOptimalFontSize(wordText.getBounds());
+         optimalFontSize = getOptimalFontSize(bounds);
          newFont = loadFont(currentWord.getFontURL()).deriveFont(optimalFontSize);
-System.out.println("optimal Font Size: " + optimalFontSize);
          wordText.setFont(newFont);
      }
      
