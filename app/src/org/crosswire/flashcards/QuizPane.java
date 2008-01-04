@@ -199,6 +199,7 @@ public class QuizPane
 
           choicesPanel.setLayout(choicesPanelGridLayout);
           choicesPanelGridLayout.setColumns(NUM_COLUMNS);
+          choicesPanelGridLayout.setHgap(10);
           choicesPanelGridLayout.setRows(0);
 
           statusPanel.setLayout(statusPanelBorderLayout);
