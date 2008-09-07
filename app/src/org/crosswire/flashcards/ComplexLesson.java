@@ -50,6 +50,8 @@ public class ComplexLesson extends Lesson {
      private static final String DIR_PROJECT = ".flashcards";
      static String homeProjectPath = "";
      static Hashtable fontURLCache = new Hashtable();
+     static Font otFont = null;
+     static Font ntFont = null;
      static {
      try {
          homeProjectPath = System.getProperty("user.home") + File.separator + DIR_PROJECT;
@@ -68,6 +70,70 @@ public class ComplexLesson extends Lesson {
      }
 
 
+     public String findFont(String fontName) {
+               String retVal = null;
+               // while loop is not really to loop, but instead for break when we find the font
+               while (fontName != null && fontName.length() > 0) {
+
+                    // try to find fontName in cache
+                    String cachedURL = (String)fontURLCache.get(fontName);
+                    if (cachedURL != null) {
+                             retVal = cachedURL;
+                             break;
+                    }
+
+                    // try to find fontName in ./<FONT>.ttf
+                    try {
+                        String fontPath = "./" + File.separator + fontName + ".ttf";
+                        File fontFile = new File(fontPath);
+                        if (fontFile.exists()) {
+                             String url = fontFile.toURL().toString();
+                             retVal = url;
+                             fontURLCache.put(fontName, url);
+System.out.println("found fontName in ./; URL: " + url);
+                             break;
+                        }
+                    }
+                    catch (AccessControlException ea) {}
+                    catch (Exception e) { e.printStackTrace(); }
+
+                    // try to find fontName in ~/.flashcards/<FONT>.ttf
+                    try {
+                        String fontPath = homeProjectPath + File.separator + fontName + ".ttf";
+                        File fontFile = new File(fontPath);
+                        if (fontFile.exists()) {
+                             String url = fontFile.toURL().toString();
+                             retVal = url;
+                             fontURLCache.put(fontName, url);
+System.out.println("found fontName in ~/.flashcards; URL: " + url);
+                             break;
+                        }
+                    }
+                    catch (AccessControlException ea) {}
+                    catch (Exception e) { e.printStackTrace(); }
+
+                    // try to find fontName on our classpath
+                    try {
+                        URL fontURL = ComplexLesson.class.getResource("/" + fontName + ".ttf");
+                        if (fontURL != null) {
+                             URLConnection connection = null;
+                             connection = fontURL.openConnection();
+                             retVal = fontURL.toString();
+                             fontURLCache.put(fontName, fontURL.toString());
+System.out.println("found fontName on classpath");
+                             break;
+                        }
+                    }
+                    catch (AccessControlException ea) {}
+                    catch (Exception e) { e.printStackTrace(); }
+
+System.out.println("didn't find fontName");
+                    break;	// didn't find the fontName, must break out of while
+               }
+          return retVal;
+
+     }
+
      /**
       * Load this lesson from persistent store named by the lesson's <code>filename</code>.
       */
@@ -80,64 +146,21 @@ public class ComplexLesson extends Lesson {
                setDescription(lesson.getProperty("lessonTitle", getURL().substring(getURL().lastIndexOf('/') + 1)));
 
                // try to find font if we've been given a lessonFont
-               String font = lesson.getProperty("lessonFont");
-               // while loop is not really to loop, but instead for break when we find the font
-               while (font != null && font.length() > 0) {
-
-                    // try to find font in cache
-                    String cachedURL = (String)fontURLCache.get(font);
-                    if (cachedURL != null) {
-                             setFont(cachedURL);
-                             break;
+               String fontName = lesson.getProperty("lessonFont");
+               if (fontName == null || fontName.length() < 1 || fontName.equalsIgnoreCase("auto")) {
+                    setFont(null);
+                    if (otFont == null) {
+			    String fontURL = findFont("SILEOT");
+			    otFont = loadFont(fontURL);
                     }
-
-                    // try to find font in ./<FONT>.ttf
-                    try {
-                        String fontPath = "./" + File.separator + font + ".ttf";
-                        File fontFile = new File(fontPath);
-                        if (fontFile.exists()) {
-                             String url = fontFile.toURL().toString();
-                             setFont(url);
-                             fontURLCache.put(font, url);
-System.out.println("found font in ./; URL: " + url);
-                             break;
-                        }
+                    if (ntFont == null) {
+			    String fontURL = findFont("GalSILB201");
+			    ntFont = loadFont(fontURL);
                     }
-                    catch (AccessControlException ea) {}
-                    catch (Exception e) { e.printStackTrace(); }
-
-                    // try to find font in ~/.flashcards/<FONT>.ttf
-                    try {
-                        String fontPath = homeProjectPath + File.separator + font + ".ttf";
-                        File fontFile = new File(fontPath);
-                        if (fontFile.exists()) {
-                             String url = fontFile.toURL().toString();
-                             setFont(url);
-                             fontURLCache.put(font, url);
-System.out.println("found font in ~/.flashcards; URL: " + url);
-                             break;
-                        }
-                    }
-                    catch (AccessControlException ea) {}
-                    catch (Exception e) { e.printStackTrace(); }
-
-                    // try to find font on our classpath
-                    try {
-                        URL fontURL = ComplexLesson.class.getResource("/" + font + ".ttf");
-                        if (fontURL != null) {
-                             URLConnection connection = null;
-                             connection = fontURL.openConnection();
-                             setFont(fontURL.toString());
-                             fontURLCache.put(font, fontURL.toString());
-System.out.println("found font on classpath");
-                             break;
-                        }
-                    }
-                    catch (AccessControlException ea) {}
-                    catch (Exception e) { e.printStackTrace(); }
-
-System.out.println("didn't find font");
-                    break;	// didn't find the font, must break out of while
+               }
+               else {
+                    String fontURL = findFont(fontName);
+                    if (fontURL != null) setFont(fontURL);
                }
 
                int baseOffset = getURL().lastIndexOf("/");
@@ -268,15 +291,32 @@ System.out.println("didn't find font");
                final int width = 800;
                final int height = 40;
                Font font = null;
-               if (getFont() != null && getFont().length() > 0) {
+               Font ntFont = null;
+               Font otFont = null;
+               boolean autoFont = false;
+               String fontName = getFont();
+               if (fontName == null || fontName.length() < 1 || fontName.equalsIgnoreCase("auto")) {
+                    autoFont = true;
+                    if (this.otFont != null) {
+                         otFont = this.otFont.deriveFont(Font.BOLD, (int)(height*.75));
+                    }
+                    if (this.ntFont != null) {
+                         ntFont = this.ntFont.deriveFont(Font.BOLD, (int)(height*.75));
+                    }
+               }
+               else {
                     Font newFont = loadFont(getFont());
                     font = newFont.deriveFont(Font.BOLD, (int)(height*.75));
                }
-//               else font = new Font(g2d.getFont().getName(), Font.BOLD, (int)(height*.75));
 
                int i = 0;
                for (; i < getFlashcards().size(); i++) {
                     FlashCard f = (FlashCard)getFlashcards().elementAt(i);
+                    if (autoFont) {
+                         font = null;
+                         if (f.isHebrew()) font = otFont;
+                         if (f.isGreek()) font = ntFont;
+                    }
                     String imageURLString = imagesPath + "/" + lname + "_" + Integer.toString(i) + ".png";
                     // Save it as a "home" resource.
                     URL filePath = new URL(imageURLString);

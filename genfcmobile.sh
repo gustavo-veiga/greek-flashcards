@@ -37,7 +37,7 @@ genpackage() {
   cd ${WORKDIR}
   JARSIZE=`ls -l ${PKGNAME}.jar |cut -f5 -d' '`
   sed -i s/##SIZE##/${JARSIZE}/ ${PKGNAME}.jad
-  sed -i s/##HTMLBASE##/${HTMLBASE}/ ${PKGNAME}.jad
+  sed -i s!##HTMLBASE##!${HTMLBASE}! ${PKGNAME}.jad
   cat >> packages/index.jsp <<!
   <a href="/fc/${PKGNAME}.jad">$i$partNumber</a><br/>
 !
