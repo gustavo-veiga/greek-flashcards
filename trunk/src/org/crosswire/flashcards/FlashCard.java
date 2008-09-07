@@ -113,6 +113,17 @@ public class FlashCard {
     values.put(imageURL, newImageURL);
   }
 
+  public boolean isGreek() {
+    int firstGlyph = getFront().charAt(0);
+    return ((firstGlyph >=  880 && firstGlyph <= 1023)
+         || (firstGlyph >= 7936 && firstGlyph <= 8191));
+  }
+
+  public boolean isHebrew() {
+    int firstGlyph = getFront().charAt(0);
+    return ((firstGlyph >=  1424 && firstGlyph <=  1535)
+         || (firstGlyph >= 64256 && firstGlyph <= 64335));
+  }
   /**
    * Method reset
    */
