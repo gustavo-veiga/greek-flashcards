@@ -174,7 +174,7 @@ public class QuizPane
 
      //Component initialization
      private void jbInit() {
-          choicesPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 10));
+          choicesPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 10, 10));
           startLessonButton.setText("Start");
           startLessonButton.addActionListener(new QuizPane_startLessonButton_actionAdapter(this));
 
