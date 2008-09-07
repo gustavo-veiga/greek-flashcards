@@ -15,8 +15,7 @@
  *     59 Temple Place - Suite 330
  *     Boston, MA 02111-1307, USA
  *
- * The copyright to this program is held by it's authors
- * Copyright: 2004
+ * Copyright: 2008 CrossWire Bible Society
  */
 package org.crosswire.flashcards;
 
@@ -67,7 +66,7 @@ public class MainFrame extends JFrame
         Container contentPane = this.getContentPane();
         contentPane.setLayout(new BorderLayout());
         this.setSize(new Dimension(600, 480));
-        this.setTitle("FlashCards  - (c) 2004 CrossWire Bible Society http://crosswire.org");
+        this.setTitle("FlashCards - (c) 2008 CrossWire Bible Society http://crosswire.org");
 
         JTabbedPane tabs = new JTabbedPane();
         tabs.addTab("Setup", setupPane);

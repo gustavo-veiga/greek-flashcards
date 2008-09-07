@@ -1,9 +1,10 @@
 #!/bin/sh
 
-MAX_LESSON_WORDS=75
+MAX_LESSON_WORDS=125
 
 #JAVA_HOME=/usr/java/j2sdk1.4.2_05
 WORKDIR=fcMobilePackage.$$
+HTMLBASE=http://crosswire.org/fc
 
 # prepares a lessons/ directory and packages into a jar for a mobile phone
 genpackage() {
@@ -36,6 +37,7 @@ genpackage() {
   cd ${WORKDIR}
   JARSIZE=`ls -l ${PKGNAME}.jar |cut -f5 -d' '`
   sed -i s/##SIZE##/${JARSIZE}/ ${PKGNAME}.jad
+  sed -i s/##HTMLBASE##/${HTMLBASE}/ ${PKGNAME}.jad
   cat >> packages/index.jsp <<!
   <a href="/fc/${PKGNAME}.jad">$i$partNumber</a><br/>
 !

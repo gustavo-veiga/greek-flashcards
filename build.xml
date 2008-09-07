@@ -177,7 +177,7 @@
       <dname>
         <param name="CN" value="The CrossWire Bible Society"/>
         <param name="OU" value="FlashCards"/>
-        <param name="O" value="Crosswire.org"/>
+        <param name="O" value="crosswire.org"/>
       </dname>
     </genkey>
   </target>
