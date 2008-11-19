@@ -43,7 +43,7 @@ public class LessonManager {
 
      public static final String LESSON_ROOT = "lessons";
      private static final String DIR_PROJECT = ".flashcards";
-     private static LessonManager instance = new LessonManager();
+     private static LessonManager instance = null;
 
      /**
       * An ordered list of <code>lessonSets</code>
@@ -53,11 +53,15 @@ public class LessonManager {
      private String homeProjectPath = null;
 
      public static LessonManager instance() {
+          if (instance == null) instance = new LessonManager();
           return instance;
      }
 
+     public LessonManager(String jarsPath) {
+          loadLessonSetsFromJarDir(jarsPath);
+     }
 
-     private LessonManager() {
+     public LessonManager() {
          try {
            homeProjectPath = System.getProperty("user.home") + File.separator + DIR_PROJECT;
            homeLessonDir = new File(homeProjectPath + File.separator + LESSON_ROOT);

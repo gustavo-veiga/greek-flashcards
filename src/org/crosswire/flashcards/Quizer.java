@@ -74,7 +74,8 @@ public class Quizer {
   public void loadLesson(Lesson lesson) {
     Vector cards = lesson.getFlashcards();
     for (int i = 0; i < cards.size(); i++) {
-      words.addElement(new WordEntry( (FlashCard) cards.elementAt(i)));
+      FlashCard f = (FlashCard) cards.elementAt(i);
+      words.addElement(new WordEntry(f));
     }
     // let's combine duplicate words
     for (int i = 0; i < words.size() - 1; i++) {
@@ -186,8 +187,10 @@ public class Quizer {
       int wordNum = getRandomInt(ret.size());
       ret.setElementAt(lastWord.flashCard.getBack(), wordNum);
     }
+System.out.println("Answer is offset: "+ret.indexOf(lastWord.flashCard.getBack()));
     return ret;
   }
+
 
   public int getTotalAsked() {
     return totalAsked;
