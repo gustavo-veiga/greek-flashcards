@@ -39,7 +39,7 @@ genpackage() {
   sed -i s/##SIZE##/${JARSIZE}/ ${PKGNAME}.jad
   sed -i s!##HTMLBASE##!${HTMLBASE}! ${PKGNAME}.jad
   cat >> packages/index.jsp <<!
-  For download via mobile browser: <a href="/fc/${PKGNAME}.jad">$i$partNumber</a> For direct download: <a href="/fc/${PKGNAME}.jad">$i$partNumber.jar</a><br/>
+  Jad file: <a href="/fc/${PKGNAME}.jad">$i$partNumber</a> Jar file: <a href="/fc/${PKGNAME}.jar">$i$partNumber.jar</a><br/>
 !
   mv ${PKGNAME}.ja[dr] packages
 }
