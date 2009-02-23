@@ -39,7 +39,7 @@ genpackage() {
   sed -i s/##SIZE##/${JARSIZE}/ ${PKGNAME}.jad
   sed -i s!##HTMLBASE##!${HTMLBASE}! ${PKGNAME}.jad
   cat >> packages/index.jsp <<!
-  Jad file: <a href="/fc/${PKGNAME}.jad">$i$partNumber</a> Jar file: <a href="/fc/${PKGNAME}.jar">$i$partNumber.jar</a><br/>
+  Jad file: <a href="/fc/${PKGNAME}.jad">$i$partNumber</a>; Jar file: <a href="/fc/${PKGNAME}.jar">$i$partNumber.jar</a><br/>
 !
   mv ${PKGNAME}.ja[dr] packages
 }
@@ -108,7 +108,10 @@ if (section == null) {
 if ("$i".equals(section)) {
 %>
   <a href="index.jsp">Back To Index</a><br/>
-<br/><b>$i</b><br/><br/>
+  To install from your mobile browser click the jad file.<br/>
+  To install via your computer you might need both files, but try the jar first alone<br/>
+  <br/>
+  <b>$i</b><br/><br/>
 !
   for j in *
   do
