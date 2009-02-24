@@ -109,7 +109,7 @@ if ("$i".equals(section)) {
 %>
   <a href="index.jsp">Back To Index</a><br/>
   To install from your mobile browser click the jad file.<br/>
-  To install via your computer you might need both files, but try the jar first alone<br/>
+  To install via your computer you might need both files, but try the jar first alone.<br/>
   <br/>
   <b>$i</b><br/><br/>
 !
