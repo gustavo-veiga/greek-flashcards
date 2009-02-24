@@ -1,0 +1,9 @@
+To build the mobile flashcards:
+
+make extralessons
+make
+
+cp fonts./*ttf ~/.flashcards
+make mobile
+make serverinstall
+
