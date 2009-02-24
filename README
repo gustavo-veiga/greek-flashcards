@@ -1,9 +1,17 @@
 To build the mobile flashcards:
 
-make extralessons
+be sure sword-tools is checked out at the same level
+as flashcards, i.e., ../sword-tools
+in sword-tools/flashtools be sure to make
+
+in this directory,
+
+mkdir -p ~/.flashcards
+cp fonts/*ttf ~/.flashcards
+
+make extraLessons
 make
 
-cp fonts./*ttf ~/.flashcards
 make mobile
 make serverinstall
 
