@@ -48,14 +48,28 @@ $myDirectory = opendir($argv[1]);
 
 $mongo 		= new Mongo($mongo_host);
 $db    		= $mongo->selectDB($mongo_db);
-$lessonsets = $db->selectCollection('lessonsets');
-$cards = $db->selectCollection('cards');
+
+$db->dropCollection('lessonsets');
+$db->dropCollection('lessons');
+$db->dropCollection('cards');
+
+$lessonsets_coll	= $db->selectCollection('lessonsets');
+$lessons_coll 		= $db->selectCollection('lessons');
+$cards_coll 		= $db->selectCollection('cards');
+
+$lessonsets_coll->ensureIndex(array("name"=>1));
+
+$lessons_coll->ensureIndex(array("name"=>1));
+
+$cards_coll->ensureIndex(array("lessonset"=>1, "lesson"=>1));
+$cards_coll->ensureIndex(array("front"=>1));
+$cards_coll->ensureIndex(array("back"=>1));
 
 while ($entryName = readdir($myDirectory)) {
     if (!preg_match('/^\./', $entryName) && is_dir($lessonDir . '/' . $entryName)) {
         $dirArray[] = $entryName;
 
-        $lessonsets->insert(array("lessonset"=>$entryName));
+        $lessonsets_coll->insert(array("name"=>$entryName));
     }
 }
 
@@ -94,14 +108,19 @@ foreach($dirArray as $dir) {
             
             $lessonfont = array_key_exists('lessonFont', $lesson_data) ? $lesson_data['lessonFont'] : "GalSILB201";
             
+            $lessons_coll->insert(array(
+   					"lessonset"=>$lessonSetDir,
+            		"name"=>$lesson,
+					"font"=>$lessonfont
+            ));
+            
             $totwords += $cardCount;
             for ($i = 0; $i < $cardCount; $i++) {
                 $front = convertUnicode($lesson_data['word' . $i]);
                 $back = $lesson_data['answers' . $i];
-				$cards->insert(array(
+				$cards_coll->insert(array(
 					"lessonset"=>$lessonSetDir,
 					"lesson"=>$lesson,
-					"font"=>$lessonfont,
 					"front"=>$front,
 					"back"=>$back
 				));
