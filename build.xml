@@ -140,14 +140,16 @@
            srcdir="${source.java.common}"
            includes="**/*.java"
            destdir="${target.classes}"
-           source="1.4">
+           includeantruntime="false"
+           source="1.6">
       <exclude name="**/migrate/*"/>
     </javac>
     <javac debug="on"
            srcdir="${source.java}"
            includes="**/*.java"
            destdir="${target.classes}"
-           source="1.4">
+           includeantruntime="false"
+           source="1.6">
       <exclude name="**/migrate/*"/>
     </javac>
     <!-- Copy the resources to the proper org/crosswire directory.

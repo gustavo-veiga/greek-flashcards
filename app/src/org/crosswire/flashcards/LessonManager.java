@@ -109,6 +109,9 @@ public class LessonManager {
           // see if there are any jars in our CWD with lesson sets
           loadLessonSetsFromJarDir("./");
 
+          // see if there is a CWD/lessons folder with lesson sets
+          loadLessonSetsFromDir(new File("./lessons/"));
+
           // see if there are any lesson sets in our home project dir
           loadLessonSetsFromDir(homeLessonDir);
 

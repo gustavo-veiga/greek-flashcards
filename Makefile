@@ -8,6 +8,8 @@ serverinstallzip: zipclean
 	mkdir FlashCards
 	cp target/install/flashcards.jar FlashCards
 	cp target/install/lessons.jar FlashCards
+	cp app/start_flashcards.sh FlashCards
+	cp app/start_flashcards.bat FlashCards
 	cp fonts/* FlashCards
 	zip FlashCards.zip FlashCards/*
 	cp -f FlashCards.zip /home/ftp/pub/flashcards
