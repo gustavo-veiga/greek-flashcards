@@ -25,6 +25,7 @@ import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
@@ -482,6 +483,7 @@ public class QuizPane
                          notLearned.remove(currentWord);
                          deleteChildren(choicesPanel);
                          wordText.setText("-=+* Great! *+=-");
+					 setOptimalFontSizes();
                          statusBar.setText("Nice Job!  You've mastered all " + words.size() + " words!");
                     }
                }
@@ -519,6 +521,7 @@ public class QuizPane
                }
                else {
                     wordText.setText("-=+* Great! *+=-");
+				 setOptimalFontSizes();
                     statusBar.setText("Nice Job!  You've mastered all " + words.size() + " words!");
                }
           }
@@ -560,6 +563,51 @@ public class QuizPane
          return biggest;
      }
 
+
+
+
+
+
+
+
+    public static final int MIN_FONT_SIZE=3;
+    public static final int MAX_FONT_SIZE=512;
+
+    protected void adaptLabelFont(JLabel l) {
+        Rectangle r=l.getBounds();
+        int fontSize=MIN_FONT_SIZE;
+        Font f=l.getFont();
+        int lastFontSize = f.getSize();
+
+        Rectangle r1=new Rectangle();
+        Rectangle r2=new Rectangle();
+        while (fontSize<MAX_FONT_SIZE) {
+            r1.setSize(getTextSize(l, f.deriveFont(f.getStyle(), fontSize)));
+            r2.setSize(getTextSize(l, f.deriveFont(f.getStyle(),fontSize+1)));
+            if (r.contains(r1) && ! r.contains(r2)) {
+                break;
+            }
+            fontSize++;
+        }
+
+        l.setFont(f.deriveFont(f.getStyle(),fontSize));
+    }
+
+    private Dimension getTextSize(JLabel l, Font f) {
+        Dimension size=new Dimension();
+	Graphics2D g = (Graphics2D)l.getGraphics();
+        g.setFont(f);
+        FontMetrics fm=g.getFontMetrics(f);
+        size.width=fm.stringWidth(l.getText());
+        size.height=fm.getHeight();
+
+        return size;
+    }
+
+
+
+
+
      
      public float getOptimalFontSize(Rectangle bounds) {
          float fontSize = 30;
@@ -587,9 +635,12 @@ public class QuizPane
          }
          // Now that bottom layout is adjusted for new font size, computer real
          // font size for top
+		adaptLabelFont(wordText);
+/*
          optimalFontSize = getOptimalFontSize(bounds);
          newFont = loadFont(currentWord.getFontURL()).deriveFont(optimalFontSize);
          wordText.setFont(newFont);
+*/
      }
      
      
