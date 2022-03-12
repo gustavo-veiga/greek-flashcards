@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+	<title>Flashcards Web Quizzer</title>
+
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/URI.min.js"></script>
+        <script type="text/javascript" src="js/jquery.cookie.js"></script>
+        <script type="text/javascript" src="js/jszip.min.js"></script>
+        <script type="text/javascript" src="js/jszip-utils.min.js"></script>
+        <script type="text/javascript" src="js/messageResource.min.js"></script>
+
+        <script type="text/javascript" src="js/flashcards.js"></script>
+
+	<style>
+#word {
+	font-size: 300%;
+}
+	</style>
+</head>
+<body>
+
+
+<script>
+
+
+var SKEL_PATH  ="/home/crosswire/bin/fcskel";
+var LESSONS_PATH="/home/crosswire/html/fc/g/packages";
+var url = window.location.href;
+var params =  URI(url).search(true);
+var lessonDir = params.l;
+
+var fcquizer = null;
+var fcword = null;
+var fcanswers = null;
+var fcwrong = null;
+
+lessonDir = (!lessonDir) ? (SKEL_PATH+"/target/install")
+				: (LESSONS_PATH+"/"+lessonDir);
+
+lessonDir = './';
+
+var mgr = $.extend(true, {}, LessonManager, {});
+
+function populateLessonSetChoices() {
+	$(mgr.getLessonSets()).each(function() {
+		if ('images' !== this.getDescription()) {
+			$('#ls').append('<option value="' + this.getDescription() + '">' + this.getDescription() + '</option>');
+		}
+	});
+}
+
+function lschange(choiceControl) {
+	var lessonSet = mgr.getLessonSet(choiceControl.value);
+	if (!lessonSet) return;
+
+	d = document.getElementById('lessons');
+	d.innerHTML='';
+	var lessons = '';
+	lessonSet.getLessons(function(lessons) {
+		$(lessons).each(function() {
+			lessons += '<option value="' + this.getDescription() + '">' + this.getDescription() + '</option>';
+		});
+		d.innerHTML = lessons;
+	});
+}
+
+function lessonchange(l) {
+	return;
+	var lessons='';
+	for (var i=0; i<l.options.length; i++) {
+		if (l.options[i].selected) {
+			lessons+=((lessons.length>0)?'&':'?');
+			lessons+='l='+escape(l.options[i].value);
+		}
+	}
+}
+
+function clear() {
+	fcquizer = null;
+	fcword = null;
+	fcanswers = null;
+	fcwrong = null;
+}
+
+function showPanel(panelName) {
+	$('#misc').hide();
+	$('#setup').hide();
+	$('#quiz').hide();
+
+	$('#'+panelName).show();
+}
+
+function quiz() {
+	clear();
+	showPanel('quiz');
+	if (fcquizer == null) {
+		var ls = $('#ls').val();
+		var l = $('#lessons')[0];
+		if (ls == null) return;
+		if (l == null) return;
+		if (l.length == 0) return;
+
+		var leset = mgr.getLessonSet(ls);
+		if (leset == null) return;
+
+		fcquizer = $.extend(true, {}, Quizer, {});
+		for (var i=0; i<l.options.length; i++) {
+			if (l.options[i].selected) {
+				var o = l.options[i].value;
+				var lesson = leset.getLesson(o);
+				if (lesson) {
+					fcquizer.loadLesson(lesson);
+				}
+			}
+		}
+	}
+	getWord();
+}
+
+function getWord(choice) {
+	s = document.getElementById('status');
+	if (s) s.innerHTML = '';
+	options = document.getElementsByTagName('input');
+	for (i = 0; i < options.length; i++) {
+		var o = options[i];
+		o.disabled = true;
+	}
+	var u = 'getWord.jsp'
+	if (choice) choice = choice.value;
+
+	if (fcquizer == null) return;
+
+	var wrong = -1;
+	if (fcwrong != null) wrong = fcwrong;
+	var status = "Begin";
+
+	if (fcword != null) {
+		var correct = false;
+		try { correct = fcanswers[choice] === fcword.getBack(); } catch {}
+		
+		if (correct) {
+			status = "Correct";
+			fcword = null;
+		}
+		else {
+			status = "Try again";
+			fcwrong = ++wrong;
+		}
+	}
+
+	if (fcword == null || fcanswers == null) {
+		fcword = fcquizer.getRandomWord(wrong);
+		fcanswers = fcquizer.getRandomAnswers(7);
+		fcwrong = 0;
+	}
+	if (fcword != null) {
+		showPanel('quiz');
+
+		$('#word').html(fcword.getFront());
+
+		var answerChoices = '<form>';
+		for (var i = 0; i < fcanswers.length; ++i) {
+			var answer = fcanswers[i];
+			if (answer.length > 50) answer = answer.substring(0, 50);
+			answerChoices += '<input type="radio" name="c" onclick="getWord(this);" value="'+i+'" '+(answer===choice?'checked="checked"':'') + '>' + answer + '</input><br/>';
+		}
+		
+		answerChoices += '</form>';
+		$('#answers').html(answerChoices);
+		var statusDisplay = status + ' | ' + fcquizer.getNotLearnedCount() + ' | ' + (fcquizer.getTotalAsked() - fcquizer.getTotalWrong()) + '/' + fcquizer.getTotalAsked() + ' | ' + fcquizer.getPercentage() + '%';
+		$('#status').html(statusDisplay);
+	}
+	else {
+		showPanel('misc');
+		$('#misc').html('<br/><br/><h2>-=+* Great Job *+=-</h2><br/><br/>');
+		fcquizer = null;
+	}
+}
+
+
+$(document).ready(function() {
+	mgr.loadLessonSets(lessonDir, function() {
+		populateLessonSetChoices();
+	});
+});
+// -->
+</script>
+</head>
+<body>
+
+
+<div id="setup">
+	<fieldset>
+		<select name="ls" id="ls" onchange="lschange(this)" size="10">
+		</select>
+		<select id="lessons" name="l" onchange="lessonchange(this)" size="10" multiple="multiple">
+			<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+		</select>
+		<button onclick="quiz(); return false;">Quiz</button>
+	</fieldset>
+</div>
+
+<div id="quiz">
+	<div id="wordItem">
+
+		<div id="word">
+		</div>
+		<hr/>
+		<div id="answers">
+		</div>
+		<hr/>
+		<div id="status">
+		</div>
+	</div>
+</div>
+
+<div id="misc">
+</div>
+
+</body>
+</html>
+
