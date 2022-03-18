@@ -115,9 +115,12 @@ console.log('loading lesson: ' + lesson.getDescription())
 			}
   
 			// if we need to randomly find a new word, let's do it
+			var attempt = 0;
 			while (currentWord == self.lastWord) {
 				var wordNum = self.getRandomInt(self.notLearned.length);
 				currentWord = self.notLearned[wordNum];
+				if (++attempt > 999) { console.log('INFINITE LOOP FORCE BREAK!!!!!'); break; }
+				if (self.notLearned.length == 1) break;	// if we're the last word to learn
 			}
 		}
 		else {
@@ -134,6 +137,7 @@ console.log('loading lesson: ' + lesson.getDescription())
 			count = self.words.length;
 		}
 
+		var attempt = 0;
 		while (count > 0) {
 			var wordNum = self.getRandomInt(self.words.length);
 			var b = self.words[wordNum].flashCard.getBack();
@@ -141,6 +145,7 @@ console.log('loading lesson: ' + lesson.getDescription())
 				retVal.push(b);
 				count--;
 			}
+			if (++attempt > 999) { console.log('INFINITE LOOP FORCE BREAK!!!!!'); break; }
 		}
 		if (self.lastWord) {
 			// be sure the right answer is in there

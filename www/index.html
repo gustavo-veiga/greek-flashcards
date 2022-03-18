@@ -8,24 +8,127 @@
         <script type="text/javascript" src="js/jquery.cookie.js"></script>
         <script type="text/javascript" src="js/jszip.min.js"></script>
         <script type="text/javascript" src="js/jszip-utils.min.js"></script>
-        <script type="text/javascript" src="js/messageResource.min.js"></script>
+        <script type="text/javascript" src="js/messageResource.js"></script>
 
         <script type="text/javascript" src="js/flashcards.js"></script>
 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<style>
+#quiz {
+	width: 100%;
+}
+#wordHeader {
+	width: 100%;
+}
 #word {
 	font-size: 300%;
+	padding: .25em;
+	margin: .25em;
+	width: auto;
+	text-align: center;
 }
-	</style>
-</head>
-<body>
+.choiceButton {
+	padding : 1.2em;
+	margin-bottom : 1.2em;
+	margin-left : .5em;
+	margin-right : .5em;
+	width : auto;
+	border: 1px solid;
+	box-shadow: 5px 10px;
+	border-radius: .5em;
+	cursor: pointer;
+}
 
+.lessonSetChoice {
+	border-radius: initial;
+}
+
+#lessons {
+	width: 100%;
+}
+
+.setupMessage {
+	padding: .5em;
+	font-size: 120%;
+	font-weight: bold;
+}
+
+.header {
+	position: fixed;
+	top: 0;
+	z-index: 2;
+	width: 100%;
+	background: white;
+}
+.footer {
+	position: fixed;
+	bottom: 0;
+	z-index: 2;
+	width: 100%;
+	background: white;
+	padding: .25em;
+}
+
+#status {
+}
+
+.wrong {
+	background:pink;
+	-webkit-transition:background 1s;
+	-moz-transition:background 1s;
+	-o-transition:background 1s;
+	transition:background 1s
+}
+
+.correct {
+	background-color:#d7ffb8;
+	color:#58a700;
+	-webkit-transition:background 1s;
+	-moz-transition:background 1s;
+	-o-transition:background 1s;
+	transition:background 1s
+}
+
+.statusResult {
+	padding-left: .25em;
+	padding-right: .25em;
+}
+
+#misc {
+	width : 100%;
+}
+
+.finished {
+	cursor: pointer;
+	border-radius: .5em;
+	border: 1px solid;
+	text-align: center;
+	box-shadow: 5px 10px;
+	background-color:#d7ffb8;
+	color:#58a700;
+	margin: 1em;
+	padding: 1em;
+	width:auto;
+}
+
+.finishedPercent {
+	cursor: pointer;
+	border-radius: .5em;
+	border: 1px solid;
+	box-shadow: 5px 10px;
+	text-align: center;
+	background-color:#d7ffb8;
+	color:#58a700;
+	margin: 3em;
+	padding: 1em;
+	width:auto;
+}
+
+	</style>
 
 <script>
 
-
-var SKEL_PATH  ="/home/crosswire/bin/fcskel";
-var LESSONS_PATH="/home/crosswire/html/fc/g/packages";
 var url = window.location.href;
 var params =  URI(url).search(true);
 var lessonDir = params.l;
@@ -35,24 +138,42 @@ var fcword = null;
 var fcanswers = null;
 var fcwrong = null;
 
-lessonDir = (!lessonDir) ? (SKEL_PATH+"/target/install")
-				: (LESSONS_PATH+"/"+lessonDir);
+var correctSound = new Audio('audio/correct.mp3');
+var wrongSound = new Audio('audio/wrong.mp3');
+var finishSound = new Audio('audio/finish.mp3');
 
 lessonDir = './';
 
 var mgr = $.extend(true, {}, LessonManager, {});
 
 function populateLessonSetChoices() {
+
+	showPanel('setup');
+	$('#lessonSets').show();
+	$('#lessonChoices').hide();
+
+	$('#setupMessage').html('Select a lesson set');
+	$('#lessonSets').html('<div id="headerPadSetup">&nbsp;</div>');
+	$('#headerPadSetup').height($('#setupMessage').outerHeight());
 	$(mgr.getLessonSets()).each(function() {
 		if ('images' !== this.getDescription()) {
-			$('#ls').append('<option value="' + this.getDescription() + '">' + this.getDescription() + '</option>');
+			$('#lessonSets').append('<div class="lessonSetChoice choiceButton" onclick="lessonSetSelected(\'' + this.getDescription() + '\');">' + this.getDescription() + '</div>');
 		}
 	});
 }
 
-function lschange(choiceControl) {
-	var lessonSet = mgr.getLessonSet(choiceControl.value);
+var lastSelectedLessonSetName = null;
+function lessonSetSelected(lessonSetName) {
+
+	var lessonSet = mgr.getLessonSet(lessonSetName);
 	if (!lessonSet) return;
+
+	lastSelectedLessonSetName = lessonSetName;
+
+	$('#lessonSets').hide();
+	$('#lessonChoices').show();
+	$('#setupMessage').html('Select lessons for review');
+	$('#headerPadSetupLessons').height($('#setupMessage').outerHeight());
 
 	d = document.getElementById('lessons');
 	d.innerHTML='';
@@ -63,17 +184,6 @@ function lschange(choiceControl) {
 		});
 		d.innerHTML = lessons;
 	});
-}
-
-function lessonchange(l) {
-	return;
-	var lessons='';
-	for (var i=0; i<l.options.length; i++) {
-		if (l.options[i].selected) {
-			lessons+=((lessons.length>0)?'&':'?');
-			lessons+='l='+escape(l.options[i].value);
-		}
-	}
 }
 
 function clear() {
@@ -95,7 +205,7 @@ function quiz() {
 	clear();
 	showPanel('quiz');
 	if (fcquizer == null) {
-		var ls = $('#ls').val();
+		var ls = lastSelectedLessonSetName;
 		var l = $('#lessons')[0];
 		if (ls == null) return;
 		if (l == null) return;
@@ -126,60 +236,77 @@ function getWord(choice) {
 		var o = options[i];
 		o.disabled = true;
 	}
-	var u = 'getWord.jsp'
-	if (choice) choice = choice.value;
+
+	var choiceNumber = -1;
+	if (choice) choiceNumber = $(choice).attr('data-value');
 
 	if (fcquizer == null) return;
 
 	var wrong = -1;
 	if (fcwrong != null) wrong = fcwrong;
 	var status = "Begin";
+	var keepChoices = false;
 
 	if (fcword != null) {
 		var correct = false;
-		try { correct = fcanswers[choice] === fcword.getBack(); } catch {}
+		try { correct = fcanswers[choiceNumber] === fcword.getBack(); } catch {}
 		
 		if (correct) {
-			status = "Correct";
+			status = '<span class="correct statusResult">Correct</span>';
+			$(choice).addClass('correct');
+			correctSound.play();
 			fcword = null;
 		}
 		else {
-			status = "Try again";
+			status = '<span class="wrong statusResult">Try again</span>';
 			fcwrong = ++wrong;
+			$(choice).addClass('wrong');
+			wrongSound.play();
+			keepChoices = true;
 		}
 	}
 
 	if (fcword == null || fcanswers == null) {
 		fcword = fcquizer.getRandomWord(wrong);
-		fcanswers = fcquizer.getRandomAnswers(7);
+		fcanswers = fcquizer.getRandomAnswers(5);
 		fcwrong = 0;
 	}
 	if (fcword != null) {
 		showPanel('quiz');
 
-		$('#word').html(fcword.getFront());
+		if (!keepChoices) {
+			setTimeout(function() {
+				$('#word').html(fcword.getFront());
 
-		var answerChoices = '<form>';
-		for (var i = 0; i < fcanswers.length; ++i) {
-			var answer = fcanswers[i];
-			if (answer.length > 50) answer = answer.substring(0, 50);
-			answerChoices += '<input type="radio" name="c" onclick="getWord(this);" value="'+i+'" '+(answer===choice?'checked="checked"':'') + '>' + answer + '</input><br/>';
+				var answerChoices = '<div id="headerPad">&nbsp;</div>';
+				for (var i = 0; i < fcanswers.length; ++i) {
+					var answer = fcanswers[i];
+					if (answer.length > 50) answer = answer.substring(0, 50);
+					answerChoices += '<div class="choiceButton'+(answer===choiceNumber?' checked':'') + '" onclick="getWord(this);" data-value="'+i+'">' + answer + '</div>';
+				}
+				
+				answerChoices += '<div id="footerPad">&nbsp;</div>';
+				$('#answers').html(answerChoices);
+				$('#headerPad').height($('#wordHeader').outerHeight());
+			}, correct ? 500 : 100);
 		}
-		
-		answerChoices += '</form>';
-		$('#answers').html(answerChoices);
-		var statusDisplay = status + ' | ' + fcquizer.getNotLearnedCount() + ' | ' + (fcquizer.getTotalAsked() - fcquizer.getTotalWrong()) + '/' + fcquizer.getTotalAsked() + ' | ' + fcquizer.getPercentage() + '%';
+		var statusDisplay = '<h3>' + status + ' | ' + fcquizer.getNotLearnedCount() + ' | ' + (fcquizer.getTotalAsked() - fcquizer.getTotalWrong()) + '/' + fcquizer.getTotalAsked() + ' | ' + Math.round(fcquizer.getPercentage()) + '%</h3>';
 		$('#status').html(statusDisplay);
+		$('#footerPad').height($('#statusFooter').outerHeight());
 	}
 	else {
-		showPanel('misc');
-		$('#misc').html('<br/><br/><h2>-=+* Great Job *+=-</h2><br/><br/>');
-		fcquizer = null;
+		setTimeout(function() {
+			showPanel('misc');
+			$('#misc').html('<br/><br/><h1 class="finished" onclick="location.reload();"> Great Job </h1><h2 onclick="location.reload();" class="finishedPercent">'+Math.round(fcquizer.getPercentage())+'%</h2><br/><br/>');
+			finishSound.play();
+			fcquizer = null;
+		}, correct ? 500 : 100);
 	}
 }
 
 
 $(document).ready(function() {
+	showPanel('setup');
 	mgr.loadLessonSets(lessonDir, function() {
 		populateLessonSetChoices();
 	});
@@ -191,24 +318,28 @@ $(document).ready(function() {
 
 
 <div id="setup">
-	<fieldset>
-		<select name="ls" id="ls" onchange="lschange(this)" size="10">
+	<div id="setupMessage" class="header setupMessage">
+	</div>
+	<div id="lessonSets">
+	</div>
+	<div id="lessonChoices">
+	<div id="headerPadSetupLessons">&nbsp;</div>
+		<select id="lessons" name="l" multiple="multiple">
+			<option>Select lessons for review</option>
 		</select>
-		<select id="lessons" name="l" onchange="lessonchange(this)" size="10" multiple="multiple">
-			<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
-		</select>
-		<button onclick="quiz(); return false;">Quiz</button>
-	</fieldset>
+		<br/><br/><button style="width:100%;padding:.5em;" onclick="quiz(); return false;">Quiz</button>
+	</div>
 </div>
 
 <div id="quiz">
-	<div id="wordItem">
-
+	<div id="wordHeader" class="header">
 		<div id="word">
 		</div>
 		<hr/>
-		<div id="answers">
-		</div>
+	</div>
+	<div id="answers">
+	</div>
+	<div id="statusFooter" class="footer">
 		<hr/>
 		<div id="status">
 		</div>
