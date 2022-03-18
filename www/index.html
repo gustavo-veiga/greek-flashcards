@@ -175,14 +175,17 @@ function lessonSetSelected(lessonSetName) {
 	$('#setupMessage').html('Select lessons for review');
 	$('#headerPadSetupLessons').height($('#setupMessage').outerHeight());
 
-	d = document.getElementById('lessons');
-	d.innerHTML='';
-	var lessons = '';
+	$('#lessons').html('');
 	lessonSet.getLessons(function(lessons) {
+		var lessonNames = [];
 		$(lessons).each(function() {
-			lessons += '<option value="' + this.getDescription() + '">' + this.getDescription() + '</option>';
+			lessonNames.push(this.getDescription());
 		});
-		d.innerHTML = lessons;
+		var lessonOptions = '';
+		$(lessonNames.sort()).each(function() {
+			lessonOptions += '<option value="' + this + '">' + this + '</option>';
+		});
+		$('#lessons').html(lessonOptions);
 	});
 }
 
