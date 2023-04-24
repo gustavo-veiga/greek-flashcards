@@ -1,8 +1,0 @@
-MIDlet-1: ##NAME##, FlashcardsMobile.png, org.crosswire.flashcards.mobile.FlashCards
-MIDlet-Jar-Size: ##SIZE##
-MIDlet-Jar-URL: ##HTMLBASE##/##NAME##.jar
-MIDlet-Name: ##NAME##
-MIDlet-Vendor: CrossWire
-MIDlet-Version: 1.0
-MicroEdition-Configuration: CLDC-1.0
-MicroEdition-Profile: MIDP-1.0
